@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:showDividers="middle"
+    android:dividerPadding="10dp"
+    tools:context="com.ltsh.app.chat.activity.LoginActivity" >
+
+
+    <EditText
+        android:id="@+id/editLoginName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="账号"/>
+
+    <EditText
+        android:id="@+id/editPassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="密码"/>
+    <Button
+        android:id="@+id/loginBtn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:width="120px"
+        android:height="80px"
+        android:text="登录"
+        />
+</LinearLayout>
