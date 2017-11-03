@@ -153,6 +153,9 @@ public class DbUtils {
     }
     public static void setValue(Cursor cursor, String columnName, int type, Object bean, PropertyMethod propertyMethod) {
         int columnIndex = cursor.getColumnIndex(columnName);
+        if(columnIndex == -1) {
+            return;
+        }
         switch (cursor.getType(columnIndex)) {
             case Cursor.FIELD_TYPE_BLOB:
                 if(type == 0) {

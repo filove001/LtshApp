@@ -65,7 +65,7 @@
             <RelativeLayout
                 android:layout_width="90px"
                 android:layout_height="match_parent"
-                android:padding="5dp">
+                android:padding="1dp">
 
                 <TextView
                     android:id="@+id/tab_menu_channel"
