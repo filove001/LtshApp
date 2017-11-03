@@ -13,6 +13,8 @@ import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.db.DbUtils;
 import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.config.CacheObject;
+import com.ltsh.app.chat.entity.viewbean.MessageItem;
+import com.ltsh.app.chat.listener.ChatItemClickListener;
 import com.ltsh.app.chat.listener.FriendItemClickListener;
 
 import java.util.ArrayList;
@@ -25,7 +27,6 @@ import java.util.Map;
 public class ChatListFragment extends Fragment {
 
     private ListView list_content;
-    private List<Map> mData = null;
 
 
     public void initData() {
@@ -38,23 +39,21 @@ public class ChatListFragment extends Fragment {
         String sql = "SELECT " +
                 "msg.create_by," +
                 "msg.create_by_name," +
-                "SUM(CASE WHEN msg.status = 'FSZ' THEN 1 ELSE 0 END) FSZ," +
-                "SUM(CASE WHEN msg.status = 'WD' THEN 1 ELSE 0 END) WD," +
-                "SUM(CASE WHEN msg.status = 'YD' THEN 1 ELSE 0 END) YD," +
-                "strftime('YYYY-MM-DD HH:MM:SS',MAX(msg.create_time)) maxTime, " +
+                "SUM(CASE WHEN msg.status = 'FSZ' THEN 1 ELSE 0 END) FSZ_COUNT," +
+                "SUM(CASE WHEN msg.status = 'WD' THEN 1 ELSE 0 END) WD_COUNT," +
+                "SUM(CASE WHEN msg.status = 'YD' THEN 1 ELSE 0 END) YD_COUNT," +
+                "strftime('YYYY-MM-DD HH:MM:SS',MAX(msg.create_time)) last_msg, " +
                 "MAX(id || '_' || msg.`msg_context`) last_msg " +
                 "FROM message_info msg " +
                 "WHERE msg.to_user=? " +
-                "GROUP BY msg.create_by,msg.create_by_name";
-        List<Map> maps = DbUtils.rawQueryMap(sql, new String[]{CacheObject.userToken.getId() + ""});
-        mData = new ArrayList<Map>();
-        for (Map map : maps) {
-            mData.add(map);
-        }
+                "GROUP BY msg.create_by,msg.create_by_name order by id desc";
+        List<MessageItem> messageItemList = DbUtils.rawQuery(MessageItem.class,sql, new String[]{CacheObject.userToken.getId() + ""});
         list_content = (ListView) view.findViewById(R.id.list_content);
-        CacheObject.messageAdapter = new MessageAdapter(this.getActivity(),maps);
+        if(CacheObject.messageAdapter == null) {
+            CacheObject.messageAdapter = new MessageAdapter(this.getActivity());
+        }
         list_content.setAdapter(CacheObject.messageAdapter);
-
+        list_content.setOnItemClickListener(new ChatItemClickListener(getActivity()));
         return view;
     }
 }

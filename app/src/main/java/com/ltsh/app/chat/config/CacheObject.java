@@ -20,4 +20,5 @@ public class CacheObject {
     public static FriendAdapter friendAdapter = null;
     public static Handler handler;
     public static UserToken userToken = null;
+    public static Map<String, String> commonParams = new HashMap<>();
 }

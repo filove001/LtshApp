@@ -12,6 +12,7 @@ public class PropertyMethod {
     static final String GET_PREFIX = "get";
     static final String SET_PREFIX = "set";
     static final String IS_PREFIX = "is";
+    private String propertyName;
     private Method readMethod;
     private Method writeMethod;
     private Class returnType;
@@ -19,7 +20,7 @@ public class PropertyMethod {
 
 
     public PropertyMethod(String propertyName, Class<?> beanClass) {
-
+        this.propertyName = propertyName;
         String readMethodName = null;
         String writeMethodName = SET_PREFIX + capitalize(propertyName);
         writeMethod = getMethod(beanClass, writeMethodName);
@@ -32,7 +33,7 @@ public class PropertyMethod {
         }
         readMethod = getMethod(beanClass, readMethodName);
     }
-    public Method getMethod(Class<?> beanClass, String methodName) {
+    public static Method getMethod(Class<?> beanClass, String methodName) {
         Method[] methods = beanClass.getMethods();
         for (Method method : methods) {
             if (method.getName().equals(methodName)) {
@@ -68,5 +69,13 @@ public class PropertyMethod {
 
     public void setReturnType(Class returnType) {
         this.returnType = returnType;
+    }
+
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
     }
 }

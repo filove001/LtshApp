@@ -15,6 +15,7 @@ import com.ltsh.app.chat.fragment.FriendFragment;
 import com.ltsh.app.chat.fragment.ChatListFragment;
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.config.CacheObject;
+import com.ltsh.app.chat.service.MsgListService;
 import com.ltsh.app.chat.service.ReceiveMsgService;
 
 /**
@@ -42,7 +43,7 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
     private String url = "htpp://127.0.0.1:8080/";
 
     private Intent receiveMessageService;
-
+    private Intent msgListService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,12 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
             receiveMessageService.setAction("com.ltsh.app.chat.RECEIVE_MSG_SERVICE");
             startService(receiveMessageService);
         }
+        if(msgListService == null) {
+            msgListService = new Intent(this, MsgListService.class);
+            msgListService.setAction("com.ltsh.app.chat.MSG_LIST_SERVICE");
+            startService(msgListService);
+        }
+
 
         CacheObject.handler = new Handler();
 
@@ -165,10 +172,12 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        chatListFragment.onDestroy();
-        friendFragment.onDestroy();
+
         if(receiveMessageService != null) {
             stopService(receiveMessageService);
+        }
+        if(msgListService != null) {
+            stopService(msgListService);
         }
     }
 }

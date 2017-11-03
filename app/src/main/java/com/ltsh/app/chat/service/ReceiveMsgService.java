@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
+
 import com.ltsh.app.chat.CallBackInterface;
 import com.ltsh.app.chat.MyAlertDiaLog;
 import com.ltsh.app.chat.config.AppConstants;
@@ -27,7 +28,7 @@ import java.util.Map;
  * Created by Random on 2017/9/27.
  */
 
-public class ReceiveMsgService extends IntentService implements CallBackInterface {
+public class ReceiveMsgService extends IntentService{
 
     private boolean isStart = true;
     public ReceiveMsgService(){
@@ -48,7 +49,12 @@ public class ReceiveMsgService extends IntentService implements CallBackInterfac
     protected void onHandleIntent(@Nullable Intent intent) {
         while(isStart) {
             Map<String, Object> params = new HashMap<>();
-            AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_MESSAGE_URL, params, this, getApplicationContext());
+            AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_MESSAGE_URL, params, getApplicationContext(), new CallBackInterface(){
+                @Override
+                public void callBack(Result result) {
+                    callBack1(result);
+                }
+            });
             try {
                 Thread.sleep(5000L);
             } catch (InterruptedException e) {
@@ -82,15 +88,13 @@ public class ReceiveMsgService extends IntentService implements CallBackInterfac
 
     }
 
-    @Override
-    public void callBack(Result result) {
+    public void callBack1(Result result) {
         if(ResultCodeEnum.SUCCESS.getCode().equals(result.getCode())) {
             Map map = (Map)result.getContent();
 
             if(map != null) {
                 final MessageInfo chatMessage = JsonUtils.fromJson(JsonUtils.toJson(map), MessageInfo.class);
                 DbUtils.insert(chatMessage);
-
 //                CacheObject.handler.post(new Runnable() {
 //                    @Override
 //                    public void run() {

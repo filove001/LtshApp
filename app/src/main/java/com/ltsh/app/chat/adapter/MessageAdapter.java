@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.entity.MessageInfo;
+import com.ltsh.app.chat.entity.viewbean.MessageItem;
+import com.ltsh.app.chat.utils.BeanUtils;
 import com.ltsh.app.chat.utils.DateUtils;
 
 import java.util.ArrayList;
@@ -26,12 +28,11 @@ public class MessageAdapter extends BaseAdapter{
 
 
     private Context mContext;
-    private List<Map> mData = null;
+    private List<MessageItem> mData = new ArrayList<>();
 
 
-    public MessageAdapter(Context mContext, List<Map> mData) {
+    public MessageAdapter(Context mContext) {
         this.mContext = mContext;
-        this.mData = mData;
     }
 
     @Override
@@ -69,10 +70,10 @@ public class MessageAdapter extends BaseAdapter{
         if(convertView == null){
             holder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.message_item, parent, false);
-            holder.txt_title = (TextView) convertView.findViewById(R.id.txt_title);
-            holder.txt_content = (TextView) convertView.findViewById(R.id.txt_content);
-            holder.txt_time = (TextView) convertView.findViewById(R.id.txt_time);
-            holder.tab_menu_channel_num = (TextView) convertView.findViewById(R.id.tab_menu_channel_num);
+            holder.msg_item_txt_title = (TextView) convertView.findViewById(R.id.msg_item_txt_title);
+            holder.msg_item_txt_content = (TextView) convertView.findViewById(R.id.msg_item_txt_content);
+            holder.msg_item_txt_time = (TextView) convertView.findViewById(R.id.msg_item_txt_time);
+            holder.msg_item_num = (TextView) convertView.findViewById(R.id.msg_item_num);
             convertView.setTag(R.id.tag_message_info,holder);
         }else{
             holder = (ViewHolder) convertView.getTag(R.id.tag_message_info);
@@ -81,18 +82,16 @@ public class MessageAdapter extends BaseAdapter{
         Object obj = mData.get(position);
         //设置下控件的值
 
-        Map chatMessage = (Map) obj;
-        if(chatMessage != null){
-            holder.txt_title.setText((String)chatMessage.get("create_by_name"));
-            holder.tab_menu_channel_num.setText(((int)chatMessage.get("FSZ") + (int)chatMessage.get("WD")) + "");
-            String last_msg = (String) chatMessage.get("last_msg");
-            if(last_msg != null) {
-                holder.txt_content.setText(last_msg.split("_")[1]);
+        MessageItem item = (MessageItem) obj;
+        if(item != null){
+            holder.msg_item_txt_title.setText(item.getCreateByName());
+            holder.msg_item_num.setText((item.getFszCount() + item.getWdCount()) + "");
+            String lastMsg = item.getLastMsg();
+            if(lastMsg != null) {
+                holder.msg_item_txt_content.setText(lastMsg.split("_")[1]);
             }
+            holder.msg_item_txt_time.setText(item.getLastTime());
 
-            if(chatMessage.get("maxTime") != null) {
-                holder.txt_time.setText((String)chatMessage.get("maxTime"));
-            }
         }
 
         return convertView;
@@ -101,18 +100,34 @@ public class MessageAdapter extends BaseAdapter{
 
 
     private static class ViewHolder{
-        TextView txt_title;
-        TextView txt_content;
-        TextView txt_time;
-        TextView tab_menu_channel_num;
+        TextView msg_item_txt_title;
+        TextView msg_item_txt_content;
+        TextView msg_item_txt_time;
+        TextView msg_item_num;
     }
 
     //往特定位置，添加一个元素
-    public void add(int position,Map data){
-        if (mData == null) {
-            mData = new ArrayList<>();
+    public void add(int position,MessageItem item){
+        boolean isChange = false;
+        for (MessageItem message :
+                mData) {
+            if (item.getCreateBy().intValue() == message.getCreateBy().intValue()) {
+                BeanUtils.copyProperties(item, message);
+            }
+            isChange = true;
         }
-        mData.add(position,data);
+        if(!isChange) {
+            mData.add(position,item);
+        }
+
+        notifyDataSetChanged();
+    }
+    //往特定位置，添加一个元素
+    public void addAll(int position, List<MessageItem> items){
+        for (MessageItem item :
+                items) {
+            add(position, item);
+        }
         notifyDataSetChanged();
     }
 }

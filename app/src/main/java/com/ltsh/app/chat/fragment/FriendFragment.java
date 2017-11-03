@@ -33,13 +33,12 @@ import java.util.Map;
 /**
  * Created by Jay on 2015/8/30 0030.
  */
-public class FriendFragment extends Fragment implements CallBackInterface {
+public class FriendFragment extends Fragment {
 
 
     private ListView friend_list;
-    private List<UserFriend> mData = null;
 
-    public void callBack(Result result) {
+    public void callBack1(Result result) {
 
         Result<Map> mapResult = result;
         if(ResultCodeEnum.SUCCESS.getCode().equals(mapResult.getCode())) {
@@ -47,38 +46,39 @@ public class FriendFragment extends Fragment implements CallBackInterface {
             List resultList = (List)content.get("resultList");
             for (Object obj : resultList) {
                 final UserFriend userFriend = JsonUtils.fromJson(JsonUtils.toJson(obj), UserFriend.class);
-                CacheObject.handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        CacheObject.friendAdapter.add(0,userFriend);
-                    }
-                });
+                UserFriend single = DbUtils.single(UserFriend.class, "friend_user_id=? and create_by=?", new String[]{userFriend.getFriendUserId() + "", userFriend.getCreateBy() + ""});
+                if(single == null) {
+                    DbUtils.insert(userFriend);
+                } else {
+                    userFriend.setId(single.getId());
+                    DbUtils.update(userFriend);
+                }
             }
         } else {
             LogUtils.e(mapResult.getCode() + ":" + mapResult.getMessage());
         }
     }
     public void initData() {
-        List<UserFriend> userFriends = DbUtils.query(UserFriend.class, "create_by = ?", new String[]{"1"}, "id desc");
-
-        for (UserFriend userFriend :
-                userFriends) {
-            mData.add(userFriend);
-        }
         Map<String, Object> map = new HashMap<>();
         map.put("pageNumber", "1");
         map.put("pageSize", "10000");
-        AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_FRIEND_URL, map, this, getActivity());
+        AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_FRIEND_URL, map, getActivity(), new CallBackInterface(){
+            @Override
+            public void callBack(Result result) {
+                callBack1(result);
+            }
+        });
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.friend_content,container,false);
-        mData = new ArrayList<UserFriend>();
         friend_list = (ListView) view.findViewById(R.id.friend_list);
         friend_list.setOnItemClickListener(new FriendItemClickListener(this.getActivity()));
-        CacheObject.friendAdapter = new FriendAdapter(this.getActivity(),mData);
-        friend_list.setAdapter(CacheObject.friendAdapter);
+        if(CacheObject.friendAdapter == null) {
+            CacheObject.friendAdapter = new FriendAdapter(this.getActivity());
+            friend_list.setAdapter(CacheObject.friendAdapter);
+        }
         initData();
         return view;
     }

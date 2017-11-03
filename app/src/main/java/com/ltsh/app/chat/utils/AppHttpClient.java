@@ -9,6 +9,9 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.ltsh.app.chat.CallBackInterface;
+import com.ltsh.app.chat.MainActivity;
+import com.ltsh.app.chat.activity.BaseActivity;
+import com.ltsh.app.chat.activity.ContextActivity;
 import com.ltsh.app.chat.activity.LoginActivity;
 import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.config.CacheObject;
@@ -24,6 +27,7 @@ import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Random on 2017/10/11.
@@ -31,7 +35,7 @@ import java.util.Map;
 
 public class AppHttpClient {
     public static String post(String baseUrl,String url, Map<String, Object> json, String randomValue) {
-        json.putAll(AppInit.commonParams);
+        json.putAll(CacheObject.commonParams);
         json.put("timestamp", Calendar.getInstance().getTimeInMillis() + "");
         json.put("keep", StringUtils.getUUID());
         if(CacheObject.userToken != null && CacheObject.userToken.getToken() != null) {
@@ -48,36 +52,43 @@ public class AppHttpClient {
     public static String post(String baseUrl,String url, Map<String, Object> json) {
         return post(baseUrl, url, json, "");
     }
-    public static void threadPost(final String baseUrl, final String url, final Map<String, Object> json, final CallBackInterface callBackInterface, final Context activity) {
+    public static void threadPost(final String baseUrl, final String url, final Map<String, Object> json, final Context activity, final CallBackInterface callBackInterface) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Result<Map> mapResult = appPost(baseUrl, url, json);
+               final  Result<Map> mapResult = appPost(baseUrl, url, json);
 
                 if(ResultCodeEnum.SUCCESS.getCode().equals(mapResult.getCode())) {
                     try {
-                        callBackInterface.callBack(mapResult);
+                        if(callBackInterface != null) {
+                            callBackInterface.callBack(mapResult);
+                        }
                     } catch (Exception e) {
                         LogUtils.e(e.getMessage(), e);
                     }
                 } else if(ResultCodeEnum.TOKEN_FAIL.getCode().equals(mapResult.getCode())) {
-//                    CacheObject.handler.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Intent loginIntent = new Intent("android.intent.action.LOGIN");
-//                            loginIntent.setClassName(activity, LoginActivity.class.getName());
-//                            activity.startActivity(loginIntent);
-//                            if(activity instanceof Activity) {
-//                                Activity activity1= (Activity)activity;
-//                                activity1.finish();
-//                            }
-//                        }
-//                    });
+                    CacheObject.handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent loginIntent = new Intent("android.intent.action.LOGIN");
+                            loginIntent.setClassName(activity, LoginActivity.class.getName());
+                            if(activity instanceof Activity) {
+                                Activity activity1= (Activity)activity;
+                                activity1.finish();
+                            }
+                            Set<Activity> activitySet = BaseActivity.activitySet;
+                            for (Activity activity : activitySet) {
+                                activity.finish();
+                            }
+                            BaseActivity.activitySet.clear();
+                            activity.startActivity(loginIntent);
+                        }
+                    });
                 } else {
                     CacheObject.handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(activity, "默认Toast样式", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, mapResult.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -85,9 +96,9 @@ public class AppHttpClient {
         }).start();
     }
 
-    public static void threadPost(final String baseUrl, final String url, final BaseEntity json, final CallBackInterface callBackInterface, final Context activity) {
+    public static void threadPost(final String baseUrl, final String url, final BaseEntity json, final Context activity, final CallBackInterface callBackInterface) {
         Map map = JsonUtils.fromJson(JsonUtils.toJson(json), Map.class);
-        threadPost(baseUrl, url, map, callBackInterface, activity);
+        threadPost(baseUrl, url, map, activity, callBackInterface);
 
     }
     public static Result<Map> appPost(String baseUrl, String url, Map<String, Object> json){
@@ -111,7 +122,7 @@ public class AppHttpClient {
     public static Result<String[]> getRandom(String baseUrl) {
         String url = AppConstants.GET_RANDOM_URL;
         Map<String, Object> params = new HashMap<>();
-        params.putAll(AppInit.commonParams);
+        params.putAll(CacheObject.commonParams);
         String uuid = StringUtils.getUUID();
         params.put("uuid", uuid);
         String post = post(baseUrl, url, params);

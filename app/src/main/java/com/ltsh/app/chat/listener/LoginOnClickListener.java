@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
 
+
 import com.ltsh.app.chat.CallBackInterface;
 import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.R;
@@ -54,16 +55,20 @@ public class LoginOnClickListener implements View.OnClickListener {
                     map.put("password", MD5Util.encoder("ltshChat:" + MD5Util.encoder("chat:"+password.toString()) + content[1]));
                     map.put("passwordRandomStr", content[0]);
                 }
-                Result<Map> result = AppHttpClient.appPost(AppConstants.SERVLCE_URL, AppConstants.LOGIN_URL, map);
-                if(ResultCodeEnum.SUCCESS.getCode().equals(result.getCode())) {
-                    Map resultMap = result.getContent();
-                    CacheObject.userToken = JsonUtils.fromJson(JsonUtils.toJson(resultMap), UserToken.class);
-                    DbUtils.dbHelper.getWritableDatabase().delete(DbUtils.getTableName(UserToken.class), null, null);
-                    DbUtils.insert(CacheObject.userToken);
-                    Intent intent = new Intent("android.intent.action.CONTEXT");
-                    intent.setClassName(activity, ContextActivity.class.getName());
-                    activity.startActivity(intent);
-                }
+                AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.LOGIN_URL, map, activity, new CallBackInterface() {
+                    @Override
+                    public void callBack(Result result) {
+                        if(ResultCodeEnum.SUCCESS.getCode().equals(result.getCode())) {
+                            Map resultMap = (Map)result.getContent();
+                            CacheObject.userToken = JsonUtils.fromJson(JsonUtils.toJson(resultMap), UserToken.class);
+                            DbUtils.dbHelper.getWritableDatabase().delete(DbUtils.getTableName(UserToken.class), null, null);
+                            DbUtils.insert(CacheObject.userToken);
+                            Intent intent = new Intent("android.intent.action.CONTEXT");
+                            intent.setClassName(activity, ContextActivity.class.getName());
+                            activity.startActivity(intent);
+                        }
+                    }
+                });
             }
         }).start();
 

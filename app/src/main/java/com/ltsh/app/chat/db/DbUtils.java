@@ -1,8 +1,12 @@
 package com.ltsh.app.chat.db;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.ltsh.app.chat.entity.BaseEntity;
+import com.ltsh.app.chat.utils.BeanUtils;
+import com.ltsh.app.chat.utils.JsonUtils;
 import com.ltsh.app.chat.utils.LogUtils;
 import com.ltsh.app.chat.utils.PropertyMethod;
 
@@ -38,9 +42,19 @@ public class DbUtils {
         Class<?> aClass = object.getClass();
         SQLiteDatabase writableDatabase = dbHelper.getWritableDatabase();
         writableDatabase.execSQL(getInsertSql(aClass), getValues(object));
-
     }
-
+    public static void update(BaseEntity object) {
+        SQLiteDatabase writableDatabase = dbHelper.getWritableDatabase();
+        ContentValues contentValues = BeanUtils.beanToContentValues(object);
+        writableDatabase.update(getTableName(object.getClass()), contentValues, "id=?", new String[]{object.getId() + ""});
+    }
+    public static <T> T getById(Class<T> classT, int id) {
+        List<T> query = query(classT, "id = ?", new String[]{id + ""}, null);
+        if(!query.isEmpty()) {
+            return query.get(0);
+        }
+        return null;
+    }
     public static List<Map> rawQueryMap(String sql, String[] params) {
         SQLiteDatabase readableDatabase = null;
         Cursor cursor = null;
@@ -53,23 +67,7 @@ public class DbUtils {
                     String[] columnNames = cursor.getColumnNames();
                     Map<String, Object> map = new HashMap<>();
                     for (String columnName : columnNames) {
-                        int columnIndex = cursor.getColumnIndex(columnName);
-                        switch (cursor.getType(columnIndex)) {
-                            case Cursor.FIELD_TYPE_BLOB:
-                                map.put(columnName, cursor.getBlob(columnIndex));
-                                break;
-                            case Cursor.FIELD_TYPE_FLOAT:
-                                map.put(columnName, cursor.getFloat(columnIndex));
-                                break;
-                            case Cursor.FIELD_TYPE_INTEGER:
-                                map.put(columnName, cursor.getInt(columnIndex));
-                                break;
-                            case Cursor.FIELD_TYPE_NULL:
-                                break;
-                            case Cursor.FIELD_TYPE_STRING:
-                                map.put(columnName, cursor.getString(columnIndex));
-                                break;
-                        }
+                        setMapValue(cursor, map, columnName);
                     }
                     list.add(map);
                 } while (cursor.moveToNext());
@@ -85,53 +83,14 @@ public class DbUtils {
         }
         return new ArrayList<>();
     }
-    public static <T> List<T> query(Class<T> classT, String where, String[] params, String orderBy) {
+
+    public static <T> List<T> rawQuery(Class<T> classT, String sql, String[] params) {
         SQLiteDatabase readableDatabase = null;
         Cursor cursor = null;
         try {
-            List<T> list = new ArrayList<>();
             readableDatabase = dbHelper.getReadableDatabase();
-            cursor = readableDatabase.query(getTableName(classT), DbUtils.getColumns(classT), where, params, null, null, orderBy);
-
-            if (cursor.moveToFirst()) {
-                do {
-                    try {
-                        Object o = classT.newInstance();
-                        List<Field> declaredFields = getFieldList(classT);
-                        for (int i = 0; i < declaredFields.size(); i++) {
-                            Field declaredField = declaredFields.get(i);
-                            PropertyMethod propertyMethod = new PropertyMethod(declaredField.getName(), classT);
-                            Class returnType = propertyMethod.getReturnType();
-
-                            String columnName = getColumnName(declaredField.getName(), 0);
-                            int columnIndex = cursor.getColumnIndex(columnName);
-                            switch (cursor.getType(columnIndex)) {
-                                case Cursor.FIELD_TYPE_BLOB:
-                                    setValue(returnType, propertyMethod.getWriteMethod(), o, cursor.getBlob(columnIndex));
-                                    break;
-                                case Cursor.FIELD_TYPE_FLOAT:
-                                    setValue(returnType, propertyMethod.getWriteMethod(), o, cursor.getFloat(columnIndex));
-                                    break;
-                                case Cursor.FIELD_TYPE_INTEGER:
-                                    setValue(returnType, propertyMethod.getWriteMethod(), o, cursor.getInt(columnIndex));
-                                    break;
-                                case Cursor.FIELD_TYPE_NULL:
-                                    break;
-                                case Cursor.FIELD_TYPE_STRING:
-                                    setValue(returnType, propertyMethod.getWriteMethod(), o, cursor.getString(columnIndex));
-                                    break;
-                            }
-
-                        }
-                        list.add((T)o);
-                    } catch (Exception e) {
-                        LogUtils.e(e.getMessage(), e);
-                    }
-
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
-            readableDatabase.close();
+            cursor = readableDatabase.rawQuery(sql, params);
+            List<T> list = cursorToList(classT, cursor);
             return list;
         } catch (Exception e) {
             LogUtils.e(e.getMessage(), e);
@@ -141,6 +100,93 @@ public class DbUtils {
         }
         return new ArrayList<>();
     }
+    public static <T> T single(Class<T> classT, String where, String[] params) {
+        List<T> query = query(classT, where, params, null);
+        if(query.isEmpty()) {
+            return null;
+        } else {
+            return query.get(0);
+        }
+    }
+    public static <T> List<T> query(Class<T> classT, String where, String[] params, String orderBy) {
+        SQLiteDatabase readableDatabase = null;
+        Cursor cursor = null;
+        try {
+            readableDatabase = dbHelper.getReadableDatabase();
+            cursor = readableDatabase.query(getTableName(classT), DbUtils.getColumns(classT), where, params, null, null, orderBy);
+            List<T> list = cursorToList(classT, cursor);
+            return list;
+        } catch (Exception e) {
+            LogUtils.e(e.getMessage(), e);
+        } finally {
+            close(cursor);
+            close(readableDatabase);
+        }
+        return new ArrayList<>();
+    }
+    public static <T> List<T> cursorToList(Class classT, Cursor cursor) {
+        List<T> list = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                try {
+                    Object o = classT.newInstance();
+                    List<Field> declaredFields = BeanUtils.getFieldList(classT);
+                    for (int i = 0; i < declaredFields.size(); i++) {
+                        Field declaredField = declaredFields.get(i);
+                        PropertyMethod propertyMethod = new PropertyMethod(declaredField.getName(), classT);
+                        String columnName = getColumnName(declaredField.getName(), 0);
+                        setBeanValue(cursor, columnName, o, propertyMethod);
+                    }
+                    list.add((T)o);
+                } catch (Exception e) {
+                    LogUtils.e(e.getMessage(), e);
+                }
+            } while (cursor.moveToNext());
+        }
+        return list;
+    }
+    public static void setMapValue(Cursor cursor, Map map, String columnName) {
+        setValue(cursor, columnName, 1, map, null);
+    }
+    public static void setBeanValue(Cursor cursor, String columnName, Object bean, PropertyMethod propertyMethod) {
+        setValue(cursor, columnName, 0, bean, propertyMethod);
+    }
+    public static void setValue(Cursor cursor, String columnName, int type, Object bean, PropertyMethod propertyMethod) {
+        int columnIndex = cursor.getColumnIndex(columnName);
+        switch (cursor.getType(columnIndex)) {
+            case Cursor.FIELD_TYPE_BLOB:
+                if(type == 0) {
+                    BeanUtils.setValue(propertyMethod, bean, cursor.getBlob(columnIndex));
+                } else if(type == 1) {
+                    ((Map)bean).put(columnName, cursor.getBlob(columnIndex));
+                }
+                break;
+            case Cursor.FIELD_TYPE_FLOAT:
+                if(type == 0) {
+                    BeanUtils.setValue(propertyMethod, bean, cursor.getFloat(columnIndex));
+                } else if(type == 1) {
+                    ((Map)bean).put(columnName, cursor.getFloat(columnIndex));
+                }
+                break;
+            case Cursor.FIELD_TYPE_INTEGER:
+                if(type == 0) {
+                    BeanUtils.setValue(propertyMethod, bean, cursor.getInt(columnIndex));
+                } else if(type == 1) {
+                    ((Map)bean).put(columnName, cursor.getInt(columnIndex));
+                }
+                break;
+            case Cursor.FIELD_TYPE_NULL:
+                break;
+            case Cursor.FIELD_TYPE_STRING:
+                if(type == 0) {
+                    BeanUtils.setValue(propertyMethod, bean, cursor.getString(columnIndex));
+                } else if(type == 1) {
+                    ((Map)bean).put(columnName, cursor.getString(columnIndex));
+                }
+                break;
+        }
+    }
+
     public static String[] getColumns(Class classT) {
         return getColumns(getDbColumns(classT));
     }
@@ -153,9 +199,9 @@ public class DbUtils {
     }
     public static Object[] getValues(Object object) {
         List<Object> list = new ArrayList<>();
-        List<Field> declaredFields = getFieldList(object.getClass());
+        List<Field> declaredFields = BeanUtils.getFieldList(object.getClass());
         for (Field field:declaredFields) {
-            if(field.getName().toLowerCase().equals("id") || field.getAnnotation(NoDbColumn.class) != null) {
+            if(field.getName().toUpperCase().equals("ID") || field.getAnnotation(NoDbColumn.class) != null) {
                 continue;
             }
             try {
@@ -211,27 +257,11 @@ public class DbUtils {
     }
     public static String getTableName(Class classT) {
         String name = classT.getSimpleName();
-        return getColumnName(name, 1).toLowerCase();
+        return getColumnName(name, 1);
     }
-    private static List<Field> getFieldList(Class classT) {
-        Class tempClass = classT;
-        List<Field> fieldList = new ArrayList<>();
-        while (tempClass != null) {//当父类为null的时候说明到达了最上层的父类(Object类).
-            Field[] declaredFields = tempClass.getDeclaredFields();
-            for (Field field :
-                    declaredFields) {
-                if (field.getName().equals("serialVersionUID") || field.getName().equals("$change") || field.getName().indexOf("shadow$") != -1) {
-                    continue;
-                }
-                fieldList.add(field);
-            }
-//            fieldList.addAll(Arrays.asList(tempClass .getDeclaredFields()));
-            tempClass = tempClass.getSuperclass(); //得到父类,然后赋给自己
-        }
-        return fieldList;
-    }
+
     public static List<DbColumn> getDbColumns(Class classT) {
-        List<Field> fieldList = getFieldList(classT);
+        List<Field> fieldList = BeanUtils.getFieldList(classT);
 
         String tableName = getTableName(classT);
         List<DbColumn> columns = new ArrayList<>();
@@ -269,7 +299,7 @@ public class DbUtils {
 //                    System.out.println(stringBuffer.substring(i,i+1));
             }
         }
-        return stringBuffer.toString();
+        return stringBuffer.toString().toUpperCase();
     }
 
     public static String getDbType(Type toType) {
@@ -304,40 +334,7 @@ public class DbUtils {
         return result;
     }
 
-    public static void setValue(Class toType, Method method, Object obj, Object value) {
 
-        try {
-            if(toType.isArray() && value != null && value.getClass().isArray()) {
-                method.invoke(obj, value);
-            }else if(toType == Integer.class || toType == Integer.TYPE) {
-                method.invoke(obj, (Integer)value);
-            } else if(toType == Double.class || toType == Double.TYPE) {
-                method.invoke(obj, ((Number)value).doubleValue());
-            } else if(toType == Boolean.class || toType == Boolean.TYPE) {
-                method.invoke(obj, ((Number)value).intValue() == 0 ? false : true);
-            } else if(toType == Byte.class || toType == Byte.TYPE) {
-                method.invoke(obj, ((Number)value).byteValue());
-            } else if(toType == Character.class || toType == Character.TYPE) {
-                method.invoke(obj, ((String)value));
-            } else if(toType == Short.class || toType == Short.TYPE) {
-                method.invoke(obj, ((Number)value).shortValue());
-            } else if(toType == Long.class || toType == Long.TYPE) {
-                method.invoke(obj, ((Number)value).longValue());
-            } else if(toType == Float.class || toType == Float.TYPE) {
-                method.invoke(obj, ((Number)value).floatValue());
-            } else if(toType == BigInteger.class) {
-                throw new RuntimeException("Don't know about " + toType);
-            } else if(toType == BigDecimal.class) {
-                method.invoke(obj, new BigDecimal(value + ""));
-            } else if(toType == String.class) {
-                method.invoke(obj, ((String)value));
-            } else {
-                throw new RuntimeException("Don't know about " + toType);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     public static void close(Closeable closeable) {
         if(closeable != null) {
             try {

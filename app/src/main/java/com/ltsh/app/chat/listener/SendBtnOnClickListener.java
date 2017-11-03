@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.EditText;
 
-import com.ltsh.app.chat.CallBackInterface;
+
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.entity.MessageInfo;
@@ -18,7 +18,7 @@ import java.util.Map;
  * Created by Random on 2017/10/26.
  */
 
-public class SendBtnOnClickListener implements View.OnClickListener, CallBackInterface {
+public class SendBtnOnClickListener implements View.OnClickListener {
     private Integer toUser;
     private Activity activity;
     public SendBtnOnClickListener(Activity activity, Integer toUser) {
@@ -35,11 +35,7 @@ public class SendBtnOnClickListener implements View.OnClickListener, CallBackInt
         messageInfo.setToUser(toUser);
         messageInfo.setMsgType(0);
         messageInfo.setSendType(0);
-        AppHttpClient.threadPost(AppConstants.SERVLCE_URL, "/chat/message/sendMessage", messageInfo, this, activity);
+        AppHttpClient.threadPost(AppConstants.SERVLCE_URL, "/chat/message/sendMessage", messageInfo, activity, null);
     }
 
-    @Override
-    public void callBack(Result result) {
-
-    }
 }

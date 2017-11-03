@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.entity.UserFriend;
+import com.ltsh.app.chat.entity.viewbean.MessageItem;
+import com.ltsh.app.chat.utils.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +26,11 @@ public class FriendAdapter extends BaseAdapter{
 
 
     private Context mContext;
-    private List<UserFriend> mData = null;
+    private List<UserFriend> mData = new ArrayList<>();
 
 
-    public FriendAdapter(Context mContext, List<UserFriend> mData) {
+    public FriendAdapter(Context mContext) {
         this.mContext = mContext;
-        this.mData = mData;
     }
 
     @Override
@@ -94,11 +95,28 @@ public class FriendAdapter extends BaseAdapter{
     }
 
     //往特定位置，添加一个元素
-    public void add(int position,UserFriend data){
-        if (mData == null) {
-            mData = new ArrayList<>();
+    public void add(int position,UserFriend item){
+        boolean isChange = false;
+        for (UserFriend message :
+                mData) {
+            if (item.getFriendUserId().intValue() == message.getFriendUserId().intValue()) {
+                BeanUtils.copyProperties(item, message);
+            }
+            isChange = true;
         }
-        mData.add(position,data);
+        if(!isChange) {
+            mData.add(position,item);
+        }
+
+        notifyDataSetChanged();
+    }
+
+    //往特定位置，添加一个元素
+    public void addAll(int position, List<UserFriend> items){
+        for (UserFriend item :
+                items) {
+            add(position, item);
+        }
         notifyDataSetChanged();
     }
 }

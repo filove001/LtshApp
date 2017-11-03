@@ -69,6 +69,11 @@
                 <action android:name="com.ltsh.app.chat.RECEIVE_MSG_SERVICE"/>
             </intent-filter>
         </service>
+        <service android:name="com.ltsh.app.chat.service.MsgListService">
+            <intent-filter>
+                <action android:name="com.ltsh.app.chat.MSG_LIST_SERVICE"/>
+            </intent-filter>
+        </service>
     </application>
 
 
