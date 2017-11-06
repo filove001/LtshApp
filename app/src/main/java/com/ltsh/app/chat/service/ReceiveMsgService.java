@@ -49,12 +49,15 @@ public class ReceiveMsgService extends IntentService{
     protected void onHandleIntent(@Nullable Intent intent) {
         while(isStart) {
             Map<String, Object> params = new HashMap<>();
-            AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_MESSAGE_URL, params, getApplicationContext(), new CallBackInterface(){
-                @Override
-                public void callBack(Result result) {
-                    callBack1(result);
-                }
-            });
+
+            Result<Map> mapResult = AppHttpClient.appPost(AppConstants.SERVLCE_URL, AppConstants.GET_MESSAGE_URL, params, getApplicationContext());
+            callBack1(mapResult);
+//            AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_MESSAGE_URL, params, getApplicationContext(), new CallBackInterface(){
+//                @Override
+//                public void callBack(Result result) {
+//                    callBack1(result);
+//                }
+//            });
             try {
                 Thread.sleep(5000L);
             } catch (InterruptedException e) {
@@ -94,7 +97,17 @@ public class ReceiveMsgService extends IntentService{
 
             if(map != null) {
                 final MessageInfo chatMessage = JsonUtils.fromJson(JsonUtils.toJson(map), MessageInfo.class);
-                DbUtils.insert(chatMessage);
+                int id = DbUtils.insert(chatMessage);
+                chatMessage.setId(id);
+                if(CacheObject.chatAdapter != null) {
+                    CacheObject.handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            CacheObject.chatAdapter.add(chatMessage, true);
+                        }
+                    });
+
+                }
 //                CacheObject.handler.post(new Runnable() {
 //                    @Override
 //                    public void run() {

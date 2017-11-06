@@ -56,7 +56,7 @@ public class AppHttpClient {
         new Thread(new Runnable() {
             @Override
             public void run() {
-               final  Result<Map> mapResult = appPost(baseUrl, url, json);
+               final  Result<Map> mapResult = appPost(baseUrl, url, json, activity);
 
                 if(ResultCodeEnum.SUCCESS.getCode().equals(mapResult.getCode())) {
                     try {
@@ -66,24 +66,6 @@ public class AppHttpClient {
                     } catch (Exception e) {
                         LogUtils.e(e.getMessage(), e);
                     }
-                } else if(ResultCodeEnum.TOKEN_FAIL.getCode().equals(mapResult.getCode())) {
-                    CacheObject.handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent loginIntent = new Intent("android.intent.action.LOGIN");
-                            loginIntent.setClassName(activity, LoginActivity.class.getName());
-                            if(activity instanceof Activity) {
-                                Activity activity1= (Activity)activity;
-                                activity1.finish();
-                            }
-                            Set<Activity> activitySet = BaseActivity.activitySet;
-                            for (Activity activity : activitySet) {
-                                activity.finish();
-                            }
-                            BaseActivity.activitySet.clear();
-                            activity.startActivity(loginIntent);
-                        }
-                    });
                 } else {
                     CacheObject.handler.post(new Runnable() {
                         @Override
@@ -101,7 +83,7 @@ public class AppHttpClient {
         threadPost(baseUrl, url, map, activity, callBackInterface);
 
     }
-    public static Result<Map> appPost(String baseUrl, String url, Map<String, Object> json){
+    public static Result<Map> appPost(String baseUrl, String url, Map<String, Object> json, final Context activity){
         Result<String[]> randomResult = getRandom(baseUrl);
         if(randomResult.getCode().equals("000000")) {
             String[] random = randomResult.getContent();
@@ -112,6 +94,25 @@ public class AppHttpClient {
             Map map = JsonUtils.fromJson(post, Map.class);
             if(ResultCodeEnum.SUCCESS.getCode().equals(map.get("code"))) {
                 return new Result<>((String)map.get("code"), (String)map.get("message"), (Map)map.get("content"));
+            }else if(ResultCodeEnum.TOKEN_FAIL.getCode().equals((String)map.get("code"))) {
+                CacheObject.handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent loginIntent = new Intent("android.intent.action.LOGIN");
+                        loginIntent.setClassName(activity, LoginActivity.class.getName());
+                        if(activity instanceof Activity) {
+                            Activity activity1= (Activity)activity;
+                            activity1.finish();
+                        }
+                        Set<Activity> activitySet = BaseActivity.activitySet;
+                        for (Activity activity : activitySet) {
+                            activity.finish();
+                        }
+                        BaseActivity.activitySet.clear();
+                        activity.startActivity(loginIntent);
+                    }
+                });
+                return new Result<>((String)map.get("code"), (String)map.get("message"));
             } else {
                 return new Result<>((String)map.get("code"), (String)map.get("message"));
             }

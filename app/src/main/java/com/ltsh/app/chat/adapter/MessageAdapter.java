@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ltsh.app.chat.R;
@@ -18,36 +19,21 @@ import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.entity.viewbean.MessageItem;
 import com.ltsh.app.chat.utils.BeanUtils;
 import com.ltsh.app.chat.utils.DateUtils;
+import com.ltsh.app.chat.utils.ImageUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class MessageAdapter extends BaseAdapter{
+public class MessageAdapter extends LtshBaseAdapter<MessageItem>{
 
 
     private Context mContext;
-    private List<MessageItem> mData = new ArrayList<>();
 
 
     public MessageAdapter(Context mContext) {
         this.mContext = mContext;
-    }
-
-    @Override
-    public int getCount() {
-        return mData.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mData.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
     }
 
     //多布局的核心，通过这个判断类别
@@ -74,17 +60,20 @@ public class MessageAdapter extends BaseAdapter{
             holder.msg_item_txt_content = (TextView) convertView.findViewById(R.id.msg_item_txt_content);
             holder.msg_item_txt_time = (TextView) convertView.findViewById(R.id.msg_item_txt_time);
             holder.msg_item_num = (TextView) convertView.findViewById(R.id.msg_item_num);
+            holder.msg_item_img_icon = (ImageView)convertView.findViewById(R.id.msg_item_img_icon);
             convertView.setTag(R.id.tag_message_info,holder);
         }else{
             holder = (ViewHolder) convertView.getTag(R.id.tag_message_info);
         }
 
-        Object obj = mData.get(position);
+        Object obj = getDataList().get(position);
         //设置下控件的值
 
         MessageItem item = (MessageItem) obj;
         if(item != null){
             holder.msg_item_txt_title.setText(item.getCreateByName());
+            holder.msg_item_img_icon.setVisibility(View.VISIBLE);
+            holder.msg_item_img_icon.setImageBitmap(ImageUtils.readBitMap(convertView.getContext(), R.mipmap.iv_icon_baidu));
             holder.msg_item_num.setText((item.getFszCount() + item.getWdCount()) + "");
             String lastMsg = item.getLastMsg();
             if(lastMsg != null) {
@@ -99,35 +88,21 @@ public class MessageAdapter extends BaseAdapter{
 
 
 
-    private static class ViewHolder{
+    private class ViewHolder {
         TextView msg_item_txt_title;
         TextView msg_item_txt_content;
         TextView msg_item_txt_time;
         TextView msg_item_num;
+        ImageView msg_item_img_icon;
     }
-
-    //往特定位置，添加一个元素
-    public void add(int position,MessageItem item){
-        boolean isChange = false;
-        for (MessageItem message :
-                mData) {
+    public boolean isRepetition(MessageItem item) {
+        for (MessageItem message : getDataList()) {
             if (item.getCreateBy().intValue() == message.getCreateBy().intValue()) {
                 BeanUtils.copyProperties(item, message);
+                return true;
             }
-            isChange = true;
         }
-        if(!isChange) {
-            mData.add(position,item);
-        }
+        return false;
+    }
 
-        notifyDataSetChanged();
-    }
-    //往特定位置，添加一个元素
-    public void addAll(int position, List<MessageItem> items){
-        for (MessageItem item :
-                items) {
-            add(position, item);
-        }
-        notifyDataSetChanged();
-    }
 }

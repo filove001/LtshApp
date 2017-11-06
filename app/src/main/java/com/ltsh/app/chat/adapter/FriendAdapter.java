@@ -18,34 +18,18 @@ import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.entity.viewbean.MessageItem;
 import com.ltsh.app.chat.utils.BeanUtils;
+import com.ltsh.app.chat.utils.ImageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FriendAdapter extends BaseAdapter{
+public class FriendAdapter extends LtshBaseAdapter<UserFriend>{
 
 
     private Context mContext;
-    private List<UserFriend> mData = new ArrayList<>();
-
 
     public FriendAdapter(Context mContext) {
         this.mContext = mContext;
-    }
-
-    @Override
-    public int getCount() {
-        return mData.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mData.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
     }
 
     //多布局的核心，通过这个判断类别
@@ -75,11 +59,13 @@ public class FriendAdapter extends BaseAdapter{
             holder = (ViewHolder) convertView.getTag(R.id.tag_user_friend);
         }
 
-        Object obj = mData.get(position);
+        Object obj = getDataList().get(position);
         //设置下控件的值
 
         UserFriend userFriend = (UserFriend) obj;
         if(userFriend != null){
+            holder.img_friend_icon.setImageBitmap(ImageUtils.readBitMap(convertView.getContext(), R.mipmap.iv_icon_baidu));
+            holder.img_friend_icon.setVisibility(View.VISIBLE);
 //            holder.img_friend_icon.seti;
             holder.txt_friend_name.setText(userFriend.getName());
         }
@@ -94,29 +80,4 @@ public class FriendAdapter extends BaseAdapter{
         TextView txt_friend_name;
     }
 
-    //往特定位置，添加一个元素
-    public void add(int position,UserFriend item){
-        boolean isChange = false;
-        for (UserFriend message :
-                mData) {
-            if (item.getFriendUserId().intValue() == message.getFriendUserId().intValue()) {
-                BeanUtils.copyProperties(item, message);
-            }
-            isChange = true;
-        }
-        if(!isChange) {
-            mData.add(position,item);
-        }
-
-        notifyDataSetChanged();
-    }
-
-    //往特定位置，添加一个元素
-    public void addAll(int position, List<UserFriend> items){
-        for (UserFriend item :
-                items) {
-            add(position, item);
-        }
-        notifyDataSetChanged();
-    }
 }

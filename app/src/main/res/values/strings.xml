@@ -11,6 +11,7 @@
     <string name="backBtnText">&lt;</string>
     <string name="sendBtnText">发送</string>
     <item name="tag_message_info" type="id"></item>
+    <item name="tag_my_msg_item" type="id"></item>
+    <item name="tag_friend_msg_item" type="id"></item>
     <item name="tag_user_friend" type="id"></item>
-    <item name="tag_chat_view_data" type="id"></item>
 </resources>

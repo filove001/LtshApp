@@ -5,7 +5,7 @@ package com.ltsh.app.chat.config;
  */
 
 public class AppConstants {
-    public final static String SERVLCE_URL = "http://192.168.22.214:8080";
+    public final static String SERVLCE_URL = "http://192.168.31.208:8011";
     /**
      * 获取信息
      */

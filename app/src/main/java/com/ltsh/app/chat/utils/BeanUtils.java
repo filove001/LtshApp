@@ -2,6 +2,8 @@ package com.ltsh.app.chat.utils;
 
 import android.content.ContentValues;
 
+import com.ltsh.app.chat.db.DbUtils;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -43,7 +45,11 @@ public class BeanUtils {
             PropertyMethod sourcePropertyMethod = new PropertyMethod(sourceField.getName(), source.getClass());
             try {
                 Object invoke = sourcePropertyMethod.getReadMethod().invoke(source);
-                setValue(contentValues, PropertyMethod.getMethod(contentValues.getClass(), "pull"), invoke, sourcePropertyMethod.getReturnType());
+                if(invoke == null)
+                    continue;
+                String columnName = DbUtils.getColumnName(sourceField.getName(), 0);
+                setValue(contentValues, contentValues.getClass().getMethod("put", String.class, invoke.getClass()),
+                        new Object[]{columnName, invoke}, sourcePropertyMethod.getReturnType());
             } catch (Exception e) {
                 LogUtils.e(e.getMessage(), e);
             }
@@ -56,7 +62,7 @@ public class BeanUtils {
         for (int i = 0; i < sourceFields.size(); i++) {
             Field sourceField = sourceFields.get(i);
             for (int j = 0; j < targetFields.size(); j++) {
-                Field targetField = targetFields.get(i);
+                Field targetField = targetFields.get(j);
                 if(sourceField.getName().equals(targetField.getName())) {
                     PropertyMethod sourcePropertyMethod = new PropertyMethod(sourceField.getName(), source.getClass());
                     PropertyMethod targetPropertyMethod = new PropertyMethod(sourceField.getName(), target.getClass());
@@ -93,6 +99,39 @@ public class BeanUtils {
         Method method = propertyMethod.getWriteMethod();
         setValue(obj, method, value, toType);
     }
+    public static void setValue(Object obj, Method method, Object[] value, Class toType) {
+
+        try {
+            method.invoke(obj, value);
+//            if(toType == Integer.class || toType == Integer.TYPE) {
+//                method.invoke(obj, (Integer)value);
+//            } else if(toType == Double.class || toType == Double.TYPE) {
+//                method.invoke(obj, ((Number)value).doubleValue());
+//            } else if(toType == Boolean.class || toType == Boolean.TYPE) {
+//                method.invoke(obj, ((Number)value).intValue() == 0 ? false : true);
+//            } else if(toType == Byte.class || toType == Byte.TYPE) {
+//                method.invoke(obj, ((Number)value).byteValue());
+//            } else if(toType == Character.class || toType == Character.TYPE) {
+//                method.invoke(obj, ((String)value));
+//            } else if(toType == Short.class || toType == Short.TYPE) {
+//                method.invoke(obj, ((Number)value).shortValue());
+//            } else if(toType == Long.class || toType == Long.TYPE) {
+//                method.invoke(obj, ((Number)value).longValue());
+//            } else if(toType == Float.class || toType == Float.TYPE) {
+//                method.invoke(obj, ((Number)value).floatValue());
+//            } else if(toType == BigInteger.class) {
+//                throw new RuntimeException("Don't know about " + toType);
+//            } else if(toType == BigDecimal.class) {
+//                method.invoke(obj, new BigDecimal(value + ""));
+//            } else if(toType == String.class) {
+//                method.invoke(obj, String.valueOf(value));
+//            } else {
+//                throw new RuntimeException("Don't know about " + toType);
+//            }
+        } catch (Exception e) {
+            LogUtils.e(e.getMessage(), e);
+        }
+    }
     public static void setValue(Object obj, Method method, Object value, Class toType) {
         try {
             if(toType == Integer.class || toType == Integer.TYPE) {
@@ -116,7 +155,7 @@ public class BeanUtils {
             } else if(toType == BigDecimal.class) {
                 method.invoke(obj, new BigDecimal(value + ""));
             } else if(toType == String.class) {
-                method.invoke(obj, ((String)value));
+                method.invoke(obj, String.valueOf(value));
             } else {
                 throw new RuntimeException("Don't know about " + toType);
             }

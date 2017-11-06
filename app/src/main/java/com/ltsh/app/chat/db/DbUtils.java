@@ -38,10 +38,23 @@ public class DbUtils {
     }
     public static MyDBOpenHelper dbHelper;
 
-    public static void insert(Object object) {
+    public static int insert(Object object) {
         Class<?> aClass = object.getClass();
         SQLiteDatabase writableDatabase = dbHelper.getWritableDatabase();
-        writableDatabase.execSQL(getInsertSql(aClass), getValues(object));
+        ContentValues contentValues = BeanUtils.beanToContentValues(object);
+        contentValues.remove("id");
+        long insert = writableDatabase.insert(getTableName(aClass), null, contentValues);
+//        writableDatabase.execSQL(getInsertSql(aClass), getValues(object));
+//        if(insert > 0) {
+        String sql = "select last_insert_rowid() from " + getTableName(aClass);
+        Cursor cursor = writableDatabase.rawQuery(sql, null);
+        int result = -1;
+        if(cursor.moveToFirst()){
+            result = cursor.getInt(0);
+        }
+//        }
+        return result;
+
     }
     public static void update(BaseEntity object) {
         SQLiteDatabase writableDatabase = dbHelper.getWritableDatabase();
@@ -72,14 +85,11 @@ public class DbUtils {
                     list.add(map);
                 } while (cursor.moveToNext());
             }
-            cursor.close();
-            readableDatabase.close();
             return list;
         } catch (Exception e) {
             LogUtils.e(e.getMessage(), e);
         } finally {
             close(cursor);
-            close(readableDatabase);
         }
         return new ArrayList<>();
     }
@@ -96,7 +106,6 @@ public class DbUtils {
             LogUtils.e(e.getMessage(), e);
         } finally {
             close(cursor);
-            close(readableDatabase);
         }
         return new ArrayList<>();
     }
@@ -120,7 +129,6 @@ public class DbUtils {
             LogUtils.e(e.getMessage(), e);
         } finally {
             close(cursor);
-            close(readableDatabase);
         }
         return new ArrayList<>();
     }
@@ -212,8 +220,7 @@ public class DbUtils {
                 Object o = propertyMethod.getReadMethod().invoke(object);
                 list.add(o);
             } catch (Exception e) {
-                e.printStackTrace();
-//                LogUtils.e(DbUtils.class.getName(),e.getMessage(), e);
+                LogUtils.e(e.getMessage(), e);
             }
         }
         return list.toArray();

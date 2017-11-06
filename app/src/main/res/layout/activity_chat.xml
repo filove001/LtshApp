@@ -45,6 +45,19 @@
             android:background="@color/div_white" />
 
     </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/chat_tab_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="48dp"
+        android:layout_marginBottom="56dp"
+        android:background="@color/bg_white"
+        >
+        <ListView
+            android:id="@+id/chat_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
 
 
     <LinearLayout
@@ -147,10 +160,10 @@
 
     <FrameLayout
         android:id="@+id/ly_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_above="@id/div_tab_bar"
-        android:layout_below="@id/ly_top_bar"/>
+        android:layout_below="@id/ly_top_bar" />
 
 
 </RelativeLayout>

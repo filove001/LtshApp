@@ -1,29 +1,18 @@
 package com.ltsh.app.chat.entity;
 
-import com.ltsh.app.chat.db.NoDbColumn;
-
-import java.util.Date;
-import java.util.List;
-
 import lombok.Data;
 
+import java.io.Serializable;
+import java.util.List;
+
 /**
- * Created by Random on 2017/9/19.
+ * Created by Random on 2017/07/26.
  */
-
-public class MessageInfo extends BaseEntity {
-
-    /**
-     * 创建用户名称
-     */
-    private String createByName;
-
-
+public class MessageSendReq {
     /**
      * 消息内容
      */
     private String msgContext;
-
     /**
      * 模板id
      */
@@ -32,13 +21,12 @@ public class MessageInfo extends BaseEntity {
      * 消息类型
      */
     private Integer msgType;
-
     /**
-     * 接收人
+     * 接受人
      */
     private Integer toUser;
     /**
-     * 接收用户名称
+     * 接受人姓名
      */
     private String toUserName;
     /**
@@ -50,35 +38,9 @@ public class MessageInfo extends BaseEntity {
      */
     private String sendDate;
     /**
-     * 读取时间
+     * 短信标志
      */
-    private String readTime;
-
-    /**
-     * 状态
-     */
-    private String status;
-    /**
-     * 图片List
-     */
-    @NoDbColumn
-    private List<String> imageList;
-
-    public String getCreateByName() {
-        return createByName;
-    }
-
-    public void setCreateByName(String createByName) {
-        this.createByName = createByName;
-    }
-
-    public String getToUserName() {
-        return toUserName;
-    }
-
-    public void setToUserName(String toUserName) {
-        this.toUserName = toUserName;
-    }
+    private String flag;
 
     public String getMsgContext() {
         return msgContext;
@@ -112,6 +74,14 @@ public class MessageInfo extends BaseEntity {
         this.toUser = toUser;
     }
 
+    public String getToUserName() {
+        return toUserName;
+    }
+
+    public void setToUserName(String toUserName) {
+        this.toUserName = toUserName;
+    }
+
     public Integer getSendType() {
         return sendType;
     }
@@ -128,27 +98,11 @@ public class MessageInfo extends BaseEntity {
         this.sendDate = sendDate;
     }
 
-    public String getReadTime() {
-        return readTime;
+    public String getFlag() {
+        return flag;
     }
 
-    public void setReadTime(String readTime) {
-        this.readTime = readTime;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public List<String> getImageList() {
-        return imageList;
-    }
-
-    public void setImageList(List<String> imageList) {
-        this.imageList = imageList;
+    public void setFlag(String flag) {
+        this.flag = flag;
     }
 }

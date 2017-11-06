@@ -13,6 +13,8 @@ import com.ltsh.app.chat.entity.viewbean.MessageItem;
 import com.ltsh.app.chat.utils.JsonUtils;
 import com.ltsh.app.chat.utils.LogUtils;
 
+import java.util.Calendar;
+
 /**
  * Created by Random on 2017/10/13.
  */
@@ -25,7 +27,6 @@ public class ChatItemClickListener implements ListView.OnItemClickListener {
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        LogUtils.i(String.format("position:%s,id:%s", position + "", id + ""));
         MessageItem item = (MessageItem)CacheObject.messageAdapter.getItem(position);
         UserFriend userFriend = new UserFriend();
         userFriend.setName(item.getCreateByName());

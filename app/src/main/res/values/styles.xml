@@ -19,7 +19,7 @@
         <item name="android:layout_width">20dp</item>
         <item name="android:layout_height">20dp</item>
         <item name="android:background">@mipmap/bg_num</item>
-        <item name="android:layout_marginLeft">-10dp</item>
+        <item name="android:layout_marginLeft">-20dp</item>
         <item name="android:textSize">12sp</item>
 
         <item name="android:gravity">center</item>
