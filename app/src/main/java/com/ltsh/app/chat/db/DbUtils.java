@@ -51,10 +51,16 @@ public class DbUtils {
         int result = -1;
         if(cursor.moveToFirst()){
             result = cursor.getInt(0);
+            cursor.close();
         }
 //        }
         return result;
 
+    }
+
+    public static void execSQL(String sql, Object[] args) {
+        SQLiteDatabase writableDatabase = dbHelper.getWritableDatabase();
+        writableDatabase.execSQL(sql, args);
     }
     public static void update(BaseEntity object) {
         SQLiteDatabase writableDatabase = dbHelper.getWritableDatabase();

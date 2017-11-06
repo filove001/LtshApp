@@ -25,4 +25,8 @@ public class MessageItemDao {
         final List<MessageItem> messageItemList = DbUtils.rawQuery(MessageItem.class,sql, new String[]{userId + ""});
         return messageItemList;
     }
+    public static void updateMessageRead(Integer createBy, Integer toUser) {
+        String sql = "update message_info set status='YD' where (status='FSZ' or status='WD') and create_by=? and to_user=?";
+        DbUtils.execSQL(sql, new Object[]{createBy, toUser});
+    }
 }

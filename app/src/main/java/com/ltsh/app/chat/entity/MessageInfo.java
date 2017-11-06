@@ -5,7 +5,6 @@ import com.ltsh.app.chat.db.NoDbColumn;
 import java.util.Date;
 import java.util.List;
 
-import lombok.Data;
 
 /**
  * Created by Random on 2017/9/19.

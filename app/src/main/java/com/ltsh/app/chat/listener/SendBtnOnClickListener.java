@@ -10,16 +10,15 @@ import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.db.DbUtils;
 import com.ltsh.app.chat.entity.MessageInfo;
-import com.ltsh.app.chat.entity.MessageSendReq;
+import com.ltsh.app.chat.enums.StatusEnums;
+import com.ltsh.app.chat.req.MessageSendReq;
 import com.ltsh.app.chat.entity.UserFriend;
-import com.ltsh.app.chat.entity.common.Result;
 import com.ltsh.app.chat.utils.AppHttpClient;
 import com.ltsh.app.chat.utils.BeanUtils;
 import com.ltsh.app.chat.utils.DateUtils;
 import com.ltsh.app.chat.utils.JsonUtils;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -47,6 +46,7 @@ public class SendBtnOnClickListener implements View.OnClickListener {
         messageInfo.setCreateBy(CacheObject.userToken.getId());
         messageInfo.setCreateByName(CacheObject.userToken.getName());
         messageInfo.setCreateTime(DateUtils.format(new Date(), DateUtils.YYYY_MM_DD_HH_MM_SS));
+        messageInfo.setStatus(StatusEnums.YFS.getValue());
         int id = DbUtils.insert(messageInfo);
         messageInfo.setId(id);
         CacheObject.chatAdapter.add(messageInfo, true);

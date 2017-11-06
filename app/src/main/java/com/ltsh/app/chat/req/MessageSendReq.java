@@ -1,6 +1,5 @@
-package com.ltsh.app.chat.entity;
+package com.ltsh.app.chat.req;
 
-import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
@@ -8,7 +7,7 @@ import java.util.List;
 /**
  * Created by Random on 2017/07/26.
  */
-public class MessageSendReq {
+public class MessageSendReq extends BaseReq {
     /**
      * 消息内容
      */
