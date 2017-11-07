@@ -1,6 +1,6 @@
-package com.ltsh.app.chat.db;
+package com.ltsh.app.chat.dao;
 
-import com.ltsh.app.chat.config.CacheObject;
+import com.ltsh.app.chat.utils.db.DbUtils;
 import com.ltsh.app.chat.entity.viewbean.MessageItem;
 
 import java.util.List;
@@ -22,11 +22,11 @@ public class MessageItemDao {
                 "FROM message_info msg " +
                 "WHERE msg.to_user=? " +
                 "GROUP BY msg.create_by,msg.create_by_name order by id desc";
-        final List<MessageItem> messageItemList = DbUtils.rawQuery(MessageItem.class,sql, new String[]{userId + ""});
+        final List<MessageItem> messageItemList = BaseDao.rawQuery(MessageItem.class,sql, new String[]{userId + ""});
         return messageItemList;
     }
     public static void updateMessageRead(Integer createBy, Integer toUser) {
-        String sql = "update message_info set status='YD' where (status='FSZ' or status='WD') and create_by=? and to_user=?";
-        DbUtils.execSQL(sql, new Object[]{createBy, toUser});
+        String sql = "update message_info set status='YD' where (status='FSZ' or status='WD') and ((create_by=? and to_user=?) or (to_user=? and create_by=?))";
+        BaseDao.execSQL(sql, new Object[]{createBy, toUser, createBy, toUser});
     }
 }

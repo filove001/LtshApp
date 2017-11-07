@@ -8,15 +8,16 @@ import android.widget.EditText;
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.config.CacheObject;
-import com.ltsh.app.chat.db.DbUtils;
+import com.ltsh.app.chat.dao.BaseDao;
 import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.enums.StatusEnums;
 import com.ltsh.app.chat.req.MessageSendReq;
 import com.ltsh.app.chat.entity.UserFriend;
-import com.ltsh.app.chat.utils.AppHttpClient;
+import com.ltsh.app.chat.utils.http.AppHttpClient;
 import com.ltsh.app.chat.utils.BeanUtils;
-import com.ltsh.app.chat.utils.DateUtils;
-import com.ltsh.app.chat.utils.JsonUtils;
+
+import org.ltsh.common.util.Dates;
+import org.ltsh.common.util.JsonUtils;
 
 import java.util.Date;
 import java.util.Map;
@@ -45,14 +46,14 @@ public class SendBtnOnClickListener implements View.OnClickListener {
         messageInfo.setSendType(0);
         messageInfo.setCreateBy(CacheObject.userToken.getId());
         messageInfo.setCreateByName(CacheObject.userToken.getName());
-        messageInfo.setCreateTime(DateUtils.format(new Date(), DateUtils.YYYY_MM_DD_HH_MM_SS));
+        messageInfo.setCreateTime(Dates.toStr(new Date(), Dates.YYYY_MM_DD_HH_MM_SS));
         messageInfo.setStatus(StatusEnums.YFS.getValue());
-        int id = DbUtils.insert(messageInfo);
+        int id = BaseDao.insert(messageInfo);
         messageInfo.setId(id);
         CacheObject.chatAdapter.add(messageInfo, true);
         MessageSendReq req = new MessageSendReq();
         BeanUtils.copyProperties(messageInfo, req);
-        AppHttpClient.threadPost(AppConstants.SERVLCE_URL, "/chat/message/sendMessage", JsonUtils.fromJson(JsonUtils.toJson(req),Map.class), activity, null);
+        AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.SEND_MESSAGE_URL, JsonUtils.fromJson(JsonUtils.toJson(req),Map.class), activity, null);
         edSendMsg.setText("");
     }
 

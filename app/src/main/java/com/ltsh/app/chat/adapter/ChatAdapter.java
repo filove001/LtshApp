@@ -6,8 +6,6 @@ package com.ltsh.app.chat.adapter;
 
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +16,7 @@ import android.widget.TextView;
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.entity.MessageInfo;
-import com.ltsh.app.chat.entity.viewbean.MessageItem;
 import com.ltsh.app.chat.utils.ImageUtils;
-import com.ltsh.app.chat.utils.LogUtils;
-
-import java.io.InputStream;
 
 public class ChatAdapter extends LtshBaseAdapter{
 

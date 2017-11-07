@@ -1,4 +1,4 @@
-package com.ltsh.app.chat.db;
+package com.ltsh.app.chat.utils.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,7 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.entity.UserToken;
-import com.ltsh.app.chat.utils.LogUtils;
+
+import org.ltsh.common.util.LogUtils;
+import org.ltsh.util.utils.db.DbColumn;
 
 import java.util.List;
 
@@ -39,7 +41,7 @@ public class MyDBOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         //db.execSQL("ALTER TABLE person ADD phone VARCHAR(12) NULL");
-        LogUtils.i("oldVersion:" + oldVersion + "newVersion:" + newVersion);
+        LogUtils.info("oldVersion:" + oldVersion + "newVersion:" + newVersion);
 
     }
 }

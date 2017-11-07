@@ -12,14 +12,16 @@ import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.activity.ContextActivity;
 import com.ltsh.app.chat.config.CacheObject;
-import com.ltsh.app.chat.db.DbUtils;
+import com.ltsh.app.chat.dao.BaseDao;
 import com.ltsh.app.chat.entity.UserToken;
 import com.ltsh.app.chat.entity.common.Result;
 import com.ltsh.app.chat.enums.ResultCodeEnum;
-import com.ltsh.app.chat.utils.AppHttpClient;
-import com.ltsh.app.chat.utils.JsonUtils;
-import com.ltsh.app.chat.utils.LogUtils;
-import com.ltsh.app.chat.utils.MD5Util;
+import com.ltsh.app.chat.utils.http.AppHttpClient;
+
+
+import org.ltsh.common.util.JsonUtils;
+import org.ltsh.common.util.LogUtils;
+import org.ltsh.common.util.security.MD5Util;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,13 +39,13 @@ public class LoginOnClickListener implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        EditText editLoginName = (EditText)activity.findViewById(R.id.editLoginName);
+        EditText editLoginName = (EditText)activity.findViewById(R.id.login_edit_login_name);
         final String loginName = editLoginName.getText().toString();
-        EditText editPassword = (EditText)activity.findViewById(R.id.editPassword);
+        EditText editPassword = (EditText)activity.findViewById(R.id.login_edit_password);
         final String password = editPassword.getText().toString();
 
         final Map map = new HashMap();
-        LogUtils.i("loginName:"+loginName.toString() + "," + "password:"+password.toString());
+        LogUtils.info("loginName:"+loginName.toString() + "," + "password:"+password.toString());
         map.put("loginName", loginName.toString());
 
         new Thread(new Runnable() {
@@ -52,7 +54,7 @@ public class LoginOnClickListener implements View.OnClickListener {
                 Result<String[]> random = AppHttpClient.getRandom(AppConstants.SERVLCE_URL);
                 if(random.getCode().equals("000000")) {
                     String[] content = random.getContent();
-                    map.put("password", MD5Util.encoder("ltshChat:" + MD5Util.encoder("chat:"+password.toString()) + content[1]));
+                    map.put("password", MD5Util.encoder("ltshChat:" + MD5Util.encoder("chat:"+MD5Util.encoder("ltshUser:" + password.toString())) + content[1]));
                     map.put("passwordRandomStr", content[0]);
                 }
                 AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.LOGIN_URL, map, activity, new CallBackInterface() {
@@ -61,8 +63,8 @@ public class LoginOnClickListener implements View.OnClickListener {
                         if(ResultCodeEnum.SUCCESS.getCode().equals(result.getCode())) {
                             Map resultMap = (Map)result.getContent();
                             CacheObject.userToken = JsonUtils.fromJson(JsonUtils.toJson(resultMap), UserToken.class);
-                            DbUtils.dbHelper.getWritableDatabase().delete(DbUtils.getTableName(UserToken.class), null, null);
-                            DbUtils.insert(CacheObject.userToken);
+                            BaseDao.delete(UserToken.class, null, null);
+                            BaseDao.insert(CacheObject.userToken);
                             Intent intent = new Intent("android.intent.action.CONTEXT");
                             intent.setClassName(activity, ContextActivity.class.getName());
                             activity.startActivity(intent);

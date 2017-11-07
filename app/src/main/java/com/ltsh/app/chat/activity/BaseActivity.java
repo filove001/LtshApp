@@ -9,8 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 
 import com.ltsh.app.chat.MyAlertDiaLog;
-import com.ltsh.app.chat.config.CacheObject;
-import com.ltsh.app.chat.utils.LogUtils;
+
+import org.ltsh.util.utils.LogUtils;
 
 import java.util.Set;
 
@@ -18,7 +18,7 @@ import java.util.Set;
  * Created by Random on 2017/10/16.
  */
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends AppCompatActivity {
     public static Set<Activity> activitySet = new ArraySet<>();
 
     @Override
@@ -43,7 +43,7 @@ public class BaseActivity extends Activity {
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();
-        LogUtils.i("按下了back键   onBackPressed()");
+        LogUtils.info("按下了back键   onBackPressed()");
         new MyAlertDiaLog(){
             @Override
             public void onConfirm(Activity mContext) {

@@ -1,14 +1,16 @@
-package com.ltsh.app.chat.utils;
+package com.ltsh.app.chat.utils.http;
 
 
 import com.ltsh.app.chat.entity.common.Result;
 import com.ltsh.app.chat.enums.ResultCodeEnum;
 
+import org.ltsh.common.util.JsonUtils;
+import org.ltsh.util.utils.LogUtils;
+
 import okhttp3.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -61,7 +63,7 @@ public class OkHttpUtils {
                 throw new IOException("Unexpected code " + response);
             }
         } catch (Exception e) {
-            LogUtils.e(e.getMessage(), e);
+            LogUtils.error(e.getMessage(), e);
         } finally {
             if(response != null) {
                 response.close();

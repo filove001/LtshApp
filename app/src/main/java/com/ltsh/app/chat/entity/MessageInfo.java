@@ -1,9 +1,5 @@
 package com.ltsh.app.chat.entity;
 
-import com.ltsh.app.chat.db.NoDbColumn;
-
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -57,11 +53,7 @@ public class MessageInfo extends BaseEntity {
      * 状态
      */
     private String status;
-    /**
-     * 图片List
-     */
-    @NoDbColumn
-    private List<String> imageList;
+
 
     public String getCreateByName() {
         return createByName;
@@ -143,11 +135,4 @@ public class MessageInfo extends BaseEntity {
         this.status = status;
     }
 
-    public List<String> getImageList() {
-        return imageList;
-    }
-
-    public void setImageList(List<String> imageList) {
-        this.imageList = imageList;
-    }
 }

@@ -26,10 +26,11 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme" >
 
         <activity
-            android:name="com.ltsh.app.chat.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
@@ -47,9 +48,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.ltsh.app.chat.activity.ContextActivity"
+            android:name="com.ltsh.app.chat.activity.RegisterActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.REGISTER" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.ltsh.app.chat.activity.ContextActivity"
+            android:label="@string/tab_menu_profile"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.CONTEXT" />
                 <category android:name="android.intent.category.LAUNCHER" />

@@ -4,26 +4,16 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.constraint.solver.Cache;
-import android.widget.Toast;
 
-import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.config.CacheObject;
-import com.ltsh.app.chat.db.DbUtils;
-import com.ltsh.app.chat.db.MessageItemDao;
-import com.ltsh.app.chat.entity.MessageInfo;
+import com.ltsh.app.chat.dao.BaseDao;
+import com.ltsh.app.chat.dao.MessageItemDao;
 import com.ltsh.app.chat.entity.UserFriend;
-import com.ltsh.app.chat.entity.common.Result;
 import com.ltsh.app.chat.entity.viewbean.MessageItem;
-import com.ltsh.app.chat.enums.ResultCodeEnum;
-import com.ltsh.app.chat.utils.AppHttpClient;
-import com.ltsh.app.chat.utils.JsonUtils;
-import com.ltsh.app.chat.utils.LogUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.ltsh.common.util.LogUtils;
+
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Random on 2017/9/27.
@@ -42,7 +32,7 @@ public class MsgListService extends IntentService {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        LogUtils.i("onBind方法被调用!");
+        LogUtils.info("onBind方法被调用!");
         return null;
     }
 
@@ -59,7 +49,7 @@ public class MsgListService extends IntentService {
                 });
             }
             if(CacheObject.friendAdapter != null) {
-                final List<UserFriend> userFriendList = DbUtils.query(UserFriend.class, "create_by=?", new String[]{CacheObject.userToken.getId() + ""}, null);
+                final List<UserFriend> userFriendList = BaseDao.query(UserFriend.class, "create_by=?", new String[]{CacheObject.userToken.getId() + ""}, null);
                 CacheObject.handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -69,9 +59,9 @@ public class MsgListService extends IntentService {
             }
 
             try {
-                Thread.sleep(2000L);
+                Thread.sleep(3000L);
             } catch (InterruptedException e) {
-                LogUtils.e(e.getMessage(), e);
+                LogUtils.error(e.getMessage(), e);
             }
         }
 
@@ -80,7 +70,7 @@ public class MsgListService extends IntentService {
     //Service被创建时调用
     @Override
     public void onCreate() {
-        LogUtils.i("onCreate方法被调用!");
+        LogUtils.info("onCreate方法被调用!");
         super.onCreate();
     }
 
@@ -95,7 +85,7 @@ public class MsgListService extends IntentService {
     //Service被关闭之前回调
     @Override
     public void onDestroy() {
-        LogUtils.i("onDestory方法被调用!");
+        LogUtils.info("onDestory方法被调用!");
         isStart = false;
         super.onDestroy();
 

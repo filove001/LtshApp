@@ -2,10 +2,12 @@ package com.ltsh.app.chat.utils;
 
 import android.content.ContentValues;
 
-import com.ltsh.app.chat.db.DbUtils;
+import com.ltsh.app.chat.utils.db.DbUtils;
+
+import org.ltsh.util.utils.LogUtils;
+import org.ltsh.util.utils.db.PropertyMethod;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -13,9 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import static android.R.attr.value;
 
 /**
  * Created by Random on 2017/11/3.
@@ -32,7 +31,7 @@ public class BeanUtils {
                 Object invoke = sourcePropertyMethod.getReadMethod().invoke(source);
                 map.put(sourceField.getName(), invoke);
             } catch (Exception e) {
-                LogUtils.e(e.getMessage(), e);
+                LogUtils.error(e.getMessage(), e);
             }
         }
         return map;
@@ -47,11 +46,11 @@ public class BeanUtils {
                 Object invoke = sourcePropertyMethod.getReadMethod().invoke(source);
                 if(invoke == null)
                     continue;
-                String columnName = DbUtils.getColumnName(sourceField.getName(), 0);
+                String columnName = DbUtils.getColumnName(sourceField.getName());
                 setValue(contentValues, contentValues.getClass().getMethod("put", String.class, invoke.getClass()),
                         new Object[]{columnName, invoke}, sourcePropertyMethod.getReturnType());
             } catch (Exception e) {
-                LogUtils.e(e.getMessage(), e);
+                LogUtils.error(e.getMessage(), e);
             }
         }
         return contentValues;
@@ -70,7 +69,7 @@ public class BeanUtils {
                         Object invoke = sourcePropertyMethod.getReadMethod().invoke(source);
                         targetPropertyMethod.getWriteMethod().invoke(target, invoke);
                     } catch (Exception e) {
-                        LogUtils.e(e.getMessage(), e);
+                        LogUtils.error(e.getMessage(), e);
                     }
                     break;
                 }
@@ -129,7 +128,7 @@ public class BeanUtils {
 //                throw new RuntimeException("Don't know about " + toType);
 //            }
         } catch (Exception e) {
-            LogUtils.e(e.getMessage(), e);
+            LogUtils.error(e.getMessage(), e);
         }
     }
     public static void setValue(Object obj, Method method, Object value, Class toType) {
@@ -160,7 +159,7 @@ public class BeanUtils {
                 throw new RuntimeException("Don't know about " + toType);
             }
         } catch (Exception e) {
-            LogUtils.e(e.getMessage(), e);
+            LogUtils.error(e.getMessage(), e);
         }
     }
 

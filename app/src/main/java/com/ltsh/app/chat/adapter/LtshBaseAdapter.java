@@ -88,7 +88,7 @@ public abstract class LtshBaseAdapter<T extends BaseEntity> extends android.widg
                 dataList.add(item);
             }
         } else {
-            return false;
+            return isChange;
         }
         if(isChannel) {
             notifyDataSetChanged();

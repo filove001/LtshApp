@@ -1,4 +1,4 @@
-package com.ltsh.app.chat.utils;
+package com.ltsh.app.chat.utils.http;
 
 
 
@@ -9,25 +9,27 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.ltsh.app.chat.CallBackInterface;
-import com.ltsh.app.chat.MainActivity;
 import com.ltsh.app.chat.activity.BaseActivity;
-import com.ltsh.app.chat.activity.ContextActivity;
 import com.ltsh.app.chat.activity.LoginActivity;
 import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.config.CacheObject;
-import com.ltsh.app.chat.db.DbUtils;
 import com.ltsh.app.chat.entity.BaseEntity;
-import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.entity.common.Result;
 import com.ltsh.app.chat.enums.ResultCodeEnum;
 
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+
+import org.ltsh.common.util.JsonUtils;
+import org.ltsh.common.util.LogUtils;
+import org.ltsh.common.util.StringUtils;
+import org.ltsh.common.util.security.AES;
+import org.ltsh.common.util.security.SignUtils;
+
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
 
 /**
  * Created by Random on 2017/10/11.
@@ -42,11 +44,11 @@ public class AppHttpClient {
             json.put("token", CacheObject.userToken.getToken());
         }
         String signStr = SignUtils.getSignStr(json);
-        LogUtils.i("签名明文:" + signStr);
+        LogUtils.info("签名明文:" + signStr);
         String sign = SignUtils.getSign(signStr, "123456", randomValue);
-        LogUtils.i("签名:" + sign +", randomValue:" + randomValue);
+        LogUtils.info("签名:" + sign +", randomValue:" + randomValue);
         json.put("signInfo", sign);
-        LogUtils.i(String.format("请求连接:%s,请求参数:%s",baseUrl + url, json));
+        LogUtils.info(String.format("请求连接:%s,请求参数:%s",baseUrl + url, json));
         return OkHttpUtils.post(baseUrl + url, json);
     }
     public static String post(String baseUrl,String url, Map<String, Object> json) {
@@ -64,7 +66,7 @@ public class AppHttpClient {
                             callBackInterface.callBack(mapResult);
                         }
                     } catch (Exception e) {
-                        LogUtils.e(e.getMessage(), e);
+                        LogUtils.error(e.getMessage(), e);
                     }
                 } else {
                     CacheObject.handler.post(new Runnable() {
@@ -90,7 +92,7 @@ public class AppHttpClient {
             json.put("randomKey", random[0]);
 
             String post = post(baseUrl, url, json, random[1]);
-            LogUtils.i("返回参数:" + post);
+            LogUtils.info("返回参数:" + post);
             Map map = JsonUtils.fromJson(post, Map.class);
             if(ResultCodeEnum.SUCCESS.getCode().equals(map.get("code"))) {
                 return new Result<>((String)map.get("code"), (String)map.get("message"), (Map)map.get("content"));
@@ -127,7 +129,7 @@ public class AppHttpClient {
         String uuid = StringUtils.getUUID();
         params.put("uuid", uuid);
         String post = post(baseUrl, url, params);
-        LogUtils.i("返回参数:" + post);
+        LogUtils.info("返回参数:" + post);
         Map map = JsonUtils.fromJson(post, Map.class);
         if(!map.get("code").equals("000000")) {
             return new Result<>((String)map.get("code"), (String)map.get("message"));
@@ -140,7 +142,7 @@ public class AppHttpClient {
             str[0] = AES.decrypt(randomKey, uuid);
             str[1] = AES.decrypt(randomValue, uuid);
         } catch (Exception e) {
-            LogUtils.e(e.getMessage(), e);
+            LogUtils.error(e.getMessage(), e);
         }
         return new Result<>(str);
     }

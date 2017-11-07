@@ -1,6 +1,5 @@
 package com.ltsh.app.chat.fragment;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,21 +10,19 @@ import android.widget.ListView;
 
 import com.ltsh.app.chat.CallBackInterface;
 import com.ltsh.app.chat.adapter.FriendAdapter;
-import com.ltsh.app.chat.adapter.MessageAdapter;
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.config.AppConstants;
-import com.ltsh.app.chat.db.DbUtils;
-import com.ltsh.app.chat.entity.MessageInfo;
+import com.ltsh.app.chat.dao.BaseDao;
 import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.entity.common.Result;
 import com.ltsh.app.chat.enums.ResultCodeEnum;
 import com.ltsh.app.chat.listener.FriendItemClickListener;
-import com.ltsh.app.chat.utils.AppHttpClient;
-import com.ltsh.app.chat.utils.JsonUtils;
-import com.ltsh.app.chat.utils.LogUtils;
+import com.ltsh.app.chat.utils.http.AppHttpClient;
 
-import java.util.ArrayList;
+import org.ltsh.common.util.JsonUtils;
+import org.ltsh.util.utils.LogUtils;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,16 +43,16 @@ public class FriendFragment extends Fragment {
             List resultList = (List)content.get("resultList");
             for (Object obj : resultList) {
                 final UserFriend userFriend = JsonUtils.fromJson(JsonUtils.toJson(obj), UserFriend.class);
-                UserFriend single = DbUtils.single(UserFriend.class, "friend_user_id=? and create_by=?", new String[]{userFriend.getFriendUserId() + "", userFriend.getCreateBy() + ""});
+                UserFriend single = BaseDao.single(UserFriend.class, "friend_user_id=? and create_by=?", new String[]{userFriend.getFriendUserId() + "", userFriend.getCreateBy() + ""});
                 if(single == null) {
-                    DbUtils.insert(userFriend);
+                    BaseDao.insert(userFriend);
                 } else {
                     userFriend.setId(single.getId());
-                    DbUtils.update(userFriend);
+                    BaseDao.update(userFriend);
                 }
             }
         } else {
-            LogUtils.e(mapResult.getCode() + ":" + mapResult.getMessage());
+            LogUtils.error(mapResult.getCode() + ":" + mapResult.getMessage());
         }
     }
     public void initData() {

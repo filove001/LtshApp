@@ -5,15 +5,24 @@ package com.ltsh.app.chat.config;
  */
 
 public class AppConstants {
-    public final static String SERVLCE_URL = "http://192.168.31.208:8011";
+//    public final static String SERVLCE_URL = "http://192.168.31.208:8013";
+    public final static String SERVLCE_URL = "http://192.168.22.214:8013";
     /**
      * 获取信息
      */
     public final static String GET_MESSAGE_URL = "/chat/message/getMessage";
     /**
+     * 获取信息
+     */
+    public final static String SEND_MESSAGE_URL = "/chat/message/sendMessage";
+    /**
      * 登录url
      */
     public final static String LOGIN_URL = "/chat/login/loginVerify";
+    /**
+     * 注册url
+     */
+    public final static String REGISTER_URL = "/chat/user/register";
     /**
      * 获取随机数
      */

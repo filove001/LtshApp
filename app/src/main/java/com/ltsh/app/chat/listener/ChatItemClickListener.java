@@ -10,10 +10,8 @@ import com.ltsh.app.chat.activity.ChatActivity;
 import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.entity.viewbean.MessageItem;
-import com.ltsh.app.chat.utils.JsonUtils;
-import com.ltsh.app.chat.utils.LogUtils;
 
-import java.util.Calendar;
+import org.ltsh.common.util.JsonUtils;
 
 /**
  * Created by Random on 2017/10/13.

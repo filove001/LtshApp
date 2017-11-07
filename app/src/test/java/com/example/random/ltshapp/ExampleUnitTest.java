@@ -1,11 +1,9 @@
 package com.example.random.ltshapp;
 
-import com.ltsh.app.chat.db.DbColumn;
-import com.ltsh.app.chat.db.DbUtils;
+import com.ltsh.app.chat.utils.db.DbUtils;
 import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.entity.UserToken;
-import com.ltsh.app.chat.utils.JsonUtils;
 
 
 import org.junit.Test;

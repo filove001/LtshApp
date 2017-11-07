@@ -10,16 +10,8 @@ import android.widget.ListView;
 
 import com.ltsh.app.chat.adapter.MessageAdapter;
 import com.ltsh.app.chat.R;
-import com.ltsh.app.chat.db.DbUtils;
-import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.config.CacheObject;
-import com.ltsh.app.chat.entity.viewbean.MessageItem;
 import com.ltsh.app.chat.listener.ChatItemClickListener;
-import com.ltsh.app.chat.listener.FriendItemClickListener;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Jay on 2015/8/30 0030.

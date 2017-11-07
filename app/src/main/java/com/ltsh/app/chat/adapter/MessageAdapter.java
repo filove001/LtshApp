@@ -9,22 +9,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ltsh.app.chat.R;
-import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.entity.viewbean.MessageItem;
 import com.ltsh.app.chat.utils.BeanUtils;
-import com.ltsh.app.chat.utils.DateUtils;
 import com.ltsh.app.chat.utils.ImageUtils;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 public class MessageAdapter extends LtshBaseAdapter<MessageItem>{
 

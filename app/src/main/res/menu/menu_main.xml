@@ -1,6 +1,11 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context="com.ltsh.app.chat.MainActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/group">
+        <item android:id="@+id/group_one" android:title="添加好友">
+        </item>
+        <item android:id="@+id/group_two" android:title="用户信息">
+        </item>
+        <item android:id="@+id/group_three" android:title="退出登录">
+        </item>
+    </group>
 </menu>

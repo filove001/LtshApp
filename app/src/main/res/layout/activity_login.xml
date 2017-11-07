@@ -6,27 +6,40 @@
     android:orientation="vertical"
     android:showDividers="middle"
     android:dividerPadding="10dp"
+    android:background="@color/bg_white"
     tools:context="com.ltsh.app.chat.activity.LoginActivity" >
 
 
     <EditText
-        android:id="@+id/editLoginName"
+        android:id="@+id/login_edit_login_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:textColorHint="#666666"
         android:hint="账号"/>
 
     <EditText
-        android:id="@+id/editPassword"
+        android:id="@+id/login_edit_password"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:textColorHint="#666666"
         android:inputType="textPassword"
         android:hint="密码"/>
     <Button
-        android:id="@+id/loginBtn"
+        android:id="@+id/submit_btn"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:width="120px"
         android:height="80px"
         android:text="登录"
+        />
+    <Button
+        android:id="@+id/reg_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:width="120px"
+        android:height="80px"
+        android:text="注册"
         />
 </LinearLayout>

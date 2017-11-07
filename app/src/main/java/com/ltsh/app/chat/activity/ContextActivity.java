@@ -6,11 +6,16 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.ltsh.app.chat.dao.BaseDao;
+import com.ltsh.app.chat.entity.UserToken;
 import com.ltsh.app.chat.fragment.FriendFragment;
 import com.ltsh.app.chat.fragment.ChatListFragment;
 import com.ltsh.app.chat.R;
@@ -44,6 +49,37 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
 
     private Intent receiveMessageService;
     private Intent msgListService;
+
+    @Override
+     public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        //填充选项菜单（读取XML文件、解析、加载到Menu组件上）
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //四个参数的含义。1，group的id,2,item的id,3,是否排序，4，将要显示的内容
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.group_one:
+                Toast.makeText(ContextActivity.this, "添加好友", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.group_two:
+                Toast.makeText(ContextActivity.this, "用户信息", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.group_three:
+                Toast.makeText(ContextActivity.this, "退出登录", Toast.LENGTH_SHORT).show();
+                CacheObject.userToken = null;
+                BaseDao.delete(UserToken.class, null, null);
+                Intent loginIntent = new Intent("android.intent.action.LOGIN");
+                loginIntent.setClassName(this, LoginActivity.class.getName());
+                startActivity(loginIntent);
+                finish();
+                break;
+        }
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

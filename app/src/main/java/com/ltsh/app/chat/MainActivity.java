@@ -3,15 +3,17 @@ package com.ltsh.app.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 
 import com.ltsh.app.chat.activity.BaseActivity;
 import com.ltsh.app.chat.activity.ContextActivity;
 import com.ltsh.app.chat.activity.LoginActivity;
 import com.ltsh.app.chat.config.CacheObject;
-import com.ltsh.app.chat.db.DbUtils;
+import com.ltsh.app.chat.dao.BaseDao;
 import com.ltsh.app.chat.entity.UserToken;
-import com.ltsh.app.chat.utils.AppInit;
-import com.ltsh.app.chat.utils.LogUtils;
+import com.ltsh.app.chat.config.AppInit;
+
+import org.ltsh.util.utils.LogUtils;
 
 import java.util.List;
 
@@ -25,10 +27,10 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_main);
         AppInit.init(this);
 
-        List<UserToken> list = DbUtils.query(UserToken.class, null, null, null);
+        List<UserToken> list = BaseDao.query(UserToken.class, null, null, null);
         if(list != null && !list.isEmpty()) {
             CacheObject.userToken = list.get(0);
             contextIntent = new Intent("android.intent.action.CONTEXT");
@@ -51,7 +53,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        LogUtils.i("按下了back键   onBackPressed()");
+        LogUtils.info("按下了back键   onBackPressed()");
 
     }
 
@@ -61,6 +63,6 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        LogUtils.i("执行 onDestroy()");
+        LogUtils.info("执行 onDestroy()");
     }
 }
