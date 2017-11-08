@@ -96,5 +96,8 @@ public class MessageAdapter extends LtshBaseAdapter<MessageItem>{
         }
         return false;
     }
-
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+    }
 }

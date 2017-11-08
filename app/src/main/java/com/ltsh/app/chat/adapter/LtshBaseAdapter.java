@@ -116,4 +116,9 @@ public abstract class LtshBaseAdapter<T extends BaseEntity> extends android.widg
     public void addAll(List<T> items){
         addAll(null, items);
     }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+    }
 }

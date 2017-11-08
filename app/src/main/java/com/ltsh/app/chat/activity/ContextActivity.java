@@ -88,7 +88,8 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
         setContentView(R.layout.activity_context);
         bindViews();
         fManager = getFragmentManager();
-        ly_tab_menu_channel.performClick();
+
+
         if(receiveMessageService == null) {
             receiveMessageService = new Intent(this, ReceiveMsgService.class);
             receiveMessageService.setAction("com.ltsh.app.chat.RECEIVE_MSG_SERVICE");
@@ -102,8 +103,8 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
 
 
         CacheObject.handler = new Handler();
-
-
+        initFragment();
+        ly_tab_menu_channel.performClick();
     }
 
     private void bindViews() {
@@ -128,7 +129,15 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
         ly_tab_menu_setting.setOnClickListener(this);
 
     }
-
+    private void initFragment() {
+        FragmentTransaction fTransaction = fManager.beginTransaction();
+        chatListFragment = new ChatListFragment();
+        fTransaction.add(R.id.ly_content, chatListFragment);
+        friendFragment = new FriendFragment();
+        fTransaction.add(R.id.ly_content, friendFragment);
+        hideAllFragment(fTransaction);
+        fTransaction.commit();
+    }
     @Override
     public void onClick(View v) {
         FragmentTransaction fTransaction = fManager.beginTransaction();

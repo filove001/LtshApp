@@ -79,5 +79,8 @@ public class FriendAdapter extends LtshBaseAdapter<UserFriend>{
         ImageView img_friend_icon;
         TextView txt_friend_name;
     }
-
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+    }
 }
