@@ -16,9 +16,9 @@ import com.ltsh.app.chat.req.RegisterUserReq;
 import com.ltsh.app.chat.utils.BeanUtils;
 import com.ltsh.app.chat.utils.http.AppHttpClient;
 
-import org.ltsh.common.util.Dates;
-import org.ltsh.common.util.JsonUtils;
-import org.ltsh.common.util.security.MD5Util;
+import com.ltsh.common.util.Dates;
+import com.ltsh.common.util.JsonUtils;
+import com.ltsh.common.util.security.MD5Util;
 
 import java.util.Date;
 import java.util.Map;

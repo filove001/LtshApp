@@ -17,11 +17,13 @@ buildscript {
 allprojects {
     repositories {
         mavenLocal()
-        jcenter()
-        google()
+//        jcenter()
+//        google()
     }
 }
-
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'//不使用缓存，使用仓库中最新的包
+}
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

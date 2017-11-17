@@ -11,7 +11,7 @@ import com.ltsh.app.chat.dao.MessageItemDao;
 import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.entity.viewbean.MessageItem;
 
-import org.ltsh.common.util.LogUtils;
+import com.ltsh.common.util.LogUtils;
 
 import java.util.List;
 

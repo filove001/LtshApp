@@ -15,7 +15,7 @@ import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.listener.SendBtnOnClickListener;
 
-import org.ltsh.common.util.JsonUtils;
+import com.ltsh.common.util.JsonUtils;
 
 import java.util.List;
 

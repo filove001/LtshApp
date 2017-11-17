@@ -13,7 +13,7 @@ import com.ltsh.app.chat.dao.BaseDao;
 import com.ltsh.app.chat.entity.UserToken;
 import com.ltsh.app.chat.config.AppInit;
 
-import org.ltsh.util.utils.LogUtils;
+import com.ltsh.common.util.LogUtils;
 
 import java.util.List;
 

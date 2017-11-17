@@ -19,11 +19,11 @@ import com.ltsh.app.chat.enums.ResultCodeEnum;
 
 
 
-import org.ltsh.common.util.JsonUtils;
-import org.ltsh.common.util.LogUtils;
-import org.ltsh.common.util.StringUtils;
-import org.ltsh.common.util.security.AES;
-import org.ltsh.common.util.security.SignUtils;
+import com.ltsh.common.util.JsonUtils;
+import com.ltsh.common.util.LogUtils;
+import com.ltsh.common.util.StringUtils;
+import com.ltsh.common.util.security.AES;
+import com.ltsh.common.util.security.SignUtils;
 
 import java.util.Calendar;
 import java.util.HashMap;

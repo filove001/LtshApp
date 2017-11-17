@@ -16,8 +16,8 @@ import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.utils.http.AppHttpClient;
 import com.ltsh.app.chat.utils.BeanUtils;
 
-import org.ltsh.common.util.Dates;
-import org.ltsh.common.util.JsonUtils;
+import com.ltsh.common.util.Dates;
+import com.ltsh.common.util.JsonUtils;
 
 import java.util.Date;
 import java.util.Map;

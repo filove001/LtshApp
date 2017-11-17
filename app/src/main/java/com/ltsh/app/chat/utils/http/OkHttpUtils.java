@@ -4,8 +4,8 @@ package com.ltsh.app.chat.utils.http;
 import com.ltsh.app.chat.entity.common.Result;
 import com.ltsh.app.chat.enums.ResultCodeEnum;
 
-import org.ltsh.common.util.JsonUtils;
-import org.ltsh.util.utils.LogUtils;
+import com.ltsh.common.util.JsonUtils;
+import com.ltsh.common.util.LogUtils;
 
 import okhttp3.*;
 

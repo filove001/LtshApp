@@ -5,10 +5,10 @@ import com.ltsh.app.chat.utils.BeanUtils;
 import com.ltsh.app.chat.utils.Names;
 
 
-import org.ltsh.common.util.LogUtils;
-import org.ltsh.common.util.db.PropertyMethod;
-import org.ltsh.util.utils.db.DbColumn;
-import org.ltsh.util.utils.db.NoDbColumn;
+import com.ltsh.common.util.LogUtils;
+import com.ltsh.common.util.db.PropertyMethod;
+import com.ltsh.common.util.db.DbColumn;
+import com.ltsh.common.util.db.NoDbColumn;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;

@@ -11,7 +11,7 @@ import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.entity.viewbean.MessageItem;
 
-import org.ltsh.common.util.JsonUtils;
+import com.ltsh.common.util.JsonUtils;
 
 /**
  * Created by Random on 2017/10/13.

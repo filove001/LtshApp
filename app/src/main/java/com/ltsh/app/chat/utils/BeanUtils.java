@@ -4,8 +4,8 @@ import android.content.ContentValues;
 
 import com.ltsh.app.chat.utils.db.DbUtils;
 
-import org.ltsh.util.utils.LogUtils;
-import org.ltsh.util.utils.db.PropertyMethod;
+import com.ltsh.common.util.LogUtils;
+import com.ltsh.common.util.db.PropertyMethod;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

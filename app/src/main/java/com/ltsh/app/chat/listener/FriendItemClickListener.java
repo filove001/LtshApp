@@ -10,8 +10,8 @@ import com.ltsh.app.chat.activity.ChatActivity;
 import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.entity.UserFriend;
 
-import org.ltsh.common.util.JsonUtils;
-import org.ltsh.common.util.LogUtils;
+import com.ltsh.common.util.JsonUtils;
+import com.ltsh.common.util.LogUtils;
 
 /**
  * Created by Random on 2017/10/13.

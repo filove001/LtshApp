@@ -9,8 +9,8 @@ import com.ltsh.app.chat.utils.db.DbUtils;
 import com.ltsh.app.chat.entity.BaseEntity;
 import com.ltsh.app.chat.utils.BeanUtils;
 
-import org.ltsh.util.utils.LogUtils;
-import org.ltsh.util.utils.db.PropertyMethod;
+import com.ltsh.common.util.LogUtils;
+import com.ltsh.common.util.db.PropertyMethod;
 
 import java.io.Closeable;
 import java.io.IOException;

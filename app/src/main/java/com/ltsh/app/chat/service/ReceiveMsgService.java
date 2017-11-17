@@ -15,8 +15,8 @@ import com.ltsh.app.chat.enums.ResultCodeEnum;
 import com.ltsh.app.chat.utils.http.AppHttpClient;
 import com.ltsh.app.chat.config.CacheObject;
 
-import org.ltsh.common.util.JsonUtils;
-import org.ltsh.common.util.LogUtils;
+import com.ltsh.common.util.JsonUtils;
+import com.ltsh.common.util.LogUtils;
 
 import java.util.HashMap;
 import java.util.Map;

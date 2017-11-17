@@ -20,8 +20,8 @@ import com.ltsh.app.chat.enums.ResultCodeEnum;
 import com.ltsh.app.chat.listener.FriendItemClickListener;
 import com.ltsh.app.chat.utils.http.AppHttpClient;
 
-import org.ltsh.common.util.JsonUtils;
-import org.ltsh.util.utils.LogUtils;
+import com.ltsh.common.util.JsonUtils;
+import com.ltsh.common.util.LogUtils;
 
 import java.util.HashMap;
 import java.util.List;

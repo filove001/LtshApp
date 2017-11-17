@@ -9,8 +9,8 @@ import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.entity.UserToken;
 
-import org.ltsh.common.util.LogUtils;
-import org.ltsh.util.utils.db.DbColumn;
+import com.ltsh.common.util.LogUtils;
+import com.ltsh.common.util.db.DbColumn;
 
 import java.util.List;
 
