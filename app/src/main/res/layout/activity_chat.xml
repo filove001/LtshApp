@@ -67,7 +67,7 @@
         android:layout_alignParentBottom="true"
         android:background="@color/bg_white"
         android:orientation="horizontal">
-
+        <!-- 提醒 -->
         <LinearLayout
             android:id="@+id/ly_tab_menu_channel"
             android:layout_width="0px"
@@ -97,7 +97,7 @@
 
 
 
-
+        <!-- 内容文本框 -->
         <LinearLayout
             android:id="@+id/ly_tab_menu_better"
             android:layout_width="0dp"
@@ -110,14 +110,25 @@
                 android:layout_height="match_parent"
                 android:padding="5dp">
                 <EditText
+                    android:visibility="gone"
                     android:id="@+id/ed_send_msg_input"
                     android:textColor="@color/bg_black"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
+                <!-- 语音 -->
+                <Button
+                    android:id="@+id/btn_yy"
+                    android:textColor="@color/bg_black"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#ffffff"
+                    android:text="@string/btn_yy_text"
+                    android:visibility="visible"
+                    />
             </RelativeLayout>
         </LinearLayout>
 
-
+        <!-- 发送按钮 -->
         <LinearLayout
             android:id="@+id/ly_tab_menu_setting"
             android:layout_width="0dp"

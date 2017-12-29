@@ -30,5 +30,8 @@ public class AppConstants {
     /**
      * 获取好友
      */
-    public final static String GET_FRIEND_URL = "/chat/friend/page";
+    public final static String GET_FRIEND_URL = "/chat/userFriend/page";
+    public final static String GET_GROUP_URL = "/chat/userGroup/page";
+    public final static String GET_GROUP_REL_URL = "/chat/userGroupRel/page";
+    public static boolean isInit = false;
 }

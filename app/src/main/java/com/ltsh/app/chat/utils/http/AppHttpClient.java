@@ -8,7 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.ltsh.app.chat.CallBackInterface;
+import com.ltsh.app.chat.CallbackInterface;
 import com.ltsh.app.chat.activity.BaseActivity;
 import com.ltsh.app.chat.activity.LoginActivity;
 import com.ltsh.app.chat.config.AppConstants;
@@ -24,6 +24,9 @@ import com.ltsh.common.util.LogUtils;
 import com.ltsh.common.util.StringUtils;
 import com.ltsh.common.util.security.AES;
 import com.ltsh.common.util.security.SignUtils;
+
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -54,7 +57,7 @@ public class AppHttpClient {
     public static String post(String baseUrl,String url, Map<String, Object> json) {
         return post(baseUrl, url, json, "");
     }
-    public static void threadPost(final String baseUrl, final String url, final Map<String, Object> json, final Context activity, final CallBackInterface callBackInterface) {
+    public static void threadPost(final String baseUrl, final String url, final Map<String, Object> json, final Context activity, final CallbackInterface callBackInterface) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -80,19 +83,24 @@ public class AppHttpClient {
         }).start();
     }
 
-    public static void threadPost(final String baseUrl, final String url, final BaseEntity json, final Context activity, final CallBackInterface callBackInterface) {
+    public static void threadPost(final String baseUrl, final String url, final BaseEntity json, final Context activity, final CallbackInterface callBackInterface) {
         Map map = JsonUtils.fromJson(JsonUtils.toJson(json), Map.class);
         threadPost(baseUrl, url, map, activity, callBackInterface);
 
     }
     public static Result<Map> appPost(String baseUrl, String url, Map<String, Object> json, final Context activity){
+
         Result<String[]> randomResult = getRandom(baseUrl);
         if(randomResult.getCode().equals("000000")) {
             String[] random = randomResult.getContent();
             json.put("randomKey", random[0]);
+            DateTime begin = new DateTime();
 
             String post = post(baseUrl, url, json, random[1]);
-            LogUtils.info("返回参数:" + post);
+            DateTime end = new DateTime();
+            //计算区间毫秒数
+            Duration d = new Duration(begin, end);
+            LogUtils.info("耗时:"+ d.getMillis() +" ms,返回参数:" + post);
             Map map = JsonUtils.fromJson(post, Map.class);
             if(ResultCodeEnum.SUCCESS.getCode().equals(map.get("code"))) {
                 return new Result<>((String)map.get("code"), (String)map.get("message"), (Map)map.get("content"));
@@ -102,16 +110,24 @@ public class AppHttpClient {
                     public void run() {
                         Intent loginIntent = new Intent("android.intent.action.LOGIN");
                         loginIntent.setClassName(activity, LoginActivity.class.getName());
+
                         if(activity instanceof Activity) {
                             Activity activity1= (Activity)activity;
-                            activity1.finish();
+                            if(!activity1.isFinishing()) {
+                                activity1.startActivity(loginIntent);
+                                activity1.finish();
+                            }
+
                         }
                         Set<Activity> activitySet = BaseActivity.activitySet;
-                        for (Activity activity : activitySet) {
-                            activity.finish();
+                        for (Activity activity1 : activitySet) {
+                            if(!activity1.isFinishing()) {
+                                activity1.finish();
+                            }
                         }
+
+
                         BaseActivity.activitySet.clear();
-                        activity.startActivity(loginIntent);
                     }
                 });
                 return new Result<>((String)map.get("code"), (String)map.get("message"));

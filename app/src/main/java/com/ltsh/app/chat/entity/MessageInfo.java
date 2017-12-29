@@ -1,18 +1,14 @@
 package com.ltsh.app.chat.entity;
 
 
+import java.util.Date;
 
 /**
- * Created by Random on 2017/9/19.
+ * 消息记录
+ * Created by Random on 2017/10/23.
  */
 
 public class MessageInfo extends BaseEntity {
-
-    /**
-     * 创建用户名称
-     */
-    private String createByName;
-
 
     /**
      * 消息内容
@@ -27,15 +23,15 @@ public class MessageInfo extends BaseEntity {
      * 消息类型
      */
     private Integer msgType;
-
     /**
-     * 接收人
+     * 发送人
+     */
+    private Integer sendUser;
+    /**
+     * 接受人
      */
     private Integer toUser;
-    /**
-     * 接收用户名称
-     */
-    private String toUserName;
+
     /**
      * 发送类型
      */
@@ -43,33 +39,24 @@ public class MessageInfo extends BaseEntity {
     /**
      * 发送时间
      */
-    private String sendDate;
+    private Date sendDate;
     /**
      * 读取时间
      */
-    private String readTime;
+    private Date readTime;
 
     /**
      * 状态
      */
     private String status;
-
-
-    public String getCreateByName() {
-        return createByName;
-    }
-
-    public void setCreateByName(String createByName) {
-        this.createByName = createByName;
-    }
-
-    public String getToUserName() {
-        return toUserName;
-    }
-
-    public void setToUserName(String toUserName) {
-        this.toUserName = toUserName;
-    }
+    /**
+     * 来源id
+     */
+    private String sourceId;
+    /**
+     * 来源类型
+     */
+    private String sourceType;
 
     public String getMsgContext() {
         return msgContext;
@@ -95,6 +82,14 @@ public class MessageInfo extends BaseEntity {
         this.msgType = msgType;
     }
 
+    public Integer getSendUser() {
+        return sendUser;
+    }
+
+    public void setSendUser(Integer sendUser) {
+        this.sendUser = sendUser;
+    }
+
     public Integer getToUser() {
         return toUser;
     }
@@ -111,19 +106,19 @@ public class MessageInfo extends BaseEntity {
         this.sendType = sendType;
     }
 
-    public String getSendDate() {
+    public Date getSendDate() {
         return sendDate;
     }
 
-    public void setSendDate(String sendDate) {
+    public void setSendDate(Date sendDate) {
         this.sendDate = sendDate;
     }
 
-    public String getReadTime() {
+    public Date getReadTime() {
         return readTime;
     }
 
-    public void setReadTime(String readTime) {
+    public void setReadTime(Date readTime) {
         this.readTime = readTime;
     }
 
@@ -135,4 +130,19 @@ public class MessageInfo extends BaseEntity {
         this.status = status;
     }
 
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
+    }
+
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
+    }
 }

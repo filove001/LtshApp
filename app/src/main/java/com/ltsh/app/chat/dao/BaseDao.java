@@ -177,6 +177,25 @@ public class BaseDao {
         }
         return new ArrayList<>();
     }
+
+    public static <T> List<T> queryMyList(Class<T> classT, String orderBy) {
+        SQLiteDatabase readableDatabase = null;
+        Cursor cursor = null;
+        try {
+            readableDatabase = CacheObject.dbHelper.getReadableDatabase();
+            String where = "create_by=?";
+            String[] params = new String[]{CacheObject.userToken.getId() + ""};
+            cursor = readableDatabase.query(DbUtils.getTableName(classT), DbUtils.getColumns(classT), where, params, null, null, orderBy);
+            List<T> list = cursorToList(classT, cursor);
+            return list;
+        } catch (Exception e) {
+            LogUtils.error(e.getMessage(), e);
+        } finally {
+            close(cursor);
+            close(readableDatabase);
+        }
+        return new ArrayList<>();
+    }
     public static <T> List<T> cursorToList(Class classT, Cursor cursor) {
         List<T> list = new ArrayList<>();
         if (cursor.moveToFirst()) {

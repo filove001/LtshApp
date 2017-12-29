@@ -1,12 +1,11 @@
 package com.ltsh.app.chat.entity;
 
-
 /**
- * Created by Random on 2017/9/19.
+ * 用户好友
+ * Created by Random on 2017/10/23.
  */
 
 public class UserFriend extends BaseEntity {
-
     /**
      * 名称
      */

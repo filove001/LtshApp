@@ -27,7 +27,7 @@ public class ChatItemClickListener implements ListView.OnItemClickListener {
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         MessageItem item = (MessageItem)CacheObject.messageAdapter.getItem(position);
         UserFriend userFriend = new UserFriend();
-        userFriend.setName(item.getCreateByName());
+        userFriend.setName(item.getName());
         userFriend.setFriendUserId(item.getCreateBy());
 //        userFriend.setFriendUserId(item.get);
         Intent chatIntent = new Intent("android.intent.action.CHAT");

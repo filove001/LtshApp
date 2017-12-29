@@ -4,11 +4,14 @@ import android.os.Handler;
 
 import com.ltsh.app.chat.adapter.ChatAdapter;
 import com.ltsh.app.chat.adapter.FriendAdapter;
-import com.ltsh.app.chat.adapter.MessageAdapter;
+import com.ltsh.app.chat.adapter.MsgListAdapter;
+import com.ltsh.app.chat.entity.UserFriend;
+import com.ltsh.app.chat.entity.UserGroup;
 import com.ltsh.app.chat.utils.db.MyDBOpenHelper;
 import com.ltsh.app.chat.entity.UserToken;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,10 +21,12 @@ import java.util.Map;
 public class CacheObject {
     public static Map<String, Object> cacheMap = new HashMap<>();
     public static ChatAdapter chatAdapter = null;
-    public static MessageAdapter messageAdapter = null;
+    public static MsgListAdapter messageAdapter = null;
     public static FriendAdapter friendAdapter = null;
     public static Handler handler;
     public static UserToken userToken = null;
     public static Map<String, String> commonParams = new HashMap<>();
     public static MyDBOpenHelper dbHelper;
+
+
 }

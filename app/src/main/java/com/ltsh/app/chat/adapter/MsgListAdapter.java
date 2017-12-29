@@ -18,13 +18,13 @@ import com.ltsh.app.chat.entity.viewbean.MessageItem;
 import com.ltsh.app.chat.utils.BeanUtils;
 import com.ltsh.app.chat.utils.ImageUtils;
 
-public class MessageAdapter extends LtshBaseAdapter<MessageItem>{
+public class MsgListAdapter extends LtshBaseAdapter<MessageItem>{
 
 
     private Context mContext;
 
 
-    public MessageAdapter(Context mContext) {
+    public MsgListAdapter(Context mContext) {
         this.mContext = mContext;
     }
 
@@ -63,7 +63,7 @@ public class MessageAdapter extends LtshBaseAdapter<MessageItem>{
 
         MessageItem item = (MessageItem) obj;
         if(item != null){
-            holder.msg_item_txt_title.setText(item.getCreateByName());
+            holder.msg_item_txt_title.setText(item.getName());
             holder.msg_item_img_icon.setVisibility(View.VISIBLE);
             holder.msg_item_img_icon.setImageBitmap(ImageUtils.readBitMap(convertView.getContext(), R.mipmap.iv_icon_baidu));
             holder.msg_item_num.setText((item.getFszCount() + item.getWdCount()) + "");
@@ -89,7 +89,8 @@ public class MessageAdapter extends LtshBaseAdapter<MessageItem>{
     }
     public boolean isRepetition(MessageItem item) {
         for (MessageItem message : getDataList()) {
-            if (item.getCreateBy().intValue() == message.getCreateBy().intValue()) {
+            if (item.getCreateBy().intValue() == message.getCreateBy().intValue() &&
+                    (item.getLastTime() != null && item.getLastTime().equals(message.getLastTime()))) {
                 BeanUtils.copyProperties(item, message);
                 return true;
             }

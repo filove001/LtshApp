@@ -8,16 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.ltsh.app.chat.CallBackInterface;
+import com.ltsh.app.chat.CallbackInterface;
 import com.ltsh.app.chat.adapter.FriendAdapter;
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.dao.BaseDao;
 import com.ltsh.app.chat.config.CacheObject;
+import com.ltsh.app.chat.entity.BaseEntity;
 import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.entity.common.Result;
 import com.ltsh.app.chat.enums.ResultCodeEnum;
 import com.ltsh.app.chat.listener.FriendItemClickListener;
+import com.ltsh.app.chat.service.LoadEntityCallSerivice;
 import com.ltsh.app.chat.utils.http.AppHttpClient;
 
 import com.ltsh.common.util.JsonUtils;
@@ -35,34 +37,23 @@ public class FriendFragment extends Fragment {
 
     private ListView friend_list;
 
-    public void callBack1(Result result) {
 
-        Result<Map> mapResult = result;
-        if(ResultCodeEnum.SUCCESS.getCode().equals(mapResult.getCode())) {
-            Map content = mapResult.getContent();
-            List resultList = (List)content.get("resultList");
-            for (Object obj : resultList) {
-                final UserFriend userFriend = JsonUtils.fromJson(JsonUtils.toJson(obj), UserFriend.class);
-                UserFriend single = BaseDao.single(UserFriend.class, "friend_user_id=? and create_by=?", new String[]{userFriend.getFriendUserId() + "", userFriend.getCreateBy() + ""});
-                if(single == null) {
-                    BaseDao.insert(userFriend);
-                } else {
-                    userFriend.setId(single.getId());
-                    BaseDao.update(userFriend);
-                }
-            }
-        } else {
-            LogUtils.error(mapResult.getCode() + ":" + mapResult.getMessage());
-        }
-    }
     public void initData() {
         Map<String, Object> map = new HashMap<>();
         map.put("pageNumber", "1");
         map.put("pageSize", "10000");
-        AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_FRIEND_URL, map, getActivity(), new CallBackInterface(){
+        AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_FRIEND_URL, map, getActivity(), new CallbackInterface(){
             @Override
             public void callBack(Result result) {
-                callBack1(result);
+                LoadEntityCallSerivice loadEntityCallSerivice = new LoadEntityCallSerivice() {
+                    @Override
+                    protected BaseEntity single(BaseEntity entity) {
+                        UserFriend entity1 = (UserFriend) entity;
+                        UserFriend single = BaseDao.single(UserFriend.class, "friend_user_id=? and create_by=?", new String[]{entity1.getFriendUserId() + "", entity1.getCreateBy() + ""});
+                        return single;
+                    }
+                };
+                loadEntityCallSerivice.callBack(result, UserFriend.class);
             }
         });
     }

@@ -3,6 +3,7 @@ package com.ltsh.app.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 
 import com.ltsh.app.chat.activity.BaseActivity;
@@ -41,6 +42,8 @@ public class MainActivity extends BaseActivity {
             loginIntent.setClassName(this, LoginActivity.class.getName());
             startActivity(loginIntent);
         }
+
+        CacheObject.handler = new Handler();
 //        this.finish();
     }
     /**

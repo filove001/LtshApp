@@ -10,7 +10,7 @@ public class MessageItem extends BaseEntity {
     /**
      * 创建者名称(对于消息是发送者)
      */
-    private String createByName;
+    private String name;
     /**
      * 发送中数量
      */
@@ -32,12 +32,12 @@ public class MessageItem extends BaseEntity {
      */
     private String lastMsg;
 
-    public String getCreateByName() {
-        return createByName;
+    public String getName() {
+        return name;
     }
 
-    public void setCreateByName(String createByName) {
-        this.createByName = createByName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getFszCount() {

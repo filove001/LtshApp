@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,14 +13,27 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ltsh.app.chat.CallbackInterface;
+import com.ltsh.app.chat.config.AppConstants;
+import com.ltsh.app.chat.config.BaseCache;
 import com.ltsh.app.chat.dao.BaseDao;
+import com.ltsh.app.chat.entity.UserFriend;
+import com.ltsh.app.chat.entity.UserGroup;
+import com.ltsh.app.chat.entity.UserGroupRel;
 import com.ltsh.app.chat.entity.UserToken;
+import com.ltsh.app.chat.entity.common.Result;
 import com.ltsh.app.chat.fragment.FriendFragment;
 import com.ltsh.app.chat.fragment.ChatListFragment;
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.config.CacheObject;
-import com.ltsh.app.chat.service.MsgListService;
+import com.ltsh.app.chat.service.LoadDataService;
+import com.ltsh.app.chat.service.LoadEntityCallSerivice;
 import com.ltsh.app.chat.service.ReceiveMsgService;
+import com.ltsh.app.chat.utils.http.AppHttpClient;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Random on 2017/10/13.
@@ -45,7 +57,6 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
     private FragmentManager fManager;
     //    private FragmentTransaction fTransaction;
     private Fragment chatListFragment, friendFragment, fg3, fg4;
-    private String url = "htpp://127.0.0.1:8080/";
 
     private Intent receiveMessageService;
     private Intent msgListService;
@@ -96,14 +107,15 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
             startService(receiveMessageService);
         }
         if(msgListService == null) {
-            msgListService = new Intent(this, MsgListService.class);
+            msgListService = new Intent(this, LoadDataService.class);
             msgListService.setAction("com.ltsh.app.chat.MSG_LIST_SERVICE");
             startService(msgListService);
         }
 
 
-        CacheObject.handler = new Handler();
+
         initFragment();
+        loadData();
         ly_tab_menu_channel.performClick();
     }
 
@@ -129,6 +141,41 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
         ly_tab_menu_setting.setOnClickListener(this);
 
     }
+
+    private void loadData() {
+        if(AppConstants.isInit) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("pageNumber", "1");
+            map.put("pageSize", "10000");
+            final LoadEntityCallSerivice callSerivice = new LoadEntityCallSerivice();
+            AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_FRIEND_URL, map, this, new CallbackInterface() {
+                @Override
+                public void callBack(Result result) {
+                    callSerivice.callBack(result, UserFriend.class);
+                }
+            });
+            AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_GROUP_URL, map, this, new CallbackInterface() {
+                @Override
+                public void callBack(Result result) {
+                    callSerivice.callBack(result, UserGroup.class);
+                }
+            });
+
+            AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_GROUP_REL_URL, map, this, new CallbackInterface() {
+                @Override
+                public void callBack(Result result) {
+                    callSerivice.callBack(result, UserGroupRel.class);
+                }
+            });
+        }
+        List<UserFriend> userFriendList = BaseDao.queryMyList(UserFriend.class, "id desc");
+        BaseCache.init(UserFriend.class, userFriendList);
+        List<UserGroup> userGroups = BaseDao.queryMyList(UserGroup.class, "id desc");
+        BaseCache.init(UserGroup.class, userGroups);
+        List<UserGroupRel> userGroupRels = BaseDao.queryMyList(UserGroupRel.class, "id desc");
+        BaseCache.init(UserGroupRel.class, userGroupRels);
+    }
+
     private void initFragment() {
         FragmentTransaction fTransaction = fManager.beginTransaction();
         chatListFragment = new ChatListFragment();
@@ -224,5 +271,6 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
         if(msgListService != null) {
             stopService(msgListService);
         }
+
     }
 }

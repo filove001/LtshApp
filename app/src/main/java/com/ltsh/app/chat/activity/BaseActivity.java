@@ -8,7 +8,7 @@ import android.support.v4.util.ArraySet;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 
-import com.ltsh.app.chat.MyAlertDiaLog;
+import com.ltsh.app.chat.utils.MyAlertDiaLog;
 
 import com.ltsh.common.util.LogUtils;
 

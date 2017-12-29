@@ -41,11 +41,11 @@ public class SendBtnOnClickListener implements View.OnClickListener {
         MessageInfo messageInfo = new MessageInfo();
         messageInfo.setMsgContext(sendMessage);
         messageInfo.setToUser(userFriend.getFriendUserId());
-        messageInfo.setToUserName(userFriend.getName());
+//        messageInfo.setToUserName(userFriend.getName());
         messageInfo.setMsgType(0);
         messageInfo.setSendType(0);
         messageInfo.setCreateBy(CacheObject.userToken.getId());
-        messageInfo.setCreateByName(CacheObject.userToken.getName());
+//        messageInfo.setCreateByName(CacheObject.userToken.getName());
         messageInfo.setCreateTime(Dates.toStr(new Date(), Dates.YYYY_MM_DD_HH_MM_SS));
         messageInfo.setStatus(StatusEnums.YFS.getValue());
         int id = BaseDao.insert(messageInfo);

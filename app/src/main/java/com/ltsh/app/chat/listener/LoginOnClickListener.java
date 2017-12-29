@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 
 
-import com.ltsh.app.chat.CallBackInterface;
+import com.ltsh.app.chat.CallbackInterface;
 import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.activity.ContextActivity;
@@ -57,7 +57,7 @@ public class LoginOnClickListener implements View.OnClickListener {
                     map.put("password", MD5Util.encoder("ltshChat:" + MD5Util.encoder("chat:"+MD5Util.encoder("ltshUser:" + password.toString())) + content[1]));
                     map.put("passwordRandomStr", content[0]);
                 }
-                AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.LOGIN_URL, map, activity, new CallBackInterface() {
+                AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.LOGIN_URL, map, activity, new CallbackInterface() {
                     @Override
                     public void callBack(Result result) {
                         if(ResultCodeEnum.SUCCESS.getCode().equals(result.getCode())) {

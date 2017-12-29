@@ -22,8 +22,8 @@ public class OkHttpUtils {
 
     public static final MediaType MEDIA_TYPE_MARKDOWN = MediaType.parse("application/octet-stream; charset=utf-8");
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
-    static OkHttpClient client = new OkHttpClient.Builder().readTimeout(70L, TimeUnit.SECONDS).writeTimeout(70L, TimeUnit.SECONDS).connectTimeout(70L, TimeUnit.SECONDS).build();
+    static OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder().readTimeout(70L, TimeUnit.SECONDS).writeTimeout(70L, TimeUnit.SECONDS).connectTimeout(70L, TimeUnit.SECONDS);
+//    static OkHttpClient client = new OkHttpClient.Builder().readTimeout(70L, TimeUnit.SECONDS).writeTimeout(70L, TimeUnit.SECONDS).connectTimeout(70L, TimeUnit.SECONDS).build();
 
     public static String post(String url, Map<String, Object> json) {
         return post(url, json, null);
@@ -54,8 +54,11 @@ public class OkHttpUtils {
                 .post(requestBody)
                 .build();
         Response response = null;
+        Call call = null;
         try {
-            response = client.newCall(request).execute();
+            OkHttpClient client = clientBuilder.build();
+            call = client.newCall(request);
+            response = call.execute();
 
             if (response.isSuccessful()) {
                 return response.body().string();

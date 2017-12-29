@@ -99,8 +99,7 @@ public abstract class LtshBaseAdapter<T extends BaseEntity> extends android.widg
     //往特定位置，添加一个元素
     public void addAll(Integer position, List<T> items){
         boolean isrn = false;
-        for (T item :
-                items) {
+        for (T item : items) {
             boolean tmp = add(position, item, false);
             if(tmp) {
                 isrn = tmp;

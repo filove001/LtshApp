@@ -6,6 +6,7 @@ package com.ltsh.app.chat.adapter;
 
 
 import android.content.Context;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +16,12 @@ import android.widget.TextView;
 
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.config.CacheObject;
+import com.ltsh.app.chat.dao.BaseDao;
 import com.ltsh.app.chat.entity.MessageInfo;
+import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.utils.ImageUtils;
+import com.ltsh.common.util.JsonUtils;
+import com.ltsh.common.util.LogUtils;
 
 public class ChatAdapter extends LtshBaseAdapter{
 
@@ -54,6 +59,7 @@ public class ChatAdapter extends LtshBaseAdapter{
         MessageInfo item = (MessageInfo) obj;
         viewHolder = null;
         int itemViewType = 0;
+
         if(item.getCreateBy().intValue() == CacheObject.userToken.getId().intValue()) {
             itemViewType = 0;
         } else {
@@ -72,6 +78,7 @@ public class ChatAdapter extends LtshBaseAdapter{
                 viewHolder = (ViewHolder) convertView.getTag(R.id.tag_friend_msg_item);
             }
         }
+        LogUtils.info("type:{}, messageItems:{}", itemViewType, JsonUtils.toJson(item));
         if(viewHolder == null) {
             viewHolder = getViewHolder(itemViewType, convertView);
         }
@@ -83,7 +90,8 @@ public class ChatAdapter extends LtshBaseAdapter{
 //            if(viewHolder.type == 0) {
 //                viewHolder.chat_item_txt_name.setText(item.getCreateByName());
 //            } else {
-                viewHolder.chat_item_txt_name.setText(item.getCreateByName());
+
+            viewHolder.chat_item_txt_name.setText(CacheObject.userToken.getName());
 //            }
 //            if(item.getCreateTime() != null) {
 //                viewHolder.chat_item_txt_time.setText(item.getCreateTime());

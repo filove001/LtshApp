@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.ltsh.app.chat.adapter.MessageAdapter;
+import com.ltsh.app.chat.adapter.MsgListAdapter;
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.listener.ChatItemClickListener;
@@ -31,7 +31,7 @@ public class ChatListFragment extends Fragment {
 
         list_content = (ListView) view.findViewById(R.id.list_content);
         if(CacheObject.messageAdapter == null) {
-            CacheObject.messageAdapter = new MessageAdapter(this.getActivity());
+            CacheObject.messageAdapter = new MsgListAdapter(this.getActivity());
         }
         list_content.setAdapter(CacheObject.messageAdapter);
         list_content.setOnItemClickListener(new ChatItemClickListener(getActivity()));

@@ -5,8 +5,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 
+import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.entity.UserFriend;
+import com.ltsh.app.chat.entity.UserGroup;
+import com.ltsh.app.chat.entity.UserGroupRel;
 import com.ltsh.app.chat.entity.UserToken;
 
 import com.ltsh.common.util.LogUtils;
@@ -25,11 +28,20 @@ public class MyDBOpenHelper extends SQLiteOpenHelper {
     @Override
     //数据库第一次创建时被调用
     public void onCreate(SQLiteDatabase db) {
+        AppConstants.isInit = true;
         List<DbColumn> dbClounms = DbUtils.getDbColumns(MessageInfo.class);
         String createTable = DbUtils.getCreateTable(dbClounms);
 
         db.execSQL(createTable);
         dbClounms = DbUtils.getDbColumns(UserFriend.class);
+        createTable = DbUtils.getCreateTable(dbClounms);
+        db.execSQL(createTable);
+
+        dbClounms = DbUtils.getDbColumns(UserGroup.class);
+        createTable = DbUtils.getCreateTable(dbClounms);
+        db.execSQL(createTable);
+
+        dbClounms = DbUtils.getDbColumns(UserGroupRel.class);
         createTable = DbUtils.getCreateTable(dbClounms);
         db.execSQL(createTable);
 

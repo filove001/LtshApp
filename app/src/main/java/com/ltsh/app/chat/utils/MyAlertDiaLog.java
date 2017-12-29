@@ -1,4 +1,4 @@
-package com.ltsh.app.chat;
+package com.ltsh.app.chat.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
