@@ -17,6 +17,9 @@ import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.entity.viewbean.MessageItem;
 import com.ltsh.app.chat.utils.BeanUtils;
 import com.ltsh.app.chat.utils.ImageUtils;
+import com.ltsh.common.util.Dates;
+
+import java.util.Date;
 
 public class MsgListAdapter extends LtshBaseAdapter<MessageItem>{
 
@@ -71,7 +74,7 @@ public class MsgListAdapter extends LtshBaseAdapter<MessageItem>{
             if(lastMsg != null) {
                 holder.msg_item_txt_content.setText(lastMsg.split("_")[1]);
             }
-            holder.msg_item_txt_time.setText(item.getLastTime());
+            holder.msg_item_txt_time.setText(Dates.toStrYYYYMMDD(new Date(Long.parseLong(item.getLastTime()))));
 
         }
 

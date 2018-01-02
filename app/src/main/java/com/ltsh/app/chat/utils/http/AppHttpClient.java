@@ -72,6 +72,7 @@ public class AppHttpClient {
                         LogUtils.error(e.getMessage(), e);
                     }
                 } else {
+
                     CacheObject.handler.post(new Runnable() {
                         @Override
                         public void run() {

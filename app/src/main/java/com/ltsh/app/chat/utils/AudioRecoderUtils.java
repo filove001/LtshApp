@@ -109,6 +109,7 @@ public class AudioRecoderUtils {
             filePath = "";
 
         }catch (RuntimeException e){
+            LogUtils.error(e.getMessage(), e);
             mMediaRecorder.reset();
             mMediaRecorder.release();
             mMediaRecorder = null;
@@ -136,6 +137,7 @@ public class AudioRecoderUtils {
             mMediaRecorder = null;
 
         }catch (RuntimeException e){
+            LogUtils.error(e.getMessage(), e);
             mMediaRecorder.reset();
             mMediaRecorder.release();
             mMediaRecorder = null;

@@ -42,18 +42,18 @@ import java.util.Map;
 public class ContextActivity extends BaseActivity implements View.OnClickListener {
 
     //Activity UI Object
-    private LinearLayout ly_tab_menu_channel;
-    private TextView tab_menu_channel;
-    private TextView tab_menu_channel_num;
-    private LinearLayout ly_tab_menu_message;
-    private TextView tab_menu_message;
-    private TextView tab_menu_message_num;
-    private LinearLayout ly_tab_menu_better;
-    private TextView tab_menu_better;
-    private TextView tab_menu_better_num;
-    private LinearLayout ly_tab_menu_setting;
-    private TextView tab_menu_setting;
-    private ImageView tab_menu_setting_partner;
+    private LinearLayout ly_tab_menu_home;
+    private TextView tab_menu_home;
+    private TextView tab_menu_home_num;
+    private LinearLayout ly_tab_menu_friend;
+    private TextView tab_menu_friend;
+    private TextView tab_menu_friend_num;
+    private LinearLayout ly_tab_menu_dynamic;
+    private TextView tab_menu_dynamic;
+    private TextView tab_menu_dynamic_num;
+    private LinearLayout ly_tab_menu_my;
+    private TextView tab_menu_my;
+    private ImageView tab_menu_my_num;
     private FragmentManager fManager;
     //    private FragmentTransaction fTransaction;
     private Fragment chatListFragment, friendFragment, fg3, fg4;
@@ -116,29 +116,29 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
 
         initFragment();
         loadData();
-        ly_tab_menu_channel.performClick();
+        ly_tab_menu_home.performClick();
     }
 
     private void bindViews() {
         //底部菜单初始化
-        ly_tab_menu_channel = (LinearLayout) findViewById(R.id.ly_tab_menu_channel);
-        tab_menu_channel = (TextView) findViewById(R.id.tab_menu_channel);
-        tab_menu_channel_num = (TextView) findViewById(R.id.tab_menu_channel_num);
-        ly_tab_menu_message = (LinearLayout) findViewById(R.id.ly_tab_menu_message);
-        tab_menu_message = (TextView) findViewById(R.id.tab_menu_message);
-        tab_menu_message_num = (TextView) findViewById(R.id.tab_menu_message_num);
-        ly_tab_menu_better = (LinearLayout) findViewById(R.id.ly_tab_menu_better);
-        tab_menu_better = (TextView) findViewById(R.id.tab_menu_better);
-        tab_menu_better_num = (TextView) findViewById(R.id.tab_menu_better_num);
-        ly_tab_menu_setting = (LinearLayout) findViewById(R.id.ly_tab_menu_setting);
-        tab_menu_setting = (TextView) findViewById(R.id.tab_menu_setting);
-        tab_menu_setting_partner = (ImageView) findViewById(R.id.tab_menu_setting_partner);
+        ly_tab_menu_home = (LinearLayout) findViewById(R.id.ly_tab_menu_home);
+        tab_menu_home = (TextView) findViewById(R.id.tab_menu_home);
+        tab_menu_home_num = (TextView) findViewById(R.id.tab_menu_home_num);
+        ly_tab_menu_friend = (LinearLayout) findViewById(R.id.ly_tab_menu_friend);
+        tab_menu_friend = (TextView) findViewById(R.id.tab_menu_friend);
+        tab_menu_friend_num = (TextView) findViewById(R.id.tab_menu_friend_num);
+        ly_tab_menu_dynamic = (LinearLayout) findViewById(R.id.ly_tab_menu_dynamic);
+        tab_menu_dynamic = (TextView) findViewById(R.id.tab_menu_dynamic);
+        tab_menu_dynamic_num = (TextView) findViewById(R.id.tab_menu_dynamic_num);
+        ly_tab_menu_my = (LinearLayout) findViewById(R.id.ly_tab_menu_my);
+        tab_menu_my = (TextView) findViewById(R.id.tab_menu_my);
+        tab_menu_my_num = (ImageView) findViewById(R.id.tab_menu_my_num);
 
 
-        ly_tab_menu_channel.setOnClickListener(this);
-        ly_tab_menu_message.setOnClickListener(this);
-        ly_tab_menu_better.setOnClickListener(this);
-        ly_tab_menu_setting.setOnClickListener(this);
+        ly_tab_menu_home.setOnClickListener(this);
+        ly_tab_menu_friend.setOnClickListener(this);
+        ly_tab_menu_dynamic.setOnClickListener(this);
+        ly_tab_menu_my.setOnClickListener(this);
 
     }
 
@@ -190,10 +190,10 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
         FragmentTransaction fTransaction = fManager.beginTransaction();
         hideAllFragment(fTransaction);
         switch (v.getId()) {
-            case R.id.ly_tab_menu_channel:
+            case R.id.ly_tab_menu_home:
                 setSelected();
-                tab_menu_channel.setSelected(true);
-                tab_menu_channel_num.setVisibility(View.INVISIBLE);
+                tab_menu_home.setSelected(true);
+                tab_menu_home_num.setVisibility(View.INVISIBLE);
                 if (chatListFragment == null) {
                     chatListFragment = new ChatListFragment();
                     fTransaction.add(R.id.ly_content, chatListFragment);
@@ -204,10 +204,10 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
                 }
 
                 break;
-            case R.id.ly_tab_menu_message:
+            case R.id.ly_tab_menu_friend:
                 setSelected();
-                tab_menu_message.setSelected(true);
-                tab_menu_message_num.setVisibility(View.INVISIBLE);
+                tab_menu_friend.setSelected(true);
+                tab_menu_friend_num.setVisibility(View.INVISIBLE);
                 if (friendFragment == null) {
                     friendFragment = new FriendFragment();
                     fTransaction.add(R.id.ly_content, friendFragment);
@@ -216,21 +216,21 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
                 }
 
                 break;
-            case R.id.ly_tab_menu_better:
+            case R.id.ly_tab_menu_dynamic:
                 setSelected();
-                tab_menu_better.setSelected(true);
-                tab_menu_better_num.setVisibility(View.INVISIBLE);
+                tab_menu_dynamic.setSelected(true);
+                tab_menu_dynamic_num.setVisibility(View.INVISIBLE);
 //                if(fg3 == null){
 //                    fg3 = new LtshChatFragment("第三个Fragment");
 //                    fTransaction.add(R.id.ly_content,fg3);
 //                }else{
 //                    fTransaction.show(fg3);
-//                }
+//
                 break;
-            case R.id.ly_tab_menu_setting:
+            case R.id.ly_tab_menu_my:
                 setSelected();
-                tab_menu_setting.setSelected(true);
-                tab_menu_setting_partner.setVisibility(View.INVISIBLE);
+                tab_menu_my.setSelected(true);
+                tab_menu_my_num.setVisibility(View.INVISIBLE);
 
 //                if(fg4 == null){
 //                    fg4 = new LtshChatFragment("第四个Fragment");
@@ -254,10 +254,10 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
 
     //重置所有文本的选中状态
     private void setSelected() {
-        tab_menu_channel.setSelected(false);
-        tab_menu_message.setSelected(false);
-        tab_menu_better.setSelected(false);
-        tab_menu_setting.setSelected(false);
+        tab_menu_home.setSelected(false);
+        tab_menu_friend.setSelected(false);
+        tab_menu_dynamic.setSelected(false);
+        tab_menu_my.setSelected(false);
 
     }
 

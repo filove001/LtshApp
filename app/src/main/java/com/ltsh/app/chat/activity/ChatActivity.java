@@ -1,6 +1,7 @@
 package com.ltsh.app.chat.activity;
 
 import android.Manifest;
+import android.graphics.drawable.Drawable;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
@@ -9,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,8 +41,10 @@ public class ChatActivity extends BaseActivity {
     private TextView titleView;
     private Button backBtn;
     private Button sendBtn;
-    private Button audioBtn;
     private ListView chat_list;
+    private EditText ed_send_msg_input;
+    private Button btn_audio;
+    private Button tab_menu_msg_switch;
 
     private AudioRecoderUtils audioRecoderUtils = null;
     @Override
@@ -74,6 +78,25 @@ public class ChatActivity extends BaseActivity {
             }
         });
         MessageItemDao.updateMessageRead(CacheObject.userToken.getId(), userFriend.getFriendUserId());
+        tab_menu_msg_switch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(btn_audio.getVisibility() == View.GONE) {
+                    Drawable top = getResources().getDrawable(R.mipmap.form);// 获取res下的图片drawable
+                    top.setBounds(0, 0, top.getMinimumWidth(), top.getMinimumHeight());// 一定要设置setBounds();
+                    tab_menu_msg_switch.setCompoundDrawables(null, top,null, null);
+                    btn_audio.setVisibility(View.VISIBLE);
+                    ed_send_msg_input.setVisibility(View.GONE);
+                } else {
+                    Drawable top = getResources().getDrawable(R.mipmap.sound);// 获取res下的图片drawable
+                    top.setBounds(0, 0, top.getMinimumWidth(), top.getMinimumHeight());// 一定要设置setBounds();
+                    tab_menu_msg_switch.setCompoundDrawables(null, top,null, null);
+//                    tab_menu_msg_switch.setBackground(getResources().getDrawable(R.mipmap.form));
+                    btn_audio.setVisibility(View.GONE);
+                    ed_send_msg_input.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 //        chat_list.setOnApplyWindowInsetsListener();
 
 
@@ -98,46 +121,22 @@ public class ChatActivity extends BaseActivity {
             @Override
             public void onStop(String filePath) {
                 Toast.makeText(ChatActivity.this, "录音保存在：" + filePath, Toast.LENGTH_SHORT).show();
+
 //                mTextView.setText(0);
             }
         });
+
         //Button的touch监听
-        audioBtn.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                switch (event.getAction()){
-
-                    case MotionEvent.ACTION_DOWN:
-
-//                        mPop.showAtLocation(rl,Gravity.CENTER,0,0);
-
-                        audioBtn.setText("松开保存");
-                        audioRecoderUtils.startRecord();
-
-
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-
-                        audioRecoderUtils.stopRecord();        //结束录音（保存录音文件）
-//                        mAudioRecoderUtils.cancelRecord();    //取消录音（不保存录音文件）
-//                        mPop.dismiss();
-                        audioBtn.setText("按住说话");
-
-                        break;
-                }
-                return true;
-            }
-        });
+        btn_audio.setOnTouchListener(new AudioOnTouchListener(audioRecoderUtils));
     }
     private boolean isStart = false;
     private void bindViews() {
         titleView = (TextView)findViewById(R.id.txt_title);
         backBtn = (Button)findViewById(R.id.btn_back);
         sendBtn = (Button)findViewById(R.id.btn_send);
-        audioBtn = (Button) findViewById(R.id.btn_yy);
-
+        ed_send_msg_input = (EditText) findViewById(R.id.ed_send_msg_input);
+        btn_audio = (Button) findViewById(R.id.btn_audio);
+        tab_menu_msg_switch = (Button)findViewById(R.id.tab_menu_msg_switch);
     }
 
 

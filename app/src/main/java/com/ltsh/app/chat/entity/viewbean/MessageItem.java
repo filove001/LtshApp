@@ -2,6 +2,8 @@ package com.ltsh.app.chat.entity.viewbean;
 
 import com.ltsh.app.chat.entity.BaseEntity;
 
+import java.util.Date;
+
 /**
  * Created by Random on 2017/11/3.
  */

@@ -10,13 +10,13 @@
     <LinearLayout
         android:id="@+id/ly_tab_menu"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:background="@color/bg_white"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/ly_tab_menu_channel"
+            android:id="@+id/ly_tab_menu_home"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -28,22 +28,22 @@
                 android:padding="5dp">
 
                 <TextView
-                    android:id="@+id/tab_menu_channel"
+                    android:id="@+id/tab_menu_home"
                     style="@style/tab_menu_text"
-                    android:drawableTop="@drawable/tab_menu_channel"
-                    android:text="@string/tab_menu_alert" />
+                    android:drawableTop="@drawable/tab_menu_home"
+                    android:text="@string/tab_menu_home" />
 
                 <TextView
-                    android:id="@+id/tab_menu_channel_num"
+                    android:id="@+id/tab_menu_home_num"
                     style="@style/tab_menu_bgnum"
-                    android:layout_toRightOf="@+id/tab_menu_channel"
+                    android:layout_toRightOf="@+id/tab_menu_home"
                     android:text="99+"
                     android:visibility="gone" />
             </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/ly_tab_menu_message"
+            android:id="@+id/ly_tab_menu_friend"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -55,43 +55,15 @@
                 android:padding="5dp">
 
                 <TextView
-                    android:id="@+id/tab_menu_message"
+                    android:id="@+id/tab_menu_friend"
                     style="@style/tab_menu_text"
-                    android:drawableTop="@drawable/tab_menu_message"
-                    android:text="@string/tab_menu_profile" />
+                    android:drawableTop="@drawable/tab_menu_friend"
+                    android:text="@string/tab_menu_friend" />
 
                 <TextView
-                    android:id="@+id/tab_menu_message_num"
+                    android:id="@+id/tab_menu_friend_num"
                     style="@style/tab_menu_bgnum"
-                    android:layout_toRightOf="@+id/tab_menu_message"
-                    android:text="99+"
-                    android:visibility="gone" />
-            </RelativeLayout>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/ly_tab_menu_better"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="5dp">
-
-                <TextView
-                    android:id="@+id/tab_menu_better"
-                    style="@style/tab_menu_text"
-                    android:drawableTop="@drawable/tab_menu_better"
-                    android:text="@string/tab_menu_pay" />
-
-                <TextView
-                    android:id="@+id/tab_menu_better_num"
-                    style="@style/tab_menu_bgnum"
-                    android:layout_toRightOf="@+id/tab_menu_better"
+                    android:layout_toRightOf="@+id/tab_menu_friend"
                     android:text="99+"
                     android:visibility="gone" />
             </RelativeLayout>
@@ -99,7 +71,7 @@
 
 
         <LinearLayout
-            android:id="@+id/ly_tab_menu_setting"
+            android:id="@+id/ly_tab_menu_dynamic"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -111,20 +83,47 @@
                 android:padding="5dp">
 
                 <TextView
-                    android:id="@+id/tab_menu_setting"
+                    android:id="@+id/tab_menu_dynamic"
                     style="@style/tab_menu_text"
-                    android:drawableTop="@drawable/tab_menu_setting"
-                    android:text="@string/tab_menu_alert" />
+                    android:drawableTop="@drawable/tab_menu_dynamic"
+                    android:text="@string/tab_menu_dynamic" />
+
+                <TextView
+                    android:id="@+id/tab_menu_dynamic_num"
+                    style="@style/tab_menu_bgnum"
+                    android:layout_toRightOf="@+id/tab_menu_dynamic"
+                    android:text="99+"
+                    android:visibility="gone" />
+            </RelativeLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ly_tab_menu_my"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/tab_menu_my"
+                    style="@style/tab_menu_text"
+                    android:drawableTop="@drawable/tab_menu_my"
+                    android:text="@string/tab_menu_my" />
 
                 <ImageView
-                    android:id="@+id/tab_menu_setting_partner"
+                    android:id="@+id/tab_menu_my_num"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:layout_marginLeft="-5dp"
-                    android:layout_toRightOf="@id/tab_menu_setting"
+                    android:layout_toRightOf="@id/tab_menu_my"
                     android:visibility="gone"
                     android:src="@mipmap/partner_red" />
-
             </RelativeLayout>
         </LinearLayout>
 
