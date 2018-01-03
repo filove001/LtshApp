@@ -70,6 +70,11 @@ public class LoginOnClickListener implements View.OnClickListener {
                             activity.startActivity(intent);
                         }
                     }
+
+                    @Override
+                    public void error(Result result) {
+
+                    }
                 });
             }
         }).start();

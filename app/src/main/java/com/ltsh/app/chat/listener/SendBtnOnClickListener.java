@@ -46,7 +46,7 @@ public class SendBtnOnClickListener implements View.OnClickListener {
         messageInfo.setSendType(0);
         messageInfo.setCreateBy(CacheObject.userToken.getId());
 //        messageInfo.setCreateByName(CacheObject.userToken.getName());
-        messageInfo.setCreateTime(Dates.toStr(new Date(), Dates.YYYY_MM_DD_HH_MM_SS));
+        messageInfo.setCreateTime(String.valueOf(new Date().getTime()));
         messageInfo.setStatus(StatusEnums.YFS.getValue());
         int id = BaseDao.insert(messageInfo);
         messageInfo.setId(id);

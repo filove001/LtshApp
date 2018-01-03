@@ -8,4 +8,5 @@ import com.ltsh.app.chat.entity.common.Result;
 
 public interface CallbackInterface {
     public void callBack(Result result);
+    public void error(Result result);
 }

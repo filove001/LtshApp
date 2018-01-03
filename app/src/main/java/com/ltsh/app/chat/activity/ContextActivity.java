@@ -153,11 +153,21 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
                 public void callBack(Result result) {
                     callSerivice.callBack(result, UserFriend.class);
                 }
+
+                @Override
+                public void error(Result result) {
+
+                }
             });
             AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_GROUP_URL, map, this, new CallbackInterface() {
                 @Override
                 public void callBack(Result result) {
                     callSerivice.callBack(result, UserGroup.class);
+                }
+
+                @Override
+                public void error(Result result) {
+
                 }
             });
 
@@ -165,6 +175,11 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
                 @Override
                 public void callBack(Result result) {
                     callSerivice.callBack(result, UserGroupRel.class);
+                }
+
+                @Override
+                public void error(Result result) {
+
                 }
             });
         }

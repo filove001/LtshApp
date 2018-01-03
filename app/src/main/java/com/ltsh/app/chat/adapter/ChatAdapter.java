@@ -15,13 +15,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ltsh.app.chat.R;
+import com.ltsh.app.chat.config.BaseCache;
 import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.dao.BaseDao;
+import com.ltsh.app.chat.entity.BaseEntity;
 import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.utils.ImageUtils;
 import com.ltsh.common.util.JsonUtils;
 import com.ltsh.common.util.LogUtils;
+
+import java.util.Map;
 
 public class ChatAdapter extends LtshBaseAdapter{
 
@@ -78,7 +82,7 @@ public class ChatAdapter extends LtshBaseAdapter{
                 viewHolder = (ViewHolder) convertView.getTag(R.id.tag_friend_msg_item);
             }
         }
-        LogUtils.info("type:{}, messageItems:{}", itemViewType, JsonUtils.toJson(item));
+//        LogUtils.info("type:{}, messageItems:{}", itemViewType, JsonUtils.toJson(item));
         if(viewHolder == null) {
             viewHolder = getViewHolder(itemViewType, convertView);
         }
@@ -90,8 +94,22 @@ public class ChatAdapter extends LtshBaseAdapter{
 //            if(viewHolder.type == 0) {
 //                viewHolder.chat_item_txt_name.setText(item.getCreateByName());
 //            } else {
+            if(item.getCreateBy() == CacheObject.userToken.getId()) {
+                viewHolder.chat_item_txt_name.setText(CacheObject.userToken.getName());
+            } else {
+                String name = "未知用户";
+                Map<Integer, BaseEntity> integerBaseEntityMap = BaseCache.cacheMap.get(UserFriend.class.getSimpleName());
+                for (Integer id:integerBaseEntityMap.keySet()) {
+                    UserFriend userFriend = (UserFriend) integerBaseEntityMap.get(id);
+                    if(userFriend.getFriendUserId() == item.getCreateBy()) {
+                        name = userFriend.getName();
+                    }
+                }
+                viewHolder.chat_item_txt_name.setText(name);
 
-            viewHolder.chat_item_txt_name.setText(CacheObject.userToken.getName());
+            }
+
+
 //            }
 //            if(item.getCreateTime() != null) {
 //                viewHolder.chat_item_txt_time.setText(item.getCreateTime());

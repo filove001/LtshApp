@@ -73,7 +73,10 @@ public class ChatActivity extends BaseActivity {
         CacheObject.handler.post(new Runnable() {
             @Override
             public void run() {
-                final List<MessageInfo> messageInfos = BaseDao.query(MessageInfo.class, "(create_by=? and to_user=?) or (create_by=? and to_user=?)", new String[]{userFriend.getFriendUserId() + "", CacheObject.userToken.getId() + "", CacheObject.userToken.getId() + "", userFriend.getFriendUserId() + ""}, null);
+                final List<MessageInfo> messageInfos = BaseDao.query(MessageInfo.class,
+                        "(create_by=? and to_user=?) or (create_by=? and to_user=?)",
+                        new String[]{userFriend.getFriendUserId() + "", CacheObject.userToken.getId() + "",
+                                CacheObject.userToken.getId() + "", userFriend.getFriendUserId() + ""}, null, "0,10");
                 CacheObject.chatAdapter.addAll(messageInfos);
             }
         });

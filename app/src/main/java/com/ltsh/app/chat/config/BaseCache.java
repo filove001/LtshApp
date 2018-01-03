@@ -28,6 +28,7 @@ public class BaseCache {
         String key = getKey(entityClass);
         return (T)cacheMap.get(key).get(id);
     }
+
     public static void add(Class entityClass,BaseEntity t) {
         String key = getKey(entityClass);
         cacheMap.get(key).put(t.getId(), t);

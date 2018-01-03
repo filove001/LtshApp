@@ -72,7 +72,7 @@ public class AppHttpClient {
                         LogUtils.error(e.getMessage(), e);
                     }
                 } else {
-
+                    callBackInterface.error(mapResult);
                     CacheObject.handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -109,6 +109,13 @@ public class AppHttpClient {
                 CacheObject.handler.post(new Runnable() {
                     @Override
                     public void run() {
+
+                        Set<Activity> activitySet = BaseActivity.activitySet;
+                        for (Activity activity1 : activitySet) {
+                            if(!activity1.isFinishing()) {
+//                                activity1.finish();
+                            }
+                        }
                         Intent loginIntent = new Intent("android.intent.action.LOGIN");
                         loginIntent.setClassName(activity, LoginActivity.class.getName());
 
@@ -116,17 +123,9 @@ public class AppHttpClient {
                             Activity activity1= (Activity)activity;
                             if(!activity1.isFinishing()) {
                                 activity1.startActivity(loginIntent);
-                                activity1.finish();
-                            }
-
-                        }
-                        Set<Activity> activitySet = BaseActivity.activitySet;
-                        for (Activity activity1 : activitySet) {
-                            if(!activity1.isFinishing()) {
-                                activity1.finish();
+//                                activity1.finish();
                             }
                         }
-
 
                         BaseActivity.activitySet.clear();
                     }

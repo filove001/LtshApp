@@ -47,6 +47,11 @@ public class ReceiveMsgService extends TimeService {
                 loadData(result);
                 setLock(false);
             }
+
+            @Override
+            public void error(Result result) {
+                setLock(false);
+            }
         });
 
     }

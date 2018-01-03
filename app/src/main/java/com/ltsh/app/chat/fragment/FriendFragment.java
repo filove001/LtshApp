@@ -55,6 +55,11 @@ public class FriendFragment extends Fragment {
                 };
                 loadEntityCallSerivice.callBack(result, UserFriend.class);
             }
+
+            @Override
+            public void error(Result result) {
+
+            }
         });
     }
     @Override

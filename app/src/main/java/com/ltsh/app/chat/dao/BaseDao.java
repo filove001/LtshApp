@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.Cache;
+
 /**
  * Created by Random on 2017/11/7.
  */
@@ -50,7 +52,7 @@ public class BaseDao {
             LogUtils.error(e.getMessage(), e);
         } finally {
             close(cursor);
-            close(writableDatabase);
+//            close(writableDatabase);
         }
 
         return result;
@@ -75,7 +77,7 @@ public class BaseDao {
         } catch (Exception e) {
             LogUtils.error(e.getMessage(), e);
         } finally {
-            close(writableDatabase);
+//            close(writableDatabase);
         }
         return -1;
     }
@@ -87,7 +89,7 @@ public class BaseDao {
         } catch (Exception e) {
             LogUtils.error(e.getMessage(), e);
         } finally {
-            close(writableDatabase);
+//            close(writableDatabase);
         }
     }
 
@@ -100,7 +102,7 @@ public class BaseDao {
         } catch (Exception e) {
             LogUtils.error(e.getMessage(), e);
         } finally {
-            close(writableDatabase);
+//            close(writableDatabase);
         }
     }
     public static <T> T getById(Class<T> classT, int id) {
@@ -132,7 +134,7 @@ public class BaseDao {
             LogUtils.error(e.getMessage(), e);
         } finally {
             close(cursor);
-            close(readableDatabase);
+//            close(readableDatabase);
         }
         return new ArrayList<>();
     }
@@ -149,7 +151,7 @@ public class BaseDao {
             LogUtils.error(e.getMessage(), e);
         } finally {
             close(cursor);
-            close(readableDatabase);
+//            close(readableDatabase);
         }
         return new ArrayList<>();
     }
@@ -162,22 +164,24 @@ public class BaseDao {
         }
     }
     public static <T> List<T> query(Class<T> classT, String where, String[] params, String orderBy) {
+        return query(classT, where,params, orderBy, null);
+    }
+    public static <T> List<T> query(Class<T> classT, String where, String[] params, String orderBy, String limit) {
         SQLiteDatabase readableDatabase = null;
         Cursor cursor = null;
         try {
             readableDatabase = CacheObject.dbHelper.getReadableDatabase();
-            cursor = readableDatabase.query(DbUtils.getTableName(classT), DbUtils.getColumns(classT), where, params, null, null, orderBy);
+            cursor = readableDatabase.query(DbUtils.getTableName(classT), DbUtils.getColumns(classT), where, params, null, null, orderBy, limit);
             List<T> list = cursorToList(classT, cursor);
             return list;
         } catch (Exception e) {
             LogUtils.error(e.getMessage(), e);
         } finally {
             close(cursor);
-            close(readableDatabase);
+//            close(readableDatabase);
         }
         return new ArrayList<>();
     }
-
     public static <T> List<T> queryMyList(Class<T> classT, String orderBy) {
         SQLiteDatabase readableDatabase = null;
         Cursor cursor = null;
@@ -192,7 +196,7 @@ public class BaseDao {
             LogUtils.error(e.getMessage(), e);
         } finally {
             close(cursor);
-            close(readableDatabase);
+//            close(readableDatabase);
         }
         return new ArrayList<>();
     }
