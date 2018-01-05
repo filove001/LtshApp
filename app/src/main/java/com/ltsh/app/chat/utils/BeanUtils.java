@@ -4,6 +4,7 @@ import android.content.ContentValues;
 
 import com.ltsh.app.chat.utils.db.DbUtils;
 
+import com.ltsh.common.util.Dates;
 import com.ltsh.common.util.LogUtils;
 import com.ltsh.common.util.db.PropertyMethod;
 
@@ -12,6 +13,7 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +49,9 @@ public class BeanUtils {
                 if(invoke == null)
                     continue;
                 String columnName = DbUtils.getColumnName(sourceField.getName());
+                if(invoke instanceof Date) {
+                    invoke = Dates.toStr((Date)invoke, Dates.YYYY_MM_DD_HH_MM_SS);
+                }
                 setValue(contentValues, contentValues.getClass().getMethod("put", String.class, invoke.getClass()),
                         new Object[]{columnName, invoke}, sourcePropertyMethod.getReturnType());
             } catch (Exception e) {
@@ -155,6 +160,8 @@ public class BeanUtils {
                 method.invoke(obj, new BigDecimal(value + ""));
             } else if(toType == String.class) {
                 method.invoke(obj, String.valueOf(value));
+            }else if(toType == Date.class) {
+                method.invoke(obj, Dates.toDate((String)value, Dates.YYYY_MM_DD_HH_MM_SS));
             } else {
                 throw new RuntimeException("Don't know about " + toType);
             }

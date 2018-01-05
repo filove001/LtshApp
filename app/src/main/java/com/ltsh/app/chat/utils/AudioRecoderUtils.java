@@ -33,7 +33,8 @@ public class AudioRecoderUtils {
     public AudioRecoderUtils(){
 
         //默认保存路径为/sdcard/record/下
-        this(Environment.getExternalStorageDirectory()+"/record/");
+
+        this(Environment.getExternalStorageDirectory()+"/ltshApp/record/");
     }
 
     public AudioRecoderUtils(String filePath) {

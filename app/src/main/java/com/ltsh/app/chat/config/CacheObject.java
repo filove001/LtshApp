@@ -21,7 +21,7 @@ import java.util.Map;
 public class CacheObject {
     public static Map<String, Object> cacheMap = new HashMap<>();
     public static ChatAdapter chatAdapter = null;
-    public static MsgListAdapter messageAdapter = null;
+    public static MsgListAdapter msgListAdapter = null;
     public static FriendAdapter friendAdapter = null;
     public static Handler handler;
     public static UserToken userToken = null;

@@ -1,10 +1,14 @@
 package com.ltsh.app.chat.activity;
 
+import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,10 +34,13 @@ import com.ltsh.app.chat.service.LoadDataService;
 import com.ltsh.app.chat.service.LoadEntityCallSerivice;
 import com.ltsh.app.chat.service.ReceiveMsgService;
 import com.ltsh.app.chat.utils.http.AppHttpClient;
+import com.ltsh.app.chat.utils.http.OkHttpUtils;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Random on 2017/10/13.
@@ -88,7 +95,34 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
                 startActivity(loginIntent);
                 finish();
                 break;
+            case R.id.group_sq:
+                int MY_PERMISSIONS_REQUEST_CALL_PHONE = 123;
+                int writePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                int filePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS);
+                if(writePermission != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            MY_PERMISSIONS_REQUEST_CALL_PHONE);
+                }
+                if(filePermission != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS},
+                            MY_PERMISSIONS_REQUEST_CALL_PHONE);
+                }
+                break;
+            case R.id.group_dowm:
+                final File cacheDir = getCacheDir();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        File downloadFile = new File(cacheDir, UUID.randomUUID().toString() + ".jpg");
+                        String url = "http://pic4.nipic.com/20091217/3885730_124701000519_2.jpg";
+                        OkHttpUtils.download(url, downloadFile);
+                    }
+                }).start();
+                break;
         }
+
         return true;
     }
 
@@ -96,6 +130,8 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_main);
         setContentView(R.layout.activity_context);
         bindViews();
         fManager = getFragmentManager();
@@ -117,6 +153,9 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
         initFragment();
         loadData();
         ly_tab_menu_home.performClick();
+
+
+
     }
 
     private void bindViews() {
@@ -183,12 +222,15 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
                 }
             });
         }
+
+
         List<UserFriend> userFriendList = BaseDao.queryMyList(UserFriend.class, "id desc");
         BaseCache.init(UserFriend.class, userFriendList);
         List<UserGroup> userGroups = BaseDao.queryMyList(UserGroup.class, "id desc");
         BaseCache.init(UserGroup.class, userGroups);
         List<UserGroupRel> userGroupRels = BaseDao.queryMyList(UserGroupRel.class, "id desc");
         BaseCache.init(UserGroupRel.class, userGroupRels);
+//        OkHttpUtils
     }
 
     private void initFragment() {

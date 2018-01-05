@@ -86,7 +86,7 @@ public class ChatAdapter extends LtshBaseAdapter{
         if(viewHolder == null) {
             viewHolder = getViewHolder(itemViewType, convertView);
         }
-
+//        LogUtils.info("viewHolder:{}", JsonUtils.toJson(viewHolder));
         if(item != null){
             viewHolder.chat_item_img_icon.setImageBitmap(ImageUtils.readBitMap(convertView.getContext(), R.mipmap.iv_icon_baidu));
             viewHolder.chat_item_img_icon.setVisibility(View.VISIBLE);
@@ -98,13 +98,18 @@ public class ChatAdapter extends LtshBaseAdapter{
                 viewHolder.chat_item_txt_name.setText(CacheObject.userToken.getName());
             } else {
                 String name = "未知用户";
-                Map<Integer, BaseEntity> integerBaseEntityMap = BaseCache.cacheMap.get(UserFriend.class.getSimpleName());
-                for (Integer id:integerBaseEntityMap.keySet()) {
-                    UserFriend userFriend = (UserFriend) integerBaseEntityMap.get(id);
-                    if(userFriend.getFriendUserId() == item.getCreateBy()) {
-                        name = userFriend.getName();
+                if(item.getSourceType().equals("USER")) {
+                    Map<Integer, BaseEntity> integerBaseEntityMap = BaseCache.cacheMap.get(UserFriend.class.getSimpleName());
+                    for (Integer id:integerBaseEntityMap.keySet()) {
+                        UserFriend userFriend = (UserFriend) integerBaseEntityMap.get(id);
+                        if(userFriend.getFriendUserId() == item.getCreateBy()) {
+                            name = userFriend.getName();
+                        }
                     }
+                } else {
+
                 }
+
                 viewHolder.chat_item_txt_name.setText(name);
 
             }
@@ -138,7 +143,11 @@ public class ChatAdapter extends LtshBaseAdapter{
         super.notifyDataSetChanged();
         listView.smoothScrollToPosition(listView.getHeight());
     }
+    private class BeanClass {
+        int type;
+        int viewId;
 
+    }
     private class ViewHolder{
         TextView chat_item_txt_content;
         TextView chat_item_txt_time;

@@ -40,12 +40,12 @@ public class LoadDataService extends TimeService {
 
     @Override
     protected void executeTimes() {
-        if(CacheObject.messageAdapter != null) {
+        if(CacheObject.msgListAdapter != null) {
             final List<MessageItem> messageItemList = MessageItemDao.getList(CacheObject.userToken.getId());
             CacheObject.handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    CacheObject.messageAdapter.addAll(0,messageItemList);
+                    CacheObject.msgListAdapter.addAll(0,messageItemList);
                 }
             });
         }

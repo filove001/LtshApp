@@ -1,12 +1,14 @@
 package com.ltsh.app.chat.activity;
 
 import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -105,13 +107,7 @@ public class ChatActivity extends BaseActivity {
 
     }
     private void initAudio(){
-        int MY_PERMISSIONS_REQUEST_CALL_PHONE = 100;
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                MY_PERMISSIONS_REQUEST_CALL_PHONE);
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS},
-                MY_PERMISSIONS_REQUEST_CALL_PHONE);
+
         audioRecoderUtils = new AudioRecoderUtils();
         audioRecoderUtils.setOnAudioStatusUpdateListener(new AudioRecoderUtils.OnAudioStatusUpdateListener() {
             @Override

@@ -91,7 +91,8 @@ public abstract class LtshBaseAdapter<T extends BaseEntity> extends android.widg
             return isChange;
         }
         if(isChannel) {
-            notifyDataSetChanged();
+            notifyDataSetInvalidated();
+//            notifyDataSetChanged();
         }
         return true;
     }

@@ -48,7 +48,10 @@ public class SendBtnOnClickListener implements View.OnClickListener {
 //        messageInfo.setCreateByName(CacheObject.userToken.getName());
         messageInfo.setCreateTime(String.valueOf(new Date().getTime()));
         messageInfo.setStatus(StatusEnums.YFS.getValue());
+        messageInfo.setSourceType("USER");
         int id = BaseDao.insert(messageInfo);
+        messageInfo.setSourceId(CacheObject.userToken.getId() + "");
+
         messageInfo.setId(id);
         CacheObject.chatAdapter.add(messageInfo, true);
         MessageSendReq req = new MessageSendReq();

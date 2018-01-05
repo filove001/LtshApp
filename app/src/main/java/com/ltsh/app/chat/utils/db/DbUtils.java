@@ -48,9 +48,9 @@ public class DbUtils {
         List<Object> list = new ArrayList<>();
         List<Field> declaredFields = BeanUtils.getFieldList(object.getClass());
         for (Field field:declaredFields) {
-            if(field.getName().toUpperCase().equals("ID") || field.getAnnotation(NoDbColumn.class) != null) {
-                continue;
-            }
+//            if(field.getName().toUpperCase().equals("ID") || field.getAnnotation(NoDbColumn.class) != null) {
+//                continue;
+//            }
             try {
                 PropertyMethod propertyMethod = new PropertyMethod(field.getName(), object.getClass());
                 Object o = propertyMethod.getReadMethod().invoke(object);
@@ -72,12 +72,12 @@ public class DbUtils {
         StringBuffer columndSb = new StringBuffer();
         StringBuffer valueSb = new StringBuffer();
         for (DbColumn dbColumn:dbColumns) {
-            if(dbColumn.isPk()) {
-
-            } else {
-                columndSb.append(dbColumn.getColumnName()).append(",");
-                valueSb.append("?,");
-            }
+//            if(dbColumn.isPk()) {
+//
+//            } else {
+            columndSb.append(dbColumn.getColumnName()).append(",");
+            valueSb.append("?,");
+//            }
 
         }
         stringBuffer.append(columndSb.substring(0, columndSb.length() - 1)).append(") values(").append(valueSb.substring(0, valueSb.length() - 1)).append(")");
@@ -92,7 +92,7 @@ public class DbUtils {
         stringBuffer.append(str).append(" ").append(dbColumns.get(0).getTableName()).append("(");
         for (DbColumn dbColumn:dbColumns) {
             if(dbColumn.isPk()) {
-                stringBuffer.append(dbColumn.getColumnName()).append(" ").append(dbColumn.getDbType()).append(" PRIMARY KEY AUTOINCREMENT").append(",");
+                stringBuffer.append(dbColumn.getColumnName()).append(" ").append(dbColumn.getDbType()).append(" PRIMARY KEY ").append(",");
             } else {
                 stringBuffer.append(dbColumn.getColumnName()).append(" ").append(dbColumn.getDbType()).append(",");
             }

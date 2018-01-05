@@ -1,9 +1,11 @@
 package com.ltsh.app.chat;
 
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.view.Menu;
 
 import com.ltsh.app.chat.activity.BaseActivity;
@@ -25,10 +27,11 @@ import java.util.List;
 public class MainActivity extends BaseActivity {
     Intent loginIntent;
     Intent contextIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
         AppInit.init(this);
 
         List<UserToken> list = BaseDao.query(UserToken.class, null, null, null);

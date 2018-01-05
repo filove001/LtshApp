@@ -4,6 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.ltsh.common.util.LogUtils;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 /**
@@ -40,4 +45,26 @@ public class ImageUtils {
         return  BitmapFactory.decodeStream(is, null, opt);
 
     }
+    public  static Bitmap readBitMap(Context context, File file){
+
+        BitmapFactory.Options opt = new  BitmapFactory.Options();
+
+        opt.inPreferredConfig =  Bitmap.Config.RGB_565;
+
+//        opt.inPurgeable = true;
+//
+//        opt.inInputShareable = true;
+
+        //  获取资源图片
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            LogUtils.error(e.getMessage(), e);
+        }
+
+        return  BitmapFactory.decodeStream(fileInputStream, null, opt);
+
+    }
+
 }

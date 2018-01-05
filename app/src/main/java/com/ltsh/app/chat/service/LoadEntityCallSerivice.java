@@ -38,6 +38,7 @@ public class LoadEntityCallSerivice {
         }
     }
     protected BaseEntity single(BaseEntity entity) {
-        return entity;
+        BaseEntity entity1 = BaseDao.getById(entity.getClass(), entity.getId());
+        return entity1;
     }
 }

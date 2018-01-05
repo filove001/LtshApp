@@ -10,6 +10,7 @@ import com.ltsh.common.util.LogUtils;
 import okhttp3.*;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,38 @@ public class OkHttpUtils {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     static OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder().readTimeout(70L, TimeUnit.SECONDS).writeTimeout(70L, TimeUnit.SECONDS).connectTimeout(70L, TimeUnit.SECONDS);
 //    static OkHttpClient client = new OkHttpClient.Builder().readTimeout(70L, TimeUnit.SECONDS).writeTimeout(70L, TimeUnit.SECONDS).connectTimeout(70L, TimeUnit.SECONDS).build();
+    public static void download(String url, File downFile) {
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+        OkHttpClient client = clientBuilder.build();
+        Response response = null;
+        Call call = null;
 
+        call = client.newCall(request);
+        FileOutputStream fileOutputStream = null;
+        try {
+            response = call.execute();
+            fileOutputStream = new FileOutputStream(downFile);
+            fileOutputStream.write(response.body().bytes());
+            fileOutputStream.flush();
+        } catch (IOException e) {
+            LogUtils.error(e.getMessage(), e);
+        } finally {
+            if(response != null) {
+                response.close();
+            }
+            if(fileOutputStream != null) {
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    LogUtils.error(e.getMessage(), e);
+                }
+            }
+
+        }
+    }
     public static String post(String url, Map<String, Object> json) {
         return post(url, json, null);
     }
@@ -72,7 +104,6 @@ public class OkHttpUtils {
                 response.close();
             }
         }
-
         return JsonUtils.toJson(new Result(ResultCodeEnum.REQUEST_ERROR));
     }
 }

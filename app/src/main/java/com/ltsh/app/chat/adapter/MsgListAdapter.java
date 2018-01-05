@@ -68,10 +68,11 @@ public class MsgListAdapter extends LtshBaseAdapter<MessageItem>{
         if(item != null){
             holder.msg_item_txt_title.setText(item.getName());
             holder.msg_item_img_icon.setVisibility(View.VISIBLE);
+
             holder.msg_item_img_icon.setImageBitmap(ImageUtils.readBitMap(convertView.getContext(), R.mipmap.iv_icon_baidu));
             holder.msg_item_num.setText((item.getFszCount() + item.getWdCount()) + "");
             String lastMsg = item.getLastMsg();
-            if(lastMsg != null) {
+            if(lastMsg != null && lastMsg.split("_").length > 1) {
                 holder.msg_item_txt_content.setText(lastMsg.split("_")[1]);
             }
             holder.msg_item_txt_time.setText(Dates.toStrYYYYMMDD(new Date(Long.parseLong(item.getLastTime()))));

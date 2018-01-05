@@ -31,7 +31,7 @@ public class BaseDao {
     public static int insert(Object object) {
         Class<?> aClass = object.getClass();
 
-        int result = -1;
+        int result = 0;
         Cursor cursor = null;
         SQLiteDatabase writableDatabase = null;
         try {
@@ -39,20 +39,20 @@ public class BaseDao {
             ContentValues contentValues = BeanUtils.beanToContentValues(object);
             contentValues.remove("id");
             long insert = writableDatabase.insert(DbUtils.getTableName(aClass), null, contentValues);
-            if(insert > 1) {
+            result = (int)insert;
+            if(insert > 0) {
                 String sql = "select last_insert_rowid() from " + DbUtils.getTableName(aClass);
                 cursor = writableDatabase.rawQuery(sql, null);
                 if(cursor.moveToFirst()){
                     result = cursor.getInt(0);
-                    cursor.close();
                 }
+
             }
 
         } catch (Exception e) {
             LogUtils.error(e.getMessage(), e);
         } finally {
-            close(cursor);
-//            close(writableDatabase);
+            close(cursor, writableDatabase);
         }
 
         return result;
@@ -65,7 +65,7 @@ public class BaseDao {
         } catch (Exception e) {
             LogUtils.error(e.getMessage(), e);
         } finally {
-            close(writableDatabase);
+            close(null, writableDatabase);
         }
         return -1;
     }
@@ -77,7 +77,7 @@ public class BaseDao {
         } catch (Exception e) {
             LogUtils.error(e.getMessage(), e);
         } finally {
-//            close(writableDatabase);
+            close(null, writableDatabase);
         }
         return -1;
     }
@@ -89,7 +89,7 @@ public class BaseDao {
         } catch (Exception e) {
             LogUtils.error(e.getMessage(), e);
         } finally {
-//            close(writableDatabase);
+            close(null, writableDatabase);
         }
     }
 
@@ -102,7 +102,7 @@ public class BaseDao {
         } catch (Exception e) {
             LogUtils.error(e.getMessage(), e);
         } finally {
-//            close(writableDatabase);
+            close(null, writableDatabase);
         }
     }
     public static <T> T getById(Class<T> classT, int id) {
@@ -133,8 +133,7 @@ public class BaseDao {
         } catch (Exception e) {
             LogUtils.error(e.getMessage(), e);
         } finally {
-            close(cursor);
-//            close(readableDatabase);
+            close(cursor, readableDatabase);
         }
         return new ArrayList<>();
     }
@@ -150,8 +149,7 @@ public class BaseDao {
         } catch (Exception e) {
             LogUtils.error(e.getMessage(), e);
         } finally {
-            close(cursor);
-//            close(readableDatabase);
+            close(cursor, readableDatabase);
         }
         return new ArrayList<>();
     }
@@ -177,8 +175,7 @@ public class BaseDao {
         } catch (Exception e) {
             LogUtils.error(e.getMessage(), e);
         } finally {
-            close(cursor);
-//            close(readableDatabase);
+            close(cursor, readableDatabase);
         }
         return new ArrayList<>();
     }
@@ -195,8 +192,7 @@ public class BaseDao {
         } catch (Exception e) {
             LogUtils.error(e.getMessage(), e);
         } finally {
-            close(cursor);
-//            close(readableDatabase);
+            close(cursor, readableDatabase);
         }
         return new ArrayList<>();
     }
@@ -230,7 +226,12 @@ public class BaseDao {
             }
         }
     }
-
+    public static void close(Cursor cursor, SQLiteDatabase database) {
+        if(cursor != null)
+            cursor.close();
+//        if(database != null)
+//            database.close();
+    }
 
     public static void setMapValue(Cursor cursor, Map map, String columnName) {
         setValue(cursor, columnName, 1, map, null);

@@ -7,5 +7,9 @@
         </item>
         <item android:id="@+id/group_three" android:title="退出登录">
         </item>
+        <item android:id="@+id/group_dowm" android:title="下载文件">
+        </item>
+        <item android:id="@+id/group_sq" android:title="授权">
+        </item>
     </group>
 </menu>
