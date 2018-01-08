@@ -93,8 +93,7 @@ public class MsgListAdapter extends LtshBaseAdapter<MessageItem>{
     }
     public boolean isRepetition(MessageItem item) {
         for (MessageItem message : getDataList()) {
-            if (item.getCreateBy().intValue() == message.getCreateBy().intValue() &&
-                    (item.getLastTime() != null && item.getLastTime().equals(message.getLastTime()))) {
+            if (item.getCreateBy().intValue() == message.getCreateBy().intValue()) {
                 BeanUtils.copyProperties(item, message);
                 return true;
             }

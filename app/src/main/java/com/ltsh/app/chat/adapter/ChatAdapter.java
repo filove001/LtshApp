@@ -69,19 +69,19 @@ public class ChatAdapter extends LtshBaseAdapter{
         } else {
             itemViewType = 1;
         }
-        if(convertView == null){
+//        if(convertView == null){
             if(itemViewType == 0) {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.my_chat_item, parent, false);
             } else {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.friend_chat_item, parent, false);
             }
-        }else{
-            if(itemViewType == 0) {
-                viewHolder = (ViewHolder) convertView.getTag(R.id.tag_my_msg_item);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag(R.id.tag_friend_msg_item);
-            }
-        }
+//        }else{
+//            if(itemViewType == 0) {
+//                viewHolder = (ViewHolder) convertView.getTag(R.id.tag_my_msg_item);
+//            } else {
+//                viewHolder = (ViewHolder) convertView.getTag(R.id.tag_friend_msg_item);
+//            }
+//        }
 //        LogUtils.info("type:{}, messageItems:{}", itemViewType, JsonUtils.toJson(item));
         if(viewHolder == null) {
             viewHolder = getViewHolder(itemViewType, convertView);
@@ -109,7 +109,6 @@ public class ChatAdapter extends LtshBaseAdapter{
                 } else {
 
                 }
-
                 viewHolder.chat_item_txt_name.setText(name);
 
             }
@@ -141,7 +140,7 @@ public class ChatAdapter extends LtshBaseAdapter{
     @Override
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
-        listView.smoothScrollToPosition(listView.getHeight());
+        listView.smoothScrollToPosition(listView.getHeight()+ 1024);
     }
     private class BeanClass {
         int type;

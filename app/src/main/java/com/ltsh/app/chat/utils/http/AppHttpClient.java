@@ -49,7 +49,7 @@ public class AppHttpClient {
         String signStr = SignUtils.getSignStr(json);
         LogUtils.info("签名明文:" + signStr);
         String sign = SignUtils.getSign(signStr, "123456", randomValue);
-        LogUtils.info("签名:" + sign +", randomValue:" + randomValue);
+//        LogUtils.info("签名:" + sign +", randomValue:" + randomValue);
         json.put("signInfo", sign);
         LogUtils.info(String.format("请求连接:%s,请求参数:%s",baseUrl + url, json));
         return OkHttpUtils.post(baseUrl + url, json);
