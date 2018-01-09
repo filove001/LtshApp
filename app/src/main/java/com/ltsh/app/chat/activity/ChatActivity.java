@@ -76,9 +76,8 @@ public class ChatActivity extends BaseActivity {
             @Override
             public void run() {
                 final List<MessageInfo> messageInfos = BaseDao.query(MessageInfo.class,
-                        "(create_by=? and to_user=?) or (create_by=? and to_user=?)",
-                        new String[]{userFriend.getFriendUserId() + "", CacheObject.userToken.getId() + "",
-                                CacheObject.userToken.getId() + "", userFriend.getFriendUserId() + ""}, null, "0,10");
+                        "belongs_to=?",
+                        new String[]{userFriend.getFriendUserId() + ""}, null, "0,10");
                 CacheObject.chatAdapter.addAll(messageInfos);
             }
         });

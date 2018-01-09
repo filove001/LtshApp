@@ -58,6 +58,8 @@ public class MessageInfo extends BaseEntity {
      */
     private String sourceType;
 
+
+
     public String getMsgContext() {
         return msgContext;
     }

@@ -49,7 +49,7 @@ public class FriendFragment extends Fragment {
                     @Override
                     protected BaseEntity single(BaseEntity entity) {
                         UserFriend entity1 = (UserFriend) entity;
-                        UserFriend single = BaseDao.single(UserFriend.class, "friend_user_id=? and create_by=?", new String[]{entity1.getFriendUserId() + "", entity1.getCreateBy() + ""});
+                        UserFriend single = BaseDao.single(UserFriend.class, "friend_user_id=? and belongs_to=?", new String[]{entity1.getFriendUserId() + "", entity1.getCreateBy() + ""});
                         return single;
                     }
                 };

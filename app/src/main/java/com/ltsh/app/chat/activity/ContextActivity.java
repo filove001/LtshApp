@@ -198,6 +198,9 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
 
                 }
             });
+            map = new HashMap<>();
+            map.put("pageNumber", "1");
+            map.put("pageSize", "10000");
             AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_GROUP_URL, map, this, new CallbackInterface() {
                 @Override
                 public void callBack(Result result) {
@@ -209,7 +212,9 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
 
                 }
             });
-
+            map = new HashMap<>();
+            map.put("pageNumber", "1");
+            map.put("pageSize", "10000");
             AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_GROUP_REL_URL, map, this, new CallbackInterface() {
                 @Override
                 public void callBack(Result result) {

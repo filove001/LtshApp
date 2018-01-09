@@ -34,6 +34,10 @@ public class BaseDao {
         int result = 0;
         Cursor cursor = null;
         SQLiteDatabase writableDatabase = null;
+        if(CacheObject.userToken != null && object instanceof BaseEntity) {
+            BaseEntity baseEntity = (BaseEntity) object;
+            baseEntity.setBelongsTo(CacheObject.userToken.getId());
+        }
         try {
             writableDatabase = CacheObject.dbHelper.getWritableDatabase();
             ContentValues contentValues = BeanUtils.beanToContentValues(object);

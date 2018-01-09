@@ -27,11 +27,13 @@ import com.ltsh.common.util.security.SignUtils;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
+import org.slf4j.MDC;
 
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 
 /**
@@ -61,25 +63,35 @@ public class AppHttpClient {
         new Thread(new Runnable() {
             @Override
             public void run() {
-               final  Result<Map> mapResult = appPost(baseUrl, url, json, activity);
+                MDC.put("keep", StringUtils.getUUID());
+                if(!CacheObject.commonParams.isEmpty()) {
+                    final  Result<Map> mapResult = appPost(baseUrl, url, json, activity);
 
-                if(ResultCodeEnum.SUCCESS.getCode().equals(mapResult.getCode())) {
-                    try {
+                    if(ResultCodeEnum.SUCCESS.getCode().equals(mapResult.getCode())) {
+                        try {
+                            if(callBackInterface != null) {
+                                callBackInterface.callBack(mapResult);
+                            }
+                        } catch (Exception e) {
+                            LogUtils.error(e.getMessage(), e);
+                        }
+                    } else {
                         if(callBackInterface != null) {
-                            callBackInterface.callBack(mapResult);
+                            callBackInterface.error(mapResult);
                         }
-                    } catch (Exception e) {
-                        LogUtils.error(e.getMessage(), e);
+                        if(CacheObject.handler!= null) {
+                            CacheObject.handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(activity, mapResult.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
                     }
-                } else {
-                    callBackInterface.error(mapResult);
-                    CacheObject.handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(activity, mapResult.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
                 }
+
+                MDC.remove("keep");
             }
         }).start();
     }

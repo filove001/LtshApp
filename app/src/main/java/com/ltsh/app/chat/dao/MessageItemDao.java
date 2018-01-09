@@ -30,7 +30,7 @@ public class MessageItemDao {
                 "FROM\n" +
                 "  message_info msg \n" +
                 "  LEFT JOIN USER_FRIEND fr ON msg.`create_by` = fr.`friend_user_id`\n" +
-                "WHERE msg.to_user = ? AND msg.`source_type`='USER'\n" +
+                "WHERE  msg.`source_type`='USER' and fr.belongs_to=? and msg.belongs_to=?\n" +
                 "GROUP BY msg.create_by,fr.name\n" +
                 "UNION ALL\n" +
                 "SELECT \n" +
@@ -50,15 +50,15 @@ public class MessageItemDao {
                 "FROM\n" +
                 "  message_info msg \n" +
                 "  LEFT JOIN User_group ur ON msg.`source_id` = ur.id\n" +
-                "WHERE msg.to_user = ? AND msg.`source_type`='GROUP'\n" +
+                "WHERE msg.`source_type`='GROUP' and ur.belongs_to=? and msg.belongs_to=? \n" +
                 "GROUP BY msg.create_by,ur.name\n" +
                 ") messgeItem \n" +
                 "ORDER BY LAST_TIME DESC";
-        final List<MessageItem> messageItemList = BaseDao.rawQuery(MessageItem.class,sql, new String[]{userId + "", userId + ""});
+        final List<MessageItem> messageItemList = BaseDao.rawQuery(MessageItem.class,sql, new String[]{userId + "", userId + "", userId + "", userId + ""});
         return messageItemList;
     }
-    public static void updateMessageRead(Integer createBy, Integer toUser) {
-        String sql = "update message_info set status='YD' where (status='FSZ' or status='YSD' or status='WD') and ((create_by=? and to_user=?) or (to_user=? and create_by=?))";
-        BaseDao.execSQL(sql, new Object[]{createBy, toUser, createBy, toUser});
+    public static void updateMessageRead(Integer belongsTo, Integer toUser) {
+        String sql = "update message_info set status='YD' where (status='FSZ' or status='YSD' or status='WD') and (belongs_to=? and send_user=?)";
+        BaseDao.execSQL(sql, new Object[]{belongsTo, toUser});
     }
 }

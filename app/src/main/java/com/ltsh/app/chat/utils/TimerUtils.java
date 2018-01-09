@@ -20,13 +20,19 @@ public abstract class TimerUtils implements Runnable {
     @Override
     public void run() {
         execute();
-        handler.postDelayed(this, times);
+        if(handler != null) {
+            handler.postDelayed(this, times);
+        }
+
     }
     public abstract void execute();
     public void start(){
         new Thread(this).start();
     }
     public void stop(){
-        handler.removeCallbacks(this);
+        if(handler != null) {
+            handler.removeCallbacks(this);
+        }
+
     }
 }

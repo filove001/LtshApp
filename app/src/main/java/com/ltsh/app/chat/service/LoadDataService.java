@@ -40,7 +40,7 @@ public class LoadDataService extends TimeService {
 
     @Override
     protected void executeTimes() {
-        if(CacheObject.msgListAdapter != null) {
+        if(CacheObject.msgListAdapter != null && CacheObject.userToken != null) {
             final List<MessageItem> messageItemList = MessageItemDao.getList(CacheObject.userToken.getId());
             CacheObject.handler.post(new Runnable() {
                 @Override
@@ -49,8 +49,8 @@ public class LoadDataService extends TimeService {
                 }
             });
         }
-        if(CacheObject.friendAdapter != null) {
-            final List<UserFriend> userFriendList = BaseDao.query(UserFriend.class, "create_by=?", new String[]{CacheObject.userToken.getId() + ""}, null);
+        if(CacheObject.friendAdapter != null && CacheObject.userToken != null) {
+            final List<UserFriend> userFriendList = BaseDao.query(UserFriend.class, "belongs_to=?", new String[]{CacheObject.userToken.getId() + ""}, null);
             CacheObject.handler.post(new Runnable() {
                 @Override
                 public void run() {

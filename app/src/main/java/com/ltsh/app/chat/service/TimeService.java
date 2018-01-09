@@ -31,6 +31,7 @@ public abstract class TimeService extends IntentService {
     }
     protected abstract void executeTimes();
     private boolean isLock = false;
+    private boolean isRun = true;
     protected void setLock(boolean isLock){
         this.isLock = isLock;
     }
@@ -56,7 +57,10 @@ public abstract class TimeService extends IntentService {
             }
         };
         timerUtils.start();
-        while(true) {
+        if(CacheObject.handler == null) {
+            isRun = false;
+        }
+        while(isRun) {
             try {
                 Thread.sleep(60000L);
             } catch (InterruptedException e) {

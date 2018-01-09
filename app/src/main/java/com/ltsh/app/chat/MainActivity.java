@@ -33,7 +33,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         AppInit.init(this);
-
+        CacheObject.handler = new Handler();
         List<UserToken> list = BaseDao.query(UserToken.class, null, null, null);
         if(list != null && !list.isEmpty()) {
             CacheObject.userToken = list.get(0);
@@ -46,7 +46,7 @@ public class MainActivity extends BaseActivity {
             startActivity(loginIntent);
         }
 
-        CacheObject.handler = new Handler();
+
 //        this.finish();
     }
     /**

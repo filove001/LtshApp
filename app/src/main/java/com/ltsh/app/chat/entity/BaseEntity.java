@@ -30,6 +30,18 @@ public class BaseEntity implements Serializable{
      * 修改时间
      */
     private String updateTime;
+    /**
+     * 所属人
+     */
+    private Integer belongsTo;
+
+    public Integer getBelongsTo() {
+        return belongsTo;
+    }
+
+    public void setBelongsTo(Integer belongsTo) {
+        this.belongsTo = belongsTo;
+    }
 
     public Integer getId() {
         return id;
