@@ -64,7 +64,7 @@ public class ChatAdapter extends LtshBaseAdapter{
         viewHolder = null;
         int itemViewType = 0;
 
-        if(item.getCreateBy().intValue() == CacheObject.userToken.getId().intValue()) {
+        if(item.getBelongsTo().intValue() == CacheObject.userToken.getId().intValue()) {
             itemViewType = 0;
         } else {
             itemViewType = 1;
@@ -94,7 +94,7 @@ public class ChatAdapter extends LtshBaseAdapter{
 //            if(viewHolder.type == 0) {
 //                viewHolder.chat_item_txt_name.setText(item.getCreateByName());
 //            } else {
-            if(item.getCreateBy() == CacheObject.userToken.getId()) {
+            if(item.getBelongsTo().intValue() == CacheObject.userToken.getId().intValue()) {
                 viewHolder.chat_item_txt_name.setText(CacheObject.userToken.getName());
             } else {
                 String name = "未知用户";

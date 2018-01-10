@@ -76,9 +76,10 @@
             android:gravity="center">
 
             <RelativeLayout
-                android:layout_width="90px"
+                android:layout_width="140px"
                 android:layout_height="match_parent"
-                android:padding="8dp">
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
 
                 <Button
                     android:id="@+id/tab_menu_msg_switch"

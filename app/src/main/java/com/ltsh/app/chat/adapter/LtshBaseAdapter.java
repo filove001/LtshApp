@@ -61,11 +61,11 @@ public abstract class LtshBaseAdapter<T extends BaseEntity> extends android.widg
         return false;
     }
     //往特定位置，添加一个元素
-    public boolean add(T item, boolean isChannel) {
-        return add(null, item, isChannel);
+    public boolean add(T item, boolean isBatch) {
+        return add(null, item, isBatch);
     }
     //往特定位置，添加一个元素
-    public boolean add(Integer position,T item, boolean isChannel){
+    public boolean add(Integer position,T item, boolean isBatch){
         boolean isChange = false;
         if(isRepetition(item)){
             isChange = true;
@@ -88,11 +88,11 @@ public abstract class LtshBaseAdapter<T extends BaseEntity> extends android.widg
                 dataList.add(item);
             }
         } else {
-            return isChange;
+            return true;
         }
-        if(isChannel) {
-            notifyDataSetInvalidated();
-//            notifyDataSetChanged();
+        if(!isBatch) {
+//            notifyDataSetInvalidated();
+            notifyDataSetChanged();
         }
         return true;
     }
@@ -101,7 +101,7 @@ public abstract class LtshBaseAdapter<T extends BaseEntity> extends android.widg
     public void addAll(Integer position, List<T> items){
         boolean isrn = false;
         for (T item : items) {
-            boolean tmp = add(position, item, false);
+            boolean tmp = add(position, item, true);
             if(tmp) {
                 isrn = tmp;
             }
