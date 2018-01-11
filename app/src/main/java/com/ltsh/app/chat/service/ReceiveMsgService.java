@@ -1,25 +1,18 @@
 package com.ltsh.app.chat.service;
 
-import android.app.IntentService;
-import android.content.Intent;
-import android.os.Handler;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 
-import com.ltsh.app.chat.CallbackInterface;
+import com.ltsh.app.chat.handler.CallbackHandler;
 import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.dao.BaseDao;
 import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.entity.common.Result;
 import com.ltsh.app.chat.enums.ResultCodeEnum;
-import com.ltsh.app.chat.utils.TimerUtils;
 import com.ltsh.app.chat.utils.http.AppHttpClient;
 import com.ltsh.app.chat.config.CacheObject;
 
 import com.ltsh.common.util.JsonUtils;
-import com.ltsh.common.util.LogUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +34,7 @@ public class ReceiveMsgService extends TimeService {
     protected void executeTimes() {
         Map<String, Object> params = new HashMap<String, Object>();
         setLock(true);
-        AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_MESSAGE_URL, params, getApplicationContext(), new CallbackInterface() {
+        AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_MESSAGE_URL, params, getApplicationContext(), new CallbackHandler() {
             @Override
             public void callBack(Result result) {
                 loadData(result);
@@ -51,6 +44,9 @@ public class ReceiveMsgService extends TimeService {
             @Override
             public void error(Result result) {
                 setLock(false);
+                if(result.getCode().equals(ResultCodeEnum.TOKEN_FAIL.getCode())) {
+                    ReceiveMsgService.super.timerUtils.stop();
+                }
             }
         });
 

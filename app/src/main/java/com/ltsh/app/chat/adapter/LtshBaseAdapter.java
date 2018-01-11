@@ -121,4 +121,8 @@ public abstract class LtshBaseAdapter<T extends BaseEntity> extends android.widg
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
     }
+
+    public void clear() {
+        this.dataList.clear();
+    }
 }

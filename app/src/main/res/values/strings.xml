@@ -23,8 +23,11 @@
 
     <string name="chat_msg_text">文本</string>
     <string name="chat_msg_audio">语音</string>
+
+    <!-- tag -->
     <item name="tag_message_info" type="id"></item>
     <item name="tag_my_msg_item" type="id"></item>
     <item name="tag_friend_msg_item" type="id"></item>
     <item name="tag_user_friend" type="id"></item>
+
 </resources>

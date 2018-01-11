@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by Random on 2017/12/29.
  */
 
-public class BaseCache {
+public class EntityCache {
     public static Map<String, Map<Integer, BaseEntity>> cacheMap = new HashMap<>();
 
     public static void init(Class entityClass, List<? extends BaseEntity> list){

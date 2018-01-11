@@ -15,15 +15,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ltsh.app.chat.R;
-import com.ltsh.app.chat.config.BaseCache;
+import com.ltsh.app.chat.config.EntityCache;
 import com.ltsh.app.chat.config.CacheObject;
-import com.ltsh.app.chat.dao.BaseDao;
 import com.ltsh.app.chat.entity.BaseEntity;
 import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.utils.ImageUtils;
-import com.ltsh.common.util.JsonUtils;
-import com.ltsh.common.util.LogUtils;
 
 import java.util.Map;
 
@@ -99,7 +96,7 @@ public class ChatAdapter extends LtshBaseAdapter{
             } else {
                 String name = "未知用户";
                 if(item.getSourceType().equals("USER")) {
-                    Map<Integer, BaseEntity> integerBaseEntityMap = BaseCache.cacheMap.get(UserFriend.class.getSimpleName());
+                    Map<Integer, BaseEntity> integerBaseEntityMap = EntityCache.cacheMap.get(UserFriend.class.getSimpleName());
                     for (Integer id:integerBaseEntityMap.keySet()) {
                         UserFriend userFriend = (UserFriend) integerBaseEntityMap.get(id);
                         if(userFriend.getFriendUserId() == item.getCreateBy()) {

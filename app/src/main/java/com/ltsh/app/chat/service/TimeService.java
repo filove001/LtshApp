@@ -17,7 +17,7 @@ import com.ltsh.common.util.LogUtils;
  */
 
 public abstract class TimeService extends IntentService {
-    private TimerUtils timerUtils;
+    protected TimerUtils timerUtils;
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
@@ -75,6 +75,7 @@ public abstract class TimeService extends IntentService {
     public void onCreate() {
 //        LogUtils.info("onCreate方法被调用!");
         super.onCreate();
+
     }
 
     //Service被启动时调用

@@ -8,7 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.ltsh.app.chat.CallbackInterface;
+import com.ltsh.app.chat.MainActivity;
+import com.ltsh.app.chat.handler.CallbackHandler;
 import com.ltsh.app.chat.activity.BaseActivity;
 import com.ltsh.app.chat.activity.LoginActivity;
 import com.ltsh.app.chat.config.AppConstants;
@@ -18,7 +19,7 @@ import com.ltsh.app.chat.entity.common.Result;
 import com.ltsh.app.chat.enums.ResultCodeEnum;
 
 
-
+import com.ltsh.app.chat.utils.LoginOutUtils;
 import com.ltsh.common.util.JsonUtils;
 import com.ltsh.common.util.LogUtils;
 import com.ltsh.common.util.StringUtils;
@@ -29,11 +30,12 @@ import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.slf4j.MDC;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
 
 /**
@@ -59,7 +61,7 @@ public class AppHttpClient {
     public static String post(String baseUrl,String url, Map<String, Object> json) {
         return post(baseUrl, url, json, "");
     }
-    public static void threadPost(final String baseUrl, final String url, final Map<String, Object> json, final Context activity, final CallbackInterface callBackInterface) {
+    public static void threadPost(final String baseUrl, final String url, final Map<String, Object> json, final Context activity, final CallbackHandler callBackHandler) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -69,15 +71,15 @@ public class AppHttpClient {
 
                     if(ResultCodeEnum.SUCCESS.getCode().equals(mapResult.getCode())) {
                         try {
-                            if(callBackInterface != null) {
-                                callBackInterface.callBack(mapResult);
+                            if(callBackHandler != null) {
+                                callBackHandler.callBack(mapResult);
                             }
                         } catch (Exception e) {
                             LogUtils.error(e.getMessage(), e);
                         }
                     } else {
-                        if(callBackInterface != null) {
-                            callBackInterface.error(mapResult);
+                        if(callBackHandler != null) {
+                            callBackHandler.error(mapResult);
                         }
                         if(CacheObject.handler!= null) {
                             CacheObject.handler.post(new Runnable() {
@@ -96,9 +98,9 @@ public class AppHttpClient {
         }).start();
     }
 
-    public static void threadPost(final String baseUrl, final String url, final BaseEntity json, final Context activity, final CallbackInterface callBackInterface) {
+    public static void threadPost(final String baseUrl, final String url, final BaseEntity json, final Context activity, final CallbackHandler callBackHandler) {
         Map map = JsonUtils.fromJson(JsonUtils.toJson(json), Map.class);
-        threadPost(baseUrl, url, map, activity, callBackInterface);
+        threadPost(baseUrl, url, map, activity, callBackHandler);
 
     }
     public static Result<Map> appPost(String baseUrl, String url, Map<String, Object> json, final Context activity){
@@ -118,30 +120,10 @@ public class AppHttpClient {
             if(ResultCodeEnum.SUCCESS.getCode().equals(map.get("code"))) {
                 return new Result<>((String)map.get("code"), (String)map.get("message"), (Map)map.get("content"));
             }else if(ResultCodeEnum.TOKEN_FAIL.getCode().equals((String)map.get("code"))) {
-                CacheObject.handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        Set<Activity> activitySet = BaseActivity.activitySet;
-                        for (Activity activity1 : activitySet) {
-                            if(!activity1.isFinishing()) {
-//                                activity1.finish();
-                            }
-                        }
-                        Intent loginIntent = new Intent("android.intent.action.LOGIN");
-                        loginIntent.setClassName(activity, LoginActivity.class.getName());
-
-                        if(activity instanceof Activity) {
-                            Activity activity1= (Activity)activity;
-                            if(!activity1.isFinishing()) {
-                                activity1.startActivity(loginIntent);
-//                                activity1.finish();
-                            }
-                        }
-
-                        BaseActivity.activitySet.clear();
-                    }
-                });
+                if(activity instanceof BaseActivity) {
+                    BaseActivity baseActivity = (BaseActivity) activity;
+                    baseActivity.loginOut();
+                }
                 return new Result<>((String)map.get("code"), (String)map.get("message"));
             } else {
                 return new Result<>((String)map.get("code"), (String)map.get("message"));

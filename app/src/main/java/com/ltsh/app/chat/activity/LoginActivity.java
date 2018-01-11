@@ -7,6 +7,7 @@ import android.widget.Button;
 
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.listener.LoginOnClickListener;
+import com.ltsh.common.util.LogUtils;
 
 /**
  * Created by Random on 2017/10/12.
@@ -26,7 +27,12 @@ public class LoginActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent("android.intent.action.REGISTER");
                 intent.setClassName(LoginActivity.this, RegisterActivity.class.getName());
-                startActivity(intent);
+                try {
+                    LoginActivity.this.finish();
+                } catch (Throwable throwable) {
+                    LogUtils.error(throwable.getMessage(), throwable);
+                }
+                getMainActivity().startActivity(intent);
             }
         });
     }

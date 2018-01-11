@@ -1,6 +1,7 @@
 package com.ltsh.app.chat.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
@@ -8,10 +9,14 @@ import android.support.v4.util.ArraySet;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 
+import com.ltsh.app.chat.MainActivity;
+import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.utils.MyAlertDiaLog;
 
 import com.ltsh.common.util.LogUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -33,6 +38,56 @@ public class BaseActivity extends AppCompatActivity {
         activitySet.add(this);
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+//        activitySet.remove(this);
+    }
+
+    public void loginOut() {
+        CacheObject.handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if(CacheObject.msgListAdapter != null) {
+                    CacheObject.msgListAdapter.clear();
+                    CacheObject.msgListAdapter = null;
+                }
+                if(CacheObject.chatAdapter != null) {
+                    CacheObject.chatAdapter.clear();
+                    CacheObject.chatAdapter = null;
+                }
+                if(CacheObject.friendAdapter != null) {
+                    CacheObject.friendAdapter.clear();
+                    CacheObject.friendAdapter = null;
+                }
+
+                Activity mainActivity = null;
+                List<Activity> activityList = new ArrayList<>();
+                for (Activity activity1 : activitySet) {
+                    if(activity1 instanceof MainActivity) {
+                        mainActivity = activity1;
+                    } else {
+                        activityList.add(activity1);
+                        if(!activity1.isFinishing()) {
+                            activity1.finish();
+                        }
+                    }
+                }
+                Intent loginIntent = new Intent("android.intent.action.LOGIN");
+                loginIntent.setClassName(mainActivity, LoginActivity.class.getName());
+                mainActivity.startActivity(loginIntent);
+            }
+        });
+    }
+    public Activity getMainActivity() {
+        for (Activity activity :
+                activitySet) {
+            if(activity instanceof MainActivity) {
+                return activity;
+            }
+        }
+        return null;
+    }
     /**
      * 监听Back键按下事件,方法1:
      * 注意:
@@ -47,6 +102,15 @@ public class BaseActivity extends AppCompatActivity {
         new MyAlertDiaLog(){
             @Override
             public void onConfirm(Activity mContext) {
+//                if(CacheObject.msgListAdapter != null) {
+//                    CacheObject.msgListAdapter.clear();
+//                }
+//                if(CacheObject.chatAdapter != null) {
+//                    CacheObject.chatAdapter.clear();
+//                }
+//                if(CacheObject.friendAdapter != null) {
+//                    CacheObject.friendAdapter.clear();
+//                }
                 for (Activity activity : activitySet) {
                     activity.finish();
                 }

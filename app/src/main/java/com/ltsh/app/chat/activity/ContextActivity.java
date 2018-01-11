@@ -7,6 +7,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.Menu;
@@ -17,9 +18,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ltsh.app.chat.CallbackInterface;
+import com.ltsh.app.chat.dao.MessageItemDao;
+import com.ltsh.app.chat.entity.viewbean.MessageItem;
+import com.ltsh.app.chat.handler.CallbackHandler;
 import com.ltsh.app.chat.config.AppConstants;
-import com.ltsh.app.chat.config.BaseCache;
+import com.ltsh.app.chat.config.EntityCache;
 import com.ltsh.app.chat.dao.BaseDao;
 import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.entity.UserGroup;
@@ -30,9 +33,11 @@ import com.ltsh.app.chat.fragment.FriendFragment;
 import com.ltsh.app.chat.fragment.ChatListFragment;
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.config.CacheObject;
-import com.ltsh.app.chat.service.LoadDataService;
+import com.ltsh.app.chat.handler.InvokeHandler;
+import com.ltsh.app.chat.service.LoadDataTime;
 import com.ltsh.app.chat.service.LoadEntityCallSerivice;
 import com.ltsh.app.chat.service.ReceiveMsgService;
+import com.ltsh.app.chat.utils.LoginOutUtils;
 import com.ltsh.app.chat.utils.http.AppHttpClient;
 import com.ltsh.app.chat.utils.http.OkHttpUtils;
 
@@ -87,28 +92,19 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
                 Toast.makeText(ContextActivity.this, "用户信息", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.group_three:
+                if(CacheObject.msgListAdapter != null) {
+                    CacheObject.msgListAdapter.clear();
+                }
+                if(CacheObject.chatAdapter != null) {
+                    CacheObject.chatAdapter.clear();
+                }
+                if(CacheObject.friendAdapter != null) {
+                    CacheObject.friendAdapter.clear();
+                }
                 Toast.makeText(ContextActivity.this, "退出登录", Toast.LENGTH_SHORT).show();
                 CacheObject.userToken = null;
                 BaseDao.delete(UserToken.class, null, null);
-                Intent loginIntent = new Intent("android.intent.action.LOGIN");
-                loginIntent.setClassName(this, LoginActivity.class.getName());
-                startActivity(loginIntent);
-                finish();
-                break;
-            case R.id.group_sq:
-                int MY_PERMISSIONS_REQUEST_CALL_PHONE = 123;
-                int writePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                int filePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS);
-                if(writePermission != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            MY_PERMISSIONS_REQUEST_CALL_PHONE);
-                }
-                if(filePermission != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS},
-                            MY_PERMISSIONS_REQUEST_CALL_PHONE);
-                }
+                super.loginOut();
                 break;
             case R.id.group_dowm:
                 final File cacheDir = getCacheDir();
@@ -142,11 +138,30 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
             receiveMessageService.setAction("com.ltsh.app.chat.RECEIVE_MSG_SERVICE");
             startService(receiveMessageService);
         }
-        if(msgListService == null) {
-            msgListService = new Intent(this, LoadDataService.class);
-            msgListService.setAction("com.ltsh.app.chat.MSG_LIST_SERVICE");
-            startService(msgListService);
-        }
+
+        LoadDataTime.start("loadDataTimes", new InvokeHandler() {
+            @Override
+            public void invoke() {
+                if(CacheObject.msgListAdapter != null && CacheObject.userToken != null) {
+                    final List<MessageItem> messageItemList = MessageItemDao.getList(CacheObject.userToken.getId());
+                    CacheObject.handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            CacheObject.msgListAdapter.addAll(0,messageItemList);
+                        }
+                    });
+                }
+                if(CacheObject.friendAdapter != null && CacheObject.userToken != null) {
+                    final List<UserFriend> userFriendList = BaseDao.query(UserFriend.class, "belongs_to=?", new String[]{CacheObject.userToken.getId() + ""}, null);
+                    CacheObject.handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            CacheObject.friendAdapter.addAll(0,userFriendList);
+                        }
+                    });
+                }
+            }
+        }, CacheObject.handler);
 
 
 
@@ -187,7 +202,7 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
             map.put("pageNumber", "1");
             map.put("pageSize", "10000");
             final LoadEntityCallSerivice callSerivice = new LoadEntityCallSerivice();
-            AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_FRIEND_URL, map, this, new CallbackInterface() {
+            AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_FRIEND_URL, map, this, new CallbackHandler() {
                 @Override
                 public void callBack(Result result) {
                     callSerivice.callBack(result, UserFriend.class);
@@ -201,7 +216,7 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
             map = new HashMap<>();
             map.put("pageNumber", "1");
             map.put("pageSize", "10000");
-            AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_GROUP_URL, map, this, new CallbackInterface() {
+            AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_GROUP_URL, map, this, new CallbackHandler() {
                 @Override
                 public void callBack(Result result) {
                     callSerivice.callBack(result, UserGroup.class);
@@ -215,7 +230,7 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
             map = new HashMap<>();
             map.put("pageNumber", "1");
             map.put("pageSize", "10000");
-            AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_GROUP_REL_URL, map, this, new CallbackInterface() {
+            AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_GROUP_REL_URL, map, this, new CallbackHandler() {
                 @Override
                 public void callBack(Result result) {
                     callSerivice.callBack(result, UserGroupRel.class);
@@ -230,11 +245,11 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
 
 
         List<UserFriend> userFriendList = BaseDao.queryMyList(UserFriend.class, "id desc");
-        BaseCache.init(UserFriend.class, userFriendList);
+        EntityCache.init(UserFriend.class, userFriendList);
         List<UserGroup> userGroups = BaseDao.queryMyList(UserGroup.class, "id desc");
-        BaseCache.init(UserGroup.class, userGroups);
+        EntityCache.init(UserGroup.class, userGroups);
         List<UserGroupRel> userGroupRels = BaseDao.queryMyList(UserGroupRel.class, "id desc");
-        BaseCache.init(UserGroupRel.class, userGroupRels);
+        EntityCache.init(UserGroupRel.class, userGroupRels);
 //        OkHttpUtils
     }
 
@@ -323,16 +338,32 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
 
     }
 
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+//        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
+//        if(chatListFragment != null) {
+//            chatListFragment.onDestroy();
+////            chatListFragment = null;
+//        }
+//        if(friendFragment != null) {
+//            friendFragment.onDestroy();
+////            friendFragment = null;
+//        }
         if(receiveMessageService != null) {
             stopService(receiveMessageService);
         }
-        if(msgListService != null) {
-            stopService(msgListService);
-        }
+        LoadDataTime.stopAll();
+        super.onDestroy();
+
+
+//        FragmentTransaction fragmentTransaction = fManager.beginTransaction();
+//        fragmentTransaction.remove(chatListFragment)
+
 
     }
 }

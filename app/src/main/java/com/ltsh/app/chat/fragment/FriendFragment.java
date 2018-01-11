@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.ltsh.app.chat.CallbackInterface;
+import com.ltsh.app.chat.handler.CallbackHandler;
 import com.ltsh.app.chat.adapter.FriendAdapter;
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.config.AppConstants;
@@ -17,16 +17,11 @@ import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.entity.BaseEntity;
 import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.entity.common.Result;
-import com.ltsh.app.chat.enums.ResultCodeEnum;
 import com.ltsh.app.chat.listener.FriendItemClickListener;
 import com.ltsh.app.chat.service.LoadEntityCallSerivice;
 import com.ltsh.app.chat.utils.http.AppHttpClient;
 
-import com.ltsh.common.util.JsonUtils;
-import com.ltsh.common.util.LogUtils;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,7 +37,7 @@ public class FriendFragment extends Fragment {
         Map<String, Object> map = new HashMap<>();
         map.put("pageNumber", "1");
         map.put("pageSize", "10000");
-        AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_FRIEND_URL, map, getActivity(), new CallbackInterface(){
+        AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_FRIEND_URL, map, getActivity(), new CallbackHandler(){
             @Override
             public void callBack(Result result) {
                 LoadEntityCallSerivice loadEntityCallSerivice = new LoadEntityCallSerivice() {

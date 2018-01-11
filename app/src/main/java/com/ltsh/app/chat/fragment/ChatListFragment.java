@@ -37,4 +37,11 @@ public class ChatListFragment extends Fragment {
         list_content.setOnItemClickListener(new ChatItemClickListener(getActivity()));
         return view;
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        list_content = null;
+    }
 }

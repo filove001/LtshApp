@@ -1,9 +1,7 @@
 package com.ltsh.app.chat.service;
 
-import com.ltsh.app.chat.CallbackInterface;
 import com.ltsh.app.chat.dao.BaseDao;
 import com.ltsh.app.chat.entity.BaseEntity;
-import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.entity.common.Result;
 import com.ltsh.app.chat.enums.ResultCodeEnum;
 import com.ltsh.common.util.JsonUtils;
