@@ -43,7 +43,15 @@ public class BaseActivity extends AppCompatActivity {
         super.finish();
 //        activitySet.remove(this);
     }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
+    public void close() {
+        super.finish();
+        activitySet.remove(this);
+    }
     public void loginOut() {
         CacheObject.handler.post(new Runnable() {
             @Override

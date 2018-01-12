@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+    <LinearLayout
+        android:id="@+id/top_bat"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bg_white"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="100px"
+            android:layout_height="match_parent"
+            android:background="@color/bg_white"
+            android:textColor="@color/text_topbar"
+            android:textSize="30sp"
+            android:text="@string/backBtnText"/>
+        <TextView
+            android:id="@+id/txt_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="100px"
+            android:gravity="center"
+            android:text="添加好友"
+            android:textColor="@color/text_topbar"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+
+    <EditText
+        android:id="@+id/friend_account"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:textColorHint="#666666"
+        android:hint="好友帐号"/>
+    <EditText
+        android:id="@+id/friend_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:textColorHint="#666666"
+        android:hint="好友名称"/>
+    <Button
+        android:id="@+id/submit_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:width="120px"
+        android:height="80px"
+        android:text="添加"
+        />
+
+</LinearLayout>

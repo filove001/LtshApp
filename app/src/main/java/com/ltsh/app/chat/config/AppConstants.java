@@ -6,7 +6,7 @@ package com.ltsh.app.chat.config;
 
 public class AppConstants {
 //    public final static String SERVLCE_URL = "http://192.168.31.208:8013";
-    public final static String SERVLCE_URL = "http://111.230.246.124:8013";
+    public final static String SERVLCE_URL = "http://120.79.158.226:8013";
     /**
      * 获取信息
      */
@@ -31,6 +31,7 @@ public class AppConstants {
      * 获取好友
      */
     public final static String GET_FRIEND_URL = "/chat/userFriend/page";
+    public final static String ADD_FRIEND_URL = "/chat/userFriend/add";
     public final static String GET_GROUP_URL = "/chat/userGroup/page";
     public final static String GET_GROUP_REL_URL = "/chat/userGroupRel/page";
     public static boolean isInit = true;

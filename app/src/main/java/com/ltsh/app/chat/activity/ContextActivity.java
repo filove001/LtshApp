@@ -69,6 +69,7 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
     private FragmentManager fManager;
     //    private FragmentTransaction fTransaction;
     private Fragment chatListFragment, friendFragment, fg3, fg4;
+    private Fragment addFriendFragment;
 
     private Intent receiveMessageService;
     private Intent msgListService;
@@ -87,6 +88,10 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
         switch (item.getItemId()) {
             case R.id.group_one:
                 Toast.makeText(ContextActivity.this, "添加好友", Toast.LENGTH_SHORT).show();
+
+                Intent addFriend = new Intent("android.intent.action.ADD_FRIEND");
+                addFriend.setClassName(this, AddFriendActivity.class.getName());
+                startActivity(addFriend);
                 break;
             case R.id.group_two:
                 Toast.makeText(ContextActivity.this, "用户信息", Toast.LENGTH_SHORT).show();
