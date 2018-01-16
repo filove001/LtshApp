@@ -96,7 +96,7 @@ public class ChatAdapter extends LtshBaseAdapter{
             } else {
                 String name = "未知用户";
                 if(item.getSourceType().equals("USER")) {
-                    Map<Integer, BaseEntity> integerBaseEntityMap = EntityCache.cacheMap.get(UserFriend.class.getSimpleName());
+                    Map<Integer, BaseEntity> integerBaseEntityMap = EntityCache.entityCache.get(UserFriend.class.getSimpleName());
                     for (Integer id:integerBaseEntityMap.keySet()) {
                         UserFriend userFriend = (UserFriend) integerBaseEntityMap.get(id);
                         if(userFriend.getFriendUserId() == item.getCreateBy()) {

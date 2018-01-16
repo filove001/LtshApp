@@ -1,23 +1,15 @@
-package com.ltsh.app.chat.activity;
+package com.ltsh.app.chat.ui.activity;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.config.AppConstants;
-import com.ltsh.app.chat.dao.BaseDao;
-import com.ltsh.app.chat.entity.BaseEntity;
-import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.entity.common.Result;
 import com.ltsh.app.chat.handler.CallbackHandler;
-import com.ltsh.app.chat.service.LoadEntityCallSerivice;
 import com.ltsh.app.chat.utils.http.AppHttpClient;
 
 import java.util.HashMap;

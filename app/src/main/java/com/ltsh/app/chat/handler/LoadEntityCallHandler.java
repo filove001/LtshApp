@@ -1,4 +1,4 @@
-package com.ltsh.app.chat.service;
+package com.ltsh.app.chat.handler;
 
 import com.ltsh.app.chat.dao.BaseDao;
 import com.ltsh.app.chat.entity.BaseEntity;
@@ -14,7 +14,7 @@ import java.util.Map;
  * Created by Random on 2017/12/29.
  */
 
-public class LoadEntityCallSerivice {
+public class LoadEntityCallHandler {
 
     public void callBack(Result result, Class<? extends BaseEntity> tClass) {
         Result<Map> mapResult = result;

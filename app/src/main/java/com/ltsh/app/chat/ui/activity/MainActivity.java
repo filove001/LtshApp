@@ -1,4 +1,4 @@
-package com.ltsh.app.chat;
+package com.ltsh.app.chat.ui.activity;
 
 
 import android.Manifest;
@@ -9,11 +9,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.view.Menu;
 
-import com.ltsh.app.chat.activity.BaseActivity;
-import com.ltsh.app.chat.activity.ContextActivity;
-import com.ltsh.app.chat.activity.LoginActivity;
+import com.ltsh.app.chat.config.TimerUtils;
+import com.ltsh.app.chat.ui.activity.BaseActivity;
+import com.ltsh.app.chat.ui.activity.ContextActivity;
+import com.ltsh.app.chat.ui.activity.LoginActivity;
 import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.dao.BaseDao;
 import com.ltsh.app.chat.entity.UserToken;
@@ -127,6 +127,7 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(networkStateReceiver);
+        TimerUtils.cancel();
         LogUtils.info("执行 onDestroy()");
     }
 }

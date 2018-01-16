@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.ltsh.app.chat.activity.ChatActivity;
+import com.ltsh.app.chat.ui.activity.ChatActivity;
 import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.entity.UserFriend;
 

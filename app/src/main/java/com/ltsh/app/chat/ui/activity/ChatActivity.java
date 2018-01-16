@@ -1,15 +1,7 @@
-package com.ltsh.app.chat.activity;
+package com.ltsh.app.chat.ui.activity;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
-import android.media.AudioFormat;
-import android.media.AudioRecord;
-import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,11 +14,9 @@ import com.ltsh.app.chat.adapter.ChatAdapter;
 import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.dao.BaseDao;
 import com.ltsh.app.chat.dao.MessageItemDao;
-import com.ltsh.app.chat.entity.AudioEntity;
 import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.listener.AudioOnTouchListener;
-import com.ltsh.app.chat.listener.AudioStartListener;
 import com.ltsh.app.chat.listener.SendBtnOnClickListener;
 
 import com.ltsh.app.chat.utils.AudioRecoderUtils;

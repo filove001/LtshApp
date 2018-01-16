@@ -1,15 +1,11 @@
-package com.ltsh.app.chat.activity;
+package com.ltsh.app.chat.ui.activity;
 
-import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,8 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ltsh.app.chat.dao.MessageItemDao;
-import com.ltsh.app.chat.entity.viewbean.MessageItem;
+import com.ltsh.app.chat.config.TimerUtils;
 import com.ltsh.app.chat.handler.CallbackHandler;
 import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.config.EntityCache;
@@ -29,23 +24,23 @@ import com.ltsh.app.chat.entity.UserGroup;
 import com.ltsh.app.chat.entity.UserGroupRel;
 import com.ltsh.app.chat.entity.UserToken;
 import com.ltsh.app.chat.entity.common.Result;
-import com.ltsh.app.chat.fragment.FriendFragment;
-import com.ltsh.app.chat.fragment.ChatListFragment;
+import com.ltsh.app.chat.handler.LoadEntityCallHandler;
+import com.ltsh.app.chat.times.LoadDataTimerTask;
+import com.ltsh.app.chat.times.ReceiveMsgTimerTask;
+import com.ltsh.app.chat.ui.fragment.FriendFragment;
+import com.ltsh.app.chat.ui.fragment.ChatListFragment;
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.config.CacheObject;
-import com.ltsh.app.chat.handler.InvokeHandler;
-import com.ltsh.app.chat.service.LoadDataTime;
-import com.ltsh.app.chat.service.LoadEntityCallSerivice;
-import com.ltsh.app.chat.service.ReceiveMsgService;
-import com.ltsh.app.chat.utils.LoginOutUtils;
+import com.ltsh.app.chat.utils.DiskLruCache;
 import com.ltsh.app.chat.utils.http.AppHttpClient;
 import com.ltsh.app.chat.utils.http.OkHttpUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by Random on 2017/10/13.
@@ -116,9 +111,21 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        File downloadFile = new File(cacheDir, UUID.randomUUID().toString() + ".jpg");
                         String url = "http://pic4.nipic.com/20091217/3885730_124701000519_2.jpg";
-                        OkHttpUtils.download(url, downloadFile);
+                        String key = DiskLruCache.Util.hashKeyForDisk(url);
+                        try {
+                            DiskLruCache.Snapshot snapshot = CacheObject.diskLruCache.get(key);
+                            if(snapshot == null) {
+
+                            }
+                            DiskLruCache.Editor edit = CacheObject.diskLruCache.edit(key);
+                            if(edit != null) {
+                                OutputStream outputStream = edit.newOutputStream(0);
+                                OkHttpUtils.download(url, outputStream);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }).start();
                 break;
@@ -138,37 +145,8 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
         fManager = getFragmentManager();
 
 
-        if(receiveMessageService == null) {
-            receiveMessageService = new Intent(this, ReceiveMsgService.class);
-            receiveMessageService.setAction("com.ltsh.app.chat.RECEIVE_MSG_SERVICE");
-            startService(receiveMessageService);
-        }
-
-        LoadDataTime.start("loadDataTimes", new InvokeHandler() {
-            @Override
-            public void invoke() {
-                if(CacheObject.msgListAdapter != null && CacheObject.userToken != null) {
-                    final List<MessageItem> messageItemList = MessageItemDao.getList(CacheObject.userToken.getId());
-                    CacheObject.handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            CacheObject.msgListAdapter.addAll(0,messageItemList);
-                        }
-                    });
-                }
-                if(CacheObject.friendAdapter != null && CacheObject.userToken != null) {
-                    final List<UserFriend> userFriendList = BaseDao.query(UserFriend.class, "belongs_to=?", new String[]{CacheObject.userToken.getId() + ""}, null);
-                    CacheObject.handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            CacheObject.friendAdapter.addAll(0,userFriendList);
-                        }
-                    });
-                }
-            }
-        }, CacheObject.handler);
-
-
+        TimerUtils.schedule(ReceiveMsgTimerTask.class, new ReceiveMsgTimerTask(this), 0, 3000);
+        TimerUtils.schedule(LoadDataTimerTask.class, new LoadDataTimerTask(CacheObject.handler), 0, 3000);
 
         initFragment();
         loadData();
@@ -206,11 +184,11 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
             Map<String, Object> map = new HashMap<>();
             map.put("pageNumber", "1");
             map.put("pageSize", "10000");
-            final LoadEntityCallSerivice callSerivice = new LoadEntityCallSerivice();
+            final LoadEntityCallHandler callHandler = new LoadEntityCallHandler();
             AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_FRIEND_URL, map, this, new CallbackHandler() {
                 @Override
                 public void callBack(Result result) {
-                    callSerivice.callBack(result, UserFriend.class);
+                    callHandler.callBack(result, UserFriend.class);
                 }
 
                 @Override
@@ -224,7 +202,7 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
             AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_GROUP_URL, map, this, new CallbackHandler() {
                 @Override
                 public void callBack(Result result) {
-                    callSerivice.callBack(result, UserGroup.class);
+                    callHandler.callBack(result, UserGroup.class);
                 }
 
                 @Override
@@ -238,7 +216,7 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
             AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_GROUP_REL_URL, map, this, new CallbackHandler() {
                 @Override
                 public void callBack(Result result) {
-                    callSerivice.callBack(result, UserGroupRel.class);
+                    callHandler.callBack(result, UserGroupRel.class);
                 }
 
                 @Override
@@ -351,24 +329,10 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void onDestroy() {
-//        if(chatListFragment != null) {
-//            chatListFragment.onDestroy();
-////            chatListFragment = null;
-//        }
-//        if(friendFragment != null) {
-//            friendFragment.onDestroy();
-////            friendFragment = null;
-//        }
         if(receiveMessageService != null) {
             stopService(receiveMessageService);
         }
-        LoadDataTime.stopAll();
         super.onDestroy();
-
-
-//        FragmentTransaction fragmentTransaction = fManager.beginTransaction();
-//        fragmentTransaction.remove(chatListFragment)
-
 
     }
 }

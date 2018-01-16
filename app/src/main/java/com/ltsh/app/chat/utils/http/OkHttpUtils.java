@@ -12,6 +12,7 @@ import okhttp3.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -26,27 +27,14 @@ public class OkHttpUtils {
     static OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder().readTimeout(70L, TimeUnit.SECONDS).writeTimeout(70L, TimeUnit.SECONDS).connectTimeout(70L, TimeUnit.SECONDS);
 //    static OkHttpClient client = new OkHttpClient.Builder().readTimeout(70L, TimeUnit.SECONDS).writeTimeout(70L, TimeUnit.SECONDS).connectTimeout(70L, TimeUnit.SECONDS).build();
     public static void download(String url, File downFile) {
-        Request request = new Request.Builder()
-                .url(url)
-                .get()
-                .build();
-        OkHttpClient client = clientBuilder.build();
-        Response response = null;
-        Call call = null;
 
-        call = client.newCall(request);
         FileOutputStream fileOutputStream = null;
         try {
-            response = call.execute();
             fileOutputStream = new FileOutputStream(downFile);
-            fileOutputStream.write(response.body().bytes());
-            fileOutputStream.flush();
+            download(url, fileOutputStream);
         } catch (IOException e) {
             LogUtils.error(e.getMessage(), e);
         } finally {
-            if(response != null) {
-                response.close();
-            }
             if(fileOutputStream != null) {
                 try {
                     fileOutputStream.close();
@@ -55,6 +43,28 @@ public class OkHttpUtils {
                 }
             }
 
+        }
+    }
+
+    public static void download(String url, OutputStream outputStream) {
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+        OkHttpClient client = clientBuilder.build();
+        Response response = null;
+        Call call = null;
+        call = client.newCall(request);
+        try {
+            response = call.execute();
+            outputStream.write(response.body().bytes());
+            outputStream.flush();
+        } catch (IOException e) {
+            LogUtils.error(e.getMessage(), e);
+        } finally {
+            if(response != null) {
+                response.close();
+            }
         }
     }
     public static String post(String url, Map<String, Object> json) {

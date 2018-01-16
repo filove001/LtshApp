@@ -7,7 +7,7 @@
     android:showDividers="middle"
     android:dividerPadding="10dp"
     android:background="@color/bg_white"
-    tools:context="com.ltsh.app.chat.activity.LoginActivity" >
+    tools:context=".ui.activity.LoginActivity" >
 
     <ImageView
         android:layout_width="match_parent"

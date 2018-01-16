@@ -52,5 +52,6 @@ dependencies {
     compile('com.github.tony19:logback-android-classic:1.1.1-6') {
         exclude group: 'com.google.android', module: 'android'
     }
+    compile 'net.zetetic:android-database-sqlcipher:3.5.9'
 //    compile group: 'com.github.tony19', name: 'logback-android-classic', version: '1.1.1-6'
 }

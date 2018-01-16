@@ -1,4 +1,4 @@
-package com.ltsh.app.chat.fragment;
+package com.ltsh.app.chat.ui.fragment;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -17,8 +17,8 @@ import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.entity.BaseEntity;
 import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.entity.common.Result;
+import com.ltsh.app.chat.handler.LoadEntityCallHandler;
 import com.ltsh.app.chat.listener.FriendItemClickListener;
-import com.ltsh.app.chat.service.LoadEntityCallSerivice;
 import com.ltsh.app.chat.utils.http.AppHttpClient;
 
 import java.util.HashMap;
@@ -40,7 +40,7 @@ public class FriendFragment extends Fragment {
         AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_FRIEND_URL, map, getActivity(), new CallbackHandler(){
             @Override
             public void callBack(Result result) {
-                LoadEntityCallSerivice loadEntityCallSerivice = new LoadEntityCallSerivice() {
+                LoadEntityCallHandler loadEntityCallHandler = new LoadEntityCallHandler() {
                     @Override
                     protected BaseEntity single(BaseEntity entity) {
                         UserFriend entity1 = (UserFriend) entity;
@@ -48,7 +48,7 @@ public class FriendFragment extends Fragment {
                         return single;
                     }
                 };
-                loadEntityCallSerivice.callBack(result, UserFriend.class);
+                loadEntityCallHandler.callBack(result, UserFriend.class);
             }
 
             @Override

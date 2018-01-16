@@ -3,15 +3,11 @@ package com.ltsh.app.chat.utils.http;
 
 
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.widget.Toast;
 
-import com.ltsh.app.chat.MainActivity;
 import com.ltsh.app.chat.handler.CallbackHandler;
-import com.ltsh.app.chat.activity.BaseActivity;
-import com.ltsh.app.chat.activity.LoginActivity;
+import com.ltsh.app.chat.ui.activity.BaseActivity;
 import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.entity.BaseEntity;
@@ -19,7 +15,6 @@ import com.ltsh.app.chat.entity.common.Result;
 import com.ltsh.app.chat.enums.ResultCodeEnum;
 
 
-import com.ltsh.app.chat.utils.LoginOutUtils;
 import com.ltsh.common.util.JsonUtils;
 import com.ltsh.common.util.LogUtils;
 import com.ltsh.common.util.StringUtils;
@@ -30,12 +25,9 @@ import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.slf4j.MDC;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 /**

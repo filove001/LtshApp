@@ -7,7 +7,7 @@
     android:showDividers="middle"
     android:dividerPadding="10dp"
     android:background="@color/bg_white"
-    tools:context="com.ltsh.app.chat.activity.RegisterActivity" >
+    tools:context=".ui.activity.RegisterActivity" >
     <LinearLayout
         android:id="@+id/top_bat"
         android:layout_width="match_parent"

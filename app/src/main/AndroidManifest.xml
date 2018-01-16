@@ -32,7 +32,7 @@
         android:theme="@style/AppTheme" >
 
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
@@ -41,7 +41,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.ltsh.app.chat.activity.LoginActivity"
+            android:name=".ui.activity.LoginActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
@@ -50,7 +50,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.ltsh.app.chat.activity.RegisterActivity"
+            android:name=".ui.activity.RegisterActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
@@ -59,7 +59,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.ltsh.app.chat.activity.ContextActivity"
+            android:name=".ui.activity.ContextActivity"
             android:label="@string/tab_menu_profile"
             >
             <intent-filter>
@@ -68,7 +68,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.ltsh.app.chat.activity.ChatActivity"
+            android:name=".ui.activity.ChatActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
@@ -77,7 +77,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.ltsh.app.chat.activity.AddFriendActivity"
+            android:name=".ui.activity.AddFriendActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
@@ -85,17 +85,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="com.ltsh.app.chat.service.ReceiveMsgService">
-            <intent-filter>
-                <action android:name="com.ltsh.app.chat.RECEIVE_MSG_SERVICE"/>
-            </intent-filter>
-        </service>
-        <service android:name="com.ltsh.app.chat.service.LoadDataService">
-            <intent-filter>
-                <action android:name="com.ltsh.app.chat.MSG_LIST_SERVICE"/>
-            </intent-filter>
-        </service>
-
 
         <receiver android:name="com.ltsh.app.chat.receiver.NetworkStateReceiver">
         </receiver>

@@ -1,4 +1,4 @@
-package com.ltsh.app.chat.activity;
+package com.ltsh.app.chat.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,8 +9,10 @@ import android.support.v4.util.ArraySet;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 
-import com.ltsh.app.chat.MainActivity;
 import com.ltsh.app.chat.config.CacheObject;
+import com.ltsh.app.chat.config.TimerUtils;
+import com.ltsh.app.chat.dao.BaseDao;
+import com.ltsh.app.chat.entity.UserToken;
 import com.ltsh.app.chat.utils.MyAlertDiaLog;
 
 import com.ltsh.common.util.LogUtils;
@@ -84,6 +86,8 @@ public class BaseActivity extends AppCompatActivity {
                 Intent loginIntent = new Intent("android.intent.action.LOGIN");
                 loginIntent.setClassName(mainActivity, LoginActivity.class.getName());
                 mainActivity.startActivity(loginIntent);
+                BaseDao.delete(UserToken.class, null, null);
+                TimerUtils.cancel();
             }
         });
     }

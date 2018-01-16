@@ -1,4 +1,4 @@
-package com.ltsh.app.chat.activity;
+package com.ltsh.app.chat.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;

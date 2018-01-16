@@ -10,7 +10,7 @@ import android.widget.EditText;
 import com.ltsh.app.chat.handler.CallbackHandler;
 import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.R;
-import com.ltsh.app.chat.activity.ContextActivity;
+import com.ltsh.app.chat.ui.activity.ContextActivity;
 import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.dao.BaseDao;
 import com.ltsh.app.chat.entity.UserToken;

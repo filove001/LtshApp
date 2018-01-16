@@ -2,15 +2,19 @@ package com.ltsh.app.chat.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+
 
 import com.ltsh.app.chat.config.CacheObject;
+import com.ltsh.app.chat.db.DBCipherHelper;
 import com.ltsh.app.chat.utils.db.DbUtils;
 import com.ltsh.app.chat.entity.BaseEntity;
 import com.ltsh.app.chat.utils.BeanUtils;
 
 import com.ltsh.common.util.LogUtils;
 import com.ltsh.common.util.db.PropertyMethod;
+
+import net.sqlcipher.SQLException;
+import net.sqlcipher.database.SQLiteDatabase;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -20,94 +24,75 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.Cache;
-
 /**
  * Created by Random on 2017/11/7.
  */
 
 public class BaseDao {
-
-    public static int insert(Object object) {
-        Class<?> aClass = object.getClass();
-
-        int result = 0;
-        Cursor cursor = null;
-        SQLiteDatabase writableDatabase = null;
-        if(CacheObject.userToken != null && object instanceof BaseEntity) {
-            BaseEntity baseEntity = (BaseEntity) object;
-            baseEntity.setBelongsTo(CacheObject.userToken.getId());
-        }
-        try {
-            writableDatabase = CacheObject.dbHelper.getWritableDatabase();
-            ContentValues contentValues = BeanUtils.beanToContentValues(object);
-            contentValues.remove("id");
-            long insert = writableDatabase.insert(DbUtils.getTableName(aClass), null, contentValues);
-            result = (int)insert;
-            if(insert > 0) {
-                String sql = "select last_insert_rowid() from " + DbUtils.getTableName(aClass);
-                cursor = writableDatabase.rawQuery(sql, null);
-                if(cursor.moveToFirst()){
-                    result = cursor.getInt(0);
+    private static DBCipherHelper dbhelper = CacheObject.dbCipherHelper;
+    public static void insert(final BaseEntity baseEntity) {
+        final Class<?> aClass = baseEntity.getClass();
+        new SqlExecute<Integer>(dbhelper) {
+            @Override
+            public Integer run(SQLiteDatabase sqLiteDatabase) {
+                ContentValues contentValues = BeanUtils.beanToContentValues(baseEntity);
+                contentValues.remove("id");
+                long insert = sqLiteDatabase.insert(DbUtils.getTableName(aClass), null, contentValues);
+                if(insert > 0) {
+                    String sql = "select last_insert_rowid() from " + DbUtils.getTableName(aClass);
+                    Cursor cursor = null;
+                    try {
+                        cursor = sqLiteDatabase.rawQuery(sql, null);
+                        if(cursor.moveToFirst()){
+                            baseEntity.setId(cursor.getInt(0));
+                        }
+                        return baseEntity.getId();
+                    } catch (Exception e) {
+                        LogUtils.error(e.getMessage(), e);
+                    } finally {
+                        close(cursor, null);
+                    }
                 }
-
+                return null;
             }
-
-        } catch (Exception e) {
-            LogUtils.error(e.getMessage(), e);
-        } finally {
-            close(cursor, writableDatabase);
-        }
-
-        return result;
+        }.execute();
     }
-    public static int deleteById(Class classT,String id) {
-        SQLiteDatabase writableDatabase = null;
-        try {
-            writableDatabase = CacheObject.dbHelper.getWritableDatabase();
-            return writableDatabase.delete(DbUtils.getTableName(classT), "id=?", new String[]{id});
-        } catch (Exception e) {
-            LogUtils.error(e.getMessage(), e);
-        } finally {
-            close(null, writableDatabase);
-        }
-        return -1;
-    }
-    public static int delete(Class classT, String whereClause, String[] whereArgs) {
-        SQLiteDatabase writableDatabase = null;
-        try {
-            writableDatabase = CacheObject.dbHelper.getWritableDatabase();
-            return writableDatabase.delete(DbUtils.getTableName(classT), whereClause, whereArgs);
-        } catch (Exception e) {
-            LogUtils.error(e.getMessage(), e);
-        } finally {
-            close(null, writableDatabase);
-        }
-        return -1;
-    }
-    public static void execSQL(String sql, Object[] args) {
-        SQLiteDatabase writableDatabase = null;
-        try {
-            writableDatabase = CacheObject.dbHelper.getWritableDatabase();
-            writableDatabase.execSQL(sql, args);
-        } catch (Exception e) {
-            LogUtils.error(e.getMessage(), e);
-        } finally {
-            close(null, writableDatabase);
-        }
+    public static int deleteById(final Class classT,final String id) {
+        return new SqlExecute<Integer>(dbhelper) {
+            @Override
+            public Integer run(SQLiteDatabase sqLiteDatabase) {
+                return sqLiteDatabase.delete(DbUtils.getTableName(classT), "id=?", new String[]{id});
+            }
+        }.execute();
     }
 
-    public static void update(BaseEntity object) {
-        SQLiteDatabase writableDatabase = null;
-        try {
-            writableDatabase = CacheObject.dbHelper.getWritableDatabase();
-            ContentValues contentValues = BeanUtils.beanToContentValues(object);
-            writableDatabase.update(DbUtils.getTableName(object.getClass()), contentValues, "id=?", new String[]{object.getId() + ""});
-        } catch (Exception e) {
-            LogUtils.error(e.getMessage(), e);
-        } finally {
-            close(null, writableDatabase);
-        }
+
+    public static int delete(final Class classT, final String whereClause, final String[] whereArgs) {
+        return new SqlExecute<Integer>(dbhelper) {
+            @Override
+            public Integer run(SQLiteDatabase sqLiteDatabase) {
+                return sqLiteDatabase.delete(DbUtils.getTableName(classT), whereClause, whereArgs);
+            }
+        }.execute();
+    }
+    public static void execSQL(final String sql, final Object[] args) {
+        new SqlExecute<Integer>(dbhelper) {
+            @Override
+            public Integer run(SQLiteDatabase sqLiteDatabase) {
+                sqLiteDatabase.execSQL(sql, args);
+                return 0;
+            }
+        }.execute();
+    }
+
+    public static void update(final BaseEntity object) {
+        new SqlExecute<Integer>(dbhelper) {
+            @Override
+            public Integer run(SQLiteDatabase sqLiteDatabase) {
+                ContentValues contentValues = BeanUtils.beanToContentValues(object);
+                return sqLiteDatabase.update(DbUtils.getTableName(object.getClass()), contentValues, "id=?", new String[]{object.getId() + ""});
+            }
+        }.execute();
     }
     public static <T> T getById(Class<T> classT, int id) {
         List<T> query = query(classT, "id = ?", new String[]{id + ""}, null);
@@ -116,46 +101,51 @@ public class BaseDao {
         }
         return null;
     }
-    public static List<Map> rawQueryMap(String sql, String[] params) {
-        SQLiteDatabase readableDatabase = null;
-        Cursor cursor = null;
-        try {
-            List<Map> list = new ArrayList<>();
-            readableDatabase = CacheObject.dbHelper.getReadableDatabase();
-            cursor = readableDatabase.rawQuery(sql, params);
-            if (cursor.moveToFirst()) {
-                do {
-                    String[] columnNames = cursor.getColumnNames();
-                    Map<String, Object> map = new HashMap<>();
-                    for (String columnName : columnNames) {
-                        setMapValue(cursor, map, columnName);
+    public static List<Map> rawQueryMap(final String sql, final String[] params) {
+        return new SqlExecute<List<Map>>(dbhelper) {
+            @Override
+            public List<Map> run(SQLiteDatabase sqLiteDatabase) {
+                List<Map> list = new ArrayList<>();
+                Cursor cursor = null;
+                try {
+                    cursor = sqLiteDatabase.rawQuery(sql, params);
+                    if (cursor.moveToFirst()) {
+                        do {
+                            String[] columnNames = cursor.getColumnNames();
+                            Map<String, Object> map = new HashMap<>();
+                            for (String columnName : columnNames) {
+                                setMapValue(cursor, map, columnName);
+                            }
+                            list.add(map);
+                        } while (cursor.moveToNext());
                     }
-                    list.add(map);
-                } while (cursor.moveToNext());
+                } catch (SQLException e) {
+                    LogUtils.error(e.getMessage(), e);
+                } finally {
+                    close(cursor, null);
+                }
+                return list;
             }
-            return list;
-        } catch (Exception e) {
-            LogUtils.error(e.getMessage(), e);
-        } finally {
-            close(cursor, readableDatabase);
-        }
-        return new ArrayList<>();
+        }.execute();
     }
 
-    public static <T> List<T> rawQuery(Class<T> classT, String sql, String[] params) {
-        SQLiteDatabase readableDatabase = null;
-        Cursor cursor = null;
-        try {
-            readableDatabase = CacheObject.dbHelper.getReadableDatabase();
-            cursor = readableDatabase.rawQuery(sql, params);
-            List<T> list = cursorToList(classT, cursor);
-            return list;
-        } catch (Exception e) {
-            LogUtils.error(e.getMessage(), e);
-        } finally {
-            close(cursor, readableDatabase);
-        }
-        return new ArrayList<>();
+    public static <T> List<T> rawQuery(final Class<T> classT, final String sql, final String[] params) {
+        return new SqlExecute<List<T>>(dbhelper) {
+            @Override
+            public List<T> run(SQLiteDatabase sqLiteDatabase) {
+                List<T> list = new ArrayList<>();
+                Cursor cursor = null;
+                try {
+                    cursor = sqLiteDatabase.rawQuery(sql, params);
+                    list = cursorToList(classT, cursor);
+                } catch (SQLException e) {
+                    LogUtils.error(e.getMessage(), e);
+                } finally {
+                    close(cursor, null);
+                }
+                return list;
+            }
+        }.execute();
     }
     public static <T> T single(Class<T> classT, String where, String[] params) {
         List<T> query = query(classT, where, params, null);
@@ -168,37 +158,46 @@ public class BaseDao {
     public static <T> List<T> query(Class<T> classT, String where, String[] params, String orderBy) {
         return query(classT, where,params, orderBy, null);
     }
-    public static <T> List<T> query(Class<T> classT, String where, String[] params, String orderBy, String limit) {
-        SQLiteDatabase readableDatabase = null;
-        Cursor cursor = null;
-        try {
-            readableDatabase = CacheObject.dbHelper.getReadableDatabase();
-            cursor = readableDatabase.query(DbUtils.getTableName(classT), DbUtils.getColumns(classT), where, params, null, null, orderBy, limit);
-            List<T> list = cursorToList(classT, cursor);
-            return list;
-        } catch (Exception e) {
-            LogUtils.error(e.getMessage(), e);
-        } finally {
-            close(cursor, readableDatabase);
-        }
-        return new ArrayList<>();
+    public static <T> List<T> query(final Class<T> classT, final String where, final String[] params, final String orderBy, final String limit) {
+        return new SqlExecute<List<T>>(dbhelper) {
+            @Override
+            public List<T> run(SQLiteDatabase sqLiteDatabase) {
+                List<T> list = new ArrayList<>();
+                Cursor cursor = null;
+                try {
+                    cursor = sqLiteDatabase.query(DbUtils.getTableName(classT), DbUtils.getColumns(classT), where, params, null, null, orderBy, limit);
+                    list = cursorToList(classT, cursor);
+                } catch (SQLException e) {
+                    LogUtils.error(e.getMessage(), e);
+                } finally {
+                    close(cursor, null);
+                }
+                return list;
+            }
+        }.execute();
+
     }
-    public static <T> List<T> queryMyList(Class<T> classT, String orderBy) {
-        SQLiteDatabase readableDatabase = null;
-        Cursor cursor = null;
-        try {
-            readableDatabase = CacheObject.dbHelper.getReadableDatabase();
-            String where = "create_by=?";
-            String[] params = new String[]{CacheObject.userToken.getId() + ""};
-            cursor = readableDatabase.query(DbUtils.getTableName(classT), DbUtils.getColumns(classT), where, params, null, null, orderBy);
-            List<T> list = cursorToList(classT, cursor);
-            return list;
-        } catch (Exception e) {
-            LogUtils.error(e.getMessage(), e);
-        } finally {
-            close(cursor, readableDatabase);
-        }
-        return new ArrayList<>();
+    public static <T> List<T> queryMyList(final Class<T> classT, final String orderBy) {
+
+        return new SqlExecute<List<T>>(dbhelper) {
+            @Override
+            public List<T> run(SQLiteDatabase sqLiteDatabase) {
+                List<T> list = new ArrayList<>();
+                Cursor cursor = null;
+                try {
+                    String where = "create_by=?";
+                    String[] params = new String[]{CacheObject.userToken.getId() + ""};
+                    cursor = sqLiteDatabase.query(DbUtils.getTableName(classT), DbUtils.getColumns(classT), where, params, null, null, orderBy);
+                    list = cursorToList(classT, cursor);
+                } catch (SQLException e) {
+                    LogUtils.error(e.getMessage(), e);
+                } finally {
+                    close(cursor, null);
+                }
+                return list;
+            }
+        }.execute();
+
     }
     public static <T> List<T> cursorToList(Class classT, Cursor cursor) {
         List<T> list = new ArrayList<>();
@@ -230,6 +229,9 @@ public class BaseDao {
             }
         }
     }
+
+
+
     public static void close(Cursor cursor, SQLiteDatabase database) {
         if(cursor != null)
             cursor.close();

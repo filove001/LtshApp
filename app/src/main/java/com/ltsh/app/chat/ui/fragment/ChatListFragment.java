@@ -1,4 +1,4 @@
-package com.ltsh.app.chat.fragment;
+package com.ltsh.app.chat.ui.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
