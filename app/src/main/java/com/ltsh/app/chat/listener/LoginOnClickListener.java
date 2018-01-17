@@ -3,8 +3,11 @@ package com.ltsh.app.chat.listener;
 import android.app.Activity;
 import android.content.Intent;
 
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 
 
 import com.ltsh.app.chat.handler.CallbackHandler;
@@ -39,11 +42,11 @@ public class LoginOnClickListener implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        EditText editLoginName = (EditText)activity.findViewById(R.id.login_edit_login_name);
-        final String loginName = editLoginName.getText().toString();
-        EditText editPassword = (EditText)activity.findViewById(R.id.login_edit_password);
-        final String password = editPassword.getText().toString();
+        final EditText editLoginName = (EditText)activity.findViewById(R.id.login_edit_login_name);
 
+        final String loginName = editLoginName.getText().toString();
+        final EditText editPassword = (EditText)activity.findViewById(R.id.login_edit_password);
+        final String password = editPassword.getText().toString();
         final Map map = new HashMap();
         LogUtils.info("loginName:"+loginName.toString() + "," + "password:"+password.toString());
         map.put("loginName", loginName.toString());

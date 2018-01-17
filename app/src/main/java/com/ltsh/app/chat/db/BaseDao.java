@@ -10,7 +10,8 @@ import com.ltsh.app.chat.entity.BaseEntity;
 import com.ltsh.app.chat.utils.BeanUtils;
 
 import com.ltsh.common.util.LogUtils;
-import com.ltsh.common.util.db.PropertyMethod;
+import com.ltsh.common.util.bean.PropertyMethod;
+
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.SQLException;

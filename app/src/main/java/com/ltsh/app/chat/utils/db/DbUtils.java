@@ -6,7 +6,7 @@ import com.ltsh.app.chat.utils.Names;
 
 
 import com.ltsh.common.util.LogUtils;
-import com.ltsh.common.util.db.PropertyMethod;
+import com.ltsh.common.util.bean.PropertyMethod;
 import com.ltsh.common.util.db.DbColumn;
 import com.ltsh.common.util.db.NoDbColumn;
 

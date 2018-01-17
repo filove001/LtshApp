@@ -6,7 +6,7 @@ import com.ltsh.app.chat.utils.db.DbUtils;
 
 import com.ltsh.common.util.Dates;
 import com.ltsh.common.util.LogUtils;
-import com.ltsh.common.util.db.PropertyMethod;
+import com.ltsh.common.util.bean.PropertyMethod;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
