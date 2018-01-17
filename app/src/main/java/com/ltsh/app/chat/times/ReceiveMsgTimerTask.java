@@ -1,12 +1,11 @@
 package com.ltsh.app.chat.times;
 
 import android.content.Context;
-import android.os.Handler;
 import android.widget.Toast;
 
 import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.config.CacheObject;
-import com.ltsh.app.chat.dao.BaseDao;
+import com.ltsh.app.chat.db.BaseDao;
 import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.entity.common.Result;
 import com.ltsh.app.chat.enums.ResultCodeEnum;
@@ -68,8 +67,7 @@ public class ReceiveMsgTimerTask extends BaseTimerTask {
             Map map = (Map)result.getContent();
             if(map != null) {
                 final MessageInfo chatMessage = JsonUtils.fromJson(JsonUtils.toJson(map), MessageInfo.class);
-                int id = BaseDao.insert(chatMessage);
-                chatMessage.setId(id);
+                BaseDao.insert(chatMessage);
                 if(CacheObject.chatAdapter != null) {
                     CacheObject.handler.post(new Runnable() {
                         @Override

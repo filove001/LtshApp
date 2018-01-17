@@ -1,6 +1,5 @@
-package com.ltsh.app.chat.dao;
+package com.ltsh.app.chat.db;
 
-import com.ltsh.app.chat.utils.db.DbUtils;
 import com.ltsh.app.chat.entity.viewbean.MessageItem;
 
 import java.util.List;

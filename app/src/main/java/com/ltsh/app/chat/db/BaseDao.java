@@ -1,11 +1,10 @@
-package com.ltsh.app.chat.dao;
+package com.ltsh.app.chat.db;
 
 import android.content.ContentValues;
-import android.database.Cursor;
+
 
 
 import com.ltsh.app.chat.config.CacheObject;
-import com.ltsh.app.chat.db.DBCipherHelper;
 import com.ltsh.app.chat.utils.db.DbUtils;
 import com.ltsh.app.chat.entity.BaseEntity;
 import com.ltsh.app.chat.utils.BeanUtils;
@@ -13,6 +12,7 @@ import com.ltsh.app.chat.utils.BeanUtils;
 import com.ltsh.common.util.LogUtils;
 import com.ltsh.common.util.db.PropertyMethod;
 
+import net.sqlcipher.Cursor;
 import net.sqlcipher.SQLException;
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -29,12 +29,12 @@ import java.util.Map;
  */
 
 public class BaseDao {
-    private static DBCipherHelper dbhelper = CacheObject.dbCipherHelper;
-    public static void insert(final BaseEntity baseEntity) {
+    private static DBCipherHelper dbhelper = CacheObject.dbHelper;
+    public static Integer insert(final BaseEntity baseEntity) {
         final Class<?> aClass = baseEntity.getClass();
-        new SqlExecute<Integer>(dbhelper) {
+        return new SqlExecute<Integer>(dbhelper) {
             @Override
-            public Integer run(SQLiteDatabase sqLiteDatabase) {
+            public Integer execute(SQLiteDatabase sqLiteDatabase) {
                 ContentValues contentValues = BeanUtils.beanToContentValues(baseEntity);
                 contentValues.remove("id");
                 long insert = sqLiteDatabase.insert(DbUtils.getTableName(aClass), null, contentValues);
@@ -55,44 +55,44 @@ public class BaseDao {
                 }
                 return null;
             }
-        }.execute();
+        }.run();
     }
     public static int deleteById(final Class classT,final String id) {
         return new SqlExecute<Integer>(dbhelper) {
             @Override
-            public Integer run(SQLiteDatabase sqLiteDatabase) {
+            public Integer execute(SQLiteDatabase sqLiteDatabase) {
                 return sqLiteDatabase.delete(DbUtils.getTableName(classT), "id=?", new String[]{id});
             }
-        }.execute();
+        }.run();
     }
 
 
     public static int delete(final Class classT, final String whereClause, final String[] whereArgs) {
         return new SqlExecute<Integer>(dbhelper) {
             @Override
-            public Integer run(SQLiteDatabase sqLiteDatabase) {
+            public Integer execute(SQLiteDatabase sqLiteDatabase) {
                 return sqLiteDatabase.delete(DbUtils.getTableName(classT), whereClause, whereArgs);
             }
-        }.execute();
+        }.run();
     }
     public static void execSQL(final String sql, final Object[] args) {
         new SqlExecute<Integer>(dbhelper) {
             @Override
-            public Integer run(SQLiteDatabase sqLiteDatabase) {
+            public Integer execute(SQLiteDatabase sqLiteDatabase) {
                 sqLiteDatabase.execSQL(sql, args);
                 return 0;
             }
-        }.execute();
+        }.run();
     }
 
     public static void update(final BaseEntity object) {
         new SqlExecute<Integer>(dbhelper) {
             @Override
-            public Integer run(SQLiteDatabase sqLiteDatabase) {
+            public Integer execute(SQLiteDatabase sqLiteDatabase) {
                 ContentValues contentValues = BeanUtils.beanToContentValues(object);
                 return sqLiteDatabase.update(DbUtils.getTableName(object.getClass()), contentValues, "id=?", new String[]{object.getId() + ""});
             }
-        }.execute();
+        }.run();
     }
     public static <T> T getById(Class<T> classT, int id) {
         List<T> query = query(classT, "id = ?", new String[]{id + ""}, null);
@@ -104,7 +104,7 @@ public class BaseDao {
     public static List<Map> rawQueryMap(final String sql, final String[] params) {
         return new SqlExecute<List<Map>>(dbhelper) {
             @Override
-            public List<Map> run(SQLiteDatabase sqLiteDatabase) {
+            public List<Map> execute(SQLiteDatabase sqLiteDatabase) {
                 List<Map> list = new ArrayList<>();
                 Cursor cursor = null;
                 try {
@@ -126,13 +126,13 @@ public class BaseDao {
                 }
                 return list;
             }
-        }.execute();
+        }.run();
     }
 
     public static <T> List<T> rawQuery(final Class<T> classT, final String sql, final String[] params) {
         return new SqlExecute<List<T>>(dbhelper) {
             @Override
-            public List<T> run(SQLiteDatabase sqLiteDatabase) {
+            public List<T> execute(SQLiteDatabase sqLiteDatabase) {
                 List<T> list = new ArrayList<>();
                 Cursor cursor = null;
                 try {
@@ -145,7 +145,7 @@ public class BaseDao {
                 }
                 return list;
             }
-        }.execute();
+        }.run();
     }
     public static <T> T single(Class<T> classT, String where, String[] params) {
         List<T> query = query(classT, where, params, null);
@@ -161,7 +161,7 @@ public class BaseDao {
     public static <T> List<T> query(final Class<T> classT, final String where, final String[] params, final String orderBy, final String limit) {
         return new SqlExecute<List<T>>(dbhelper) {
             @Override
-            public List<T> run(SQLiteDatabase sqLiteDatabase) {
+            public List<T> execute(SQLiteDatabase sqLiteDatabase) {
                 List<T> list = new ArrayList<>();
                 Cursor cursor = null;
                 try {
@@ -174,14 +174,14 @@ public class BaseDao {
                 }
                 return list;
             }
-        }.execute();
+        }.run();
 
     }
     public static <T> List<T> queryMyList(final Class<T> classT, final String orderBy) {
 
         return new SqlExecute<List<T>>(dbhelper) {
             @Override
-            public List<T> run(SQLiteDatabase sqLiteDatabase) {
+            public List<T> execute(SQLiteDatabase sqLiteDatabase) {
                 List<T> list = new ArrayList<>();
                 Cursor cursor = null;
                 try {
@@ -196,7 +196,7 @@ public class BaseDao {
                 }
                 return list;
             }
-        }.execute();
+        }.run();
 
     }
     public static <T> List<T> cursorToList(Class classT, Cursor cursor) {

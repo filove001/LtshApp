@@ -8,8 +8,7 @@ import java.util.Date;
  * Created by Random on 2017/10/11.
  */
 
-public class UserToken implements Serializable {
-    private Integer id;
+public class UserToken extends BaseEntity {
     private String loginName;//登录名
     private String name;//显示名
     private String phone;//手机号码
@@ -17,21 +16,12 @@ public class UserToken implements Serializable {
     private Date loginDate;//登录时间
     public UserToken(){}
     public UserToken(Integer id, String loginName, String name, String phone, String token, Date loginDate) {
-        this.id = id;
+        setId(id);
         this.loginName = loginName;
         this.name = name;
         this.phone = phone;
         this.token = token;
         this.loginDate = loginDate;
-    }
-
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getLoginName() {

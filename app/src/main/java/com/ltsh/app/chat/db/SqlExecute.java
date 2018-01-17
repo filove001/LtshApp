@@ -1,4 +1,4 @@
-package com.ltsh.app.chat.dao;
+package com.ltsh.app.chat.db;
 
 import com.ltsh.app.chat.db.DBCipherHelper;
 import com.ltsh.common.util.LogUtils;
@@ -15,11 +15,13 @@ public abstract class SqlExecute<T> {
     public SqlExecute(DBCipherHelper dbhelper) {
         this.dbhelper = dbhelper;
     }
-    public T execute() {
+    public abstract T execute(SQLiteDatabase sqLiteDatabase);
+    public T run() {
         SQLiteDatabase sqLiteDatabase = null;
+
         try {
             sqLiteDatabase = dbhelper.getWritableDatabase();
-            return run(sqLiteDatabase);
+            return execute(sqLiteDatabase);
         } catch (SQLException e) {
             LogUtils.error(e.getMessage(), e);
         } finally {
@@ -27,5 +29,4 @@ public abstract class SqlExecute<T> {
         }
         return null;
     }
-    public abstract T run(SQLiteDatabase sqLiteDatabase);
 }

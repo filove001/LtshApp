@@ -1,11 +1,8 @@
-package com.ltsh.app.chat.config;
+package com.ltsh.app.chat.utils.timer;
 
 import com.ltsh.common.util.LogUtils;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;

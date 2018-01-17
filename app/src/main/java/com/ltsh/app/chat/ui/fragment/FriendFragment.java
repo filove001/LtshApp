@@ -12,7 +12,7 @@ import com.ltsh.app.chat.handler.CallbackHandler;
 import com.ltsh.app.chat.adapter.FriendAdapter;
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.config.AppConstants;
-import com.ltsh.app.chat.dao.BaseDao;
+import com.ltsh.app.chat.db.BaseDao;
 import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.entity.BaseEntity;
 import com.ltsh.app.chat.entity.UserFriend;

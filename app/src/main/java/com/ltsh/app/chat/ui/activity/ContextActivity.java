@@ -14,11 +14,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ltsh.app.chat.config.TimerUtils;
+import com.ltsh.app.chat.utils.timer.TimerUtils;
 import com.ltsh.app.chat.handler.CallbackHandler;
 import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.config.EntityCache;
-import com.ltsh.app.chat.dao.BaseDao;
+import com.ltsh.app.chat.db.BaseDao;
 import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.entity.UserGroup;
 import com.ltsh.app.chat.entity.UserGroupRel;
@@ -31,7 +31,7 @@ import com.ltsh.app.chat.ui.fragment.FriendFragment;
 import com.ltsh.app.chat.ui.fragment.ChatListFragment;
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.config.CacheObject;
-import com.ltsh.app.chat.utils.DiskLruCache;
+import com.ltsh.app.chat.utils.cache.DiskLruCache;
 import com.ltsh.app.chat.utils.http.AppHttpClient;
 import com.ltsh.app.chat.utils.http.OkHttpUtils;
 

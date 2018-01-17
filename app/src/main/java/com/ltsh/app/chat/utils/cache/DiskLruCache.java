@@ -1,4 +1,4 @@
-package com.ltsh.app.chat.utils;
+package com.ltsh.app.chat.utils.cache;
 import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.EOFException;
@@ -25,19 +25,11 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.io.Closeable;
-import java.io.File;
-import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 /**
  * Created by Random on 2018/1/16.
  */

@@ -10,12 +10,9 @@ import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
-import com.ltsh.app.chat.config.TimerUtils;
-import com.ltsh.app.chat.ui.activity.BaseActivity;
-import com.ltsh.app.chat.ui.activity.ContextActivity;
-import com.ltsh.app.chat.ui.activity.LoginActivity;
+import com.ltsh.app.chat.utils.timer.TimerUtils;
 import com.ltsh.app.chat.config.CacheObject;
-import com.ltsh.app.chat.dao.BaseDao;
+import com.ltsh.app.chat.db.BaseDao;
 import com.ltsh.app.chat.entity.UserToken;
 import com.ltsh.app.chat.config.AppInit;
 

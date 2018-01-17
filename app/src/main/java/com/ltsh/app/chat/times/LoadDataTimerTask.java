@@ -1,26 +1,14 @@
 package com.ltsh.app.chat.times;
 
-import android.content.Context;
 import android.os.Handler;
-import android.widget.Toast;
 
-import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.config.CacheObject;
-import com.ltsh.app.chat.dao.BaseDao;
-import com.ltsh.app.chat.dao.MessageItemDao;
-import com.ltsh.app.chat.entity.MessageInfo;
+import com.ltsh.app.chat.db.BaseDao;
+import com.ltsh.app.chat.db.MessageItemDao;
 import com.ltsh.app.chat.entity.UserFriend;
-import com.ltsh.app.chat.entity.common.Result;
 import com.ltsh.app.chat.entity.viewbean.MessageItem;
-import com.ltsh.app.chat.enums.ResultCodeEnum;
-import com.ltsh.app.chat.handler.CallbackHandler;
-import com.ltsh.app.chat.utils.http.AppHttpClient;
-import com.ltsh.common.util.JsonUtils;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TimerTask;
 
 /**
  * Created by Random on 2018/1/16.

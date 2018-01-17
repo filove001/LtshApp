@@ -12,7 +12,7 @@ import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.ui.activity.ContextActivity;
 import com.ltsh.app.chat.config.CacheObject;
-import com.ltsh.app.chat.dao.BaseDao;
+import com.ltsh.app.chat.db.BaseDao;
 import com.ltsh.app.chat.entity.UserToken;
 import com.ltsh.app.chat.entity.common.Result;
 import com.ltsh.app.chat.enums.ResultCodeEnum;

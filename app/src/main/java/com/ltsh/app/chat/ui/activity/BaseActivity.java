@@ -10,8 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 
 import com.ltsh.app.chat.config.CacheObject;
-import com.ltsh.app.chat.config.TimerUtils;
-import com.ltsh.app.chat.dao.BaseDao;
+import com.ltsh.app.chat.utils.timer.TimerUtils;
+import com.ltsh.app.chat.db.BaseDao;
 import com.ltsh.app.chat.entity.UserToken;
 import com.ltsh.app.chat.utils.MyAlertDiaLog;
 

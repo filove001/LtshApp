@@ -8,7 +8,7 @@ import android.widget.EditText;
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.config.CacheObject;
-import com.ltsh.app.chat.dao.BaseDao;
+import com.ltsh.app.chat.db.BaseDao;
 import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.enums.StatusEnums;
 import com.ltsh.app.chat.req.MessageSendReq;
@@ -16,7 +16,6 @@ import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.utils.http.AppHttpClient;
 import com.ltsh.app.chat.utils.BeanUtils;
 
-import com.ltsh.common.util.Dates;
 import com.ltsh.common.util.JsonUtils;
 
 import java.util.Date;
@@ -49,10 +48,10 @@ public class SendBtnOnClickListener implements View.OnClickListener {
         messageInfo.setCreateTime(String.valueOf(new Date().getTime()));
         messageInfo.setStatus(StatusEnums.YFS.getValue());
         messageInfo.setSourceType("USER");
-        int id = BaseDao.insert(messageInfo);
+        BaseDao.insert(messageInfo);
         messageInfo.setSourceId(CacheObject.userToken.getId() + "");
 
-        messageInfo.setId(id);
+
         CacheObject.chatAdapter.add(messageInfo, true);
         MessageSendReq req = new MessageSendReq();
         BeanUtils.copyProperties(messageInfo, req);

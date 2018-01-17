@@ -6,21 +6,12 @@ import android.widget.EditText;
 
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.config.AppConstants;
-import com.ltsh.app.chat.config.CacheObject;
-import com.ltsh.app.chat.dao.BaseDao;
-import com.ltsh.app.chat.entity.MessageInfo;
-import com.ltsh.app.chat.entity.UserFriend;
-import com.ltsh.app.chat.enums.StatusEnums;
-import com.ltsh.app.chat.req.MessageSendReq;
 import com.ltsh.app.chat.req.RegisterUserReq;
-import com.ltsh.app.chat.utils.BeanUtils;
 import com.ltsh.app.chat.utils.http.AppHttpClient;
 
-import com.ltsh.common.util.Dates;
 import com.ltsh.common.util.JsonUtils;
 import com.ltsh.common.util.security.MD5Util;
 
-import java.util.Date;
 import java.util.Map;
 
 /**
