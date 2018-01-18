@@ -8,6 +8,8 @@ public enum ResultCodeEnum {
 
     SUCCESS("000000", "成功"),
     REQUEST_ERROR("999998", "服务器连接失败"),
+    LOGIN_FAIL("999997", "登录失败"),
+    REGISTER_FAIL("999997", "注册失败"),
     TOKEN_FAIL("990004", "token已失效"),
     ;
 

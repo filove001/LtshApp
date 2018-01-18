@@ -18,14 +18,11 @@ public abstract class SqlExecute<T> {
     public abstract T execute(SQLiteDatabase sqLiteDatabase);
     public T run() {
         SQLiteDatabase sqLiteDatabase = null;
-
         try {
             sqLiteDatabase = dbhelper.getWritableDatabase();
             return execute(sqLiteDatabase);
         } catch (SQLException e) {
             LogUtils.error(e.getMessage(), e);
-        } finally {
-            sqLiteDatabase.close();
         }
         return null;
     }

@@ -36,6 +36,7 @@ public class BaseDao {
         return new SqlExecute<Integer>(dbhelper) {
             @Override
             public Integer execute(SQLiteDatabase sqLiteDatabase) {
+                baseEntity.setBelongsTo(CacheObject.userToken.getId());
                 ContentValues contentValues = BeanUtils.beanToContentValues(baseEntity);
                 contentValues.remove("id");
                 long insert = sqLiteDatabase.insert(DbUtils.getTableName(aClass), null, contentValues);

@@ -25,8 +25,6 @@ public class TimerUtils {
         return timer;
     }
     public static void schedule(Class classTemp,TimerTask timerTask, long delay, long period) {
-
-
         String timeKey = classTemp.getSimpleName();
         schedule(timeKey, timerTask, delay, period);
     }
@@ -48,8 +46,11 @@ public class TimerUtils {
         }
     }
     public static void cancel() {
-        timer.cancel();
-        timer = null;
-        timerTasks.clear();
+        if(timer != null) {
+            timer.cancel();
+            timer = null;
+            timerTasks.clear();
+        }
+
     }
 }

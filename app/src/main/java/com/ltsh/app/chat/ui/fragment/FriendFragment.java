@@ -40,14 +40,7 @@ public class FriendFragment extends Fragment {
         AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_FRIEND_URL, map, getActivity(), new CallbackHandler(){
             @Override
             public void callBack(Result result) {
-                LoadEntityCallHandler loadEntityCallHandler = new LoadEntityCallHandler() {
-                    @Override
-                    protected BaseEntity single(BaseEntity entity) {
-                        UserFriend entity1 = (UserFriend) entity;
-                        UserFriend single = BaseDao.single(UserFriend.class, "friend_user_id=? and belongs_to=?", new String[]{entity1.getFriendUserId() + "", entity1.getCreateBy() + ""});
-                        return single;
-                    }
-                };
+                LoadEntityCallHandler loadEntityCallHandler = new LoadEntityCallHandler();
                 loadEntityCallHandler.callBack(result, UserFriend.class);
             }
 
@@ -67,7 +60,7 @@ public class FriendFragment extends Fragment {
             CacheObject.friendAdapter = new FriendAdapter(this.getActivity());
             friend_list.setAdapter(CacheObject.friendAdapter);
         }
-        initData();
+        //initData();
         return view;
     }
 
