@@ -5,6 +5,7 @@ import android.os.Handler;
 import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.db.BaseDao;
 import com.ltsh.app.chat.db.MessageItemDao;
+import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.entity.viewbean.MessageItem;
 

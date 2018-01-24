@@ -17,14 +17,17 @@
             android:layout_alignParentBottom="true"
             android:background="@color/bg_white"
             android:orientation="horizontal">
-            <Button
+
+            <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/btn_back"
-                android:layout_width="100px"
+                android:layout_width="80px"
                 android:layout_height="match_parent"
-                android:background="@color/bg_white"
-                android:textColor="@color/text_topbar"
-                android:textSize="30sp"
-                android:text="@string/backBtnText"/>
+                android:src="@mipmap/btn_back"
+                android:background="#ffffff"
+                android:layout_marginLeft="10px"
+                android:layout_marginTop="10px"
+                android:layout_marginBottom="10px"
+                />
             <TextView
                 android:id="@+id/txt_title"
                 android:layout_width="match_parent"

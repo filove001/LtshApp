@@ -2,6 +2,7 @@ package com.ltsh.app.chat.ui.activity;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatImageButton;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +20,10 @@ import com.ltsh.app.chat.entity.UserFriend;
 import com.ltsh.app.chat.listener.AudioOnTouchListener;
 import com.ltsh.app.chat.listener.SendBtnOnClickListener;
 
+import com.ltsh.app.chat.times.ChatTimerTask;
+import com.ltsh.app.chat.times.LoadDataTimerTask;
 import com.ltsh.app.chat.utils.AudioRecoderUtils;
+import com.ltsh.app.chat.utils.timer.TimerUtils;
 import com.ltsh.common.util.JsonUtils;
 
 import java.util.List;
@@ -31,7 +35,7 @@ import java.util.List;
 public class ChatActivity extends BaseActivity {
 
     private TextView titleView;
-    private Button backBtn;
+    private AppCompatImageButton backBtn;
     private Button sendBtn;
     private ListView chat_list;
     private EditText ed_send_msg_input;
@@ -66,11 +70,13 @@ public class ChatActivity extends BaseActivity {
             @Override
             public void run() {
                 final List<MessageInfo> messageInfos = BaseDao.query(MessageInfo.class,
-                        "belongs_to=?",
-                        new String[]{userFriend.getFriendUserId() + ""}, null, "0,10");
+                        "(create_by = ? or to_user = ?) and belongs_to=?",
+                        new String[]{userFriend.getFriendUserId() + "", userFriend.getFriendUserId() + "", CacheObject.userToken.getId() + ""}, null, "0,10");
                 CacheObject.chatAdapter.addAll(messageInfos);
             }
         });
+        TimerUtils.schedule(ChatTimerTask.class, new ChatTimerTask(CacheObject.handler, userFriend), 0, 3000);
+
         MessageItemDao.updateMessageRead(CacheObject.userToken.getId(), userFriend.getFriendUserId());
         tab_menu_msg_switch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +126,7 @@ public class ChatActivity extends BaseActivity {
     private boolean isStart = false;
     private void bindViews() {
         titleView = (TextView)findViewById(R.id.txt_title);
-        backBtn = (Button)findViewById(R.id.btn_back);
+        backBtn = (AppCompatImageButton)findViewById(R.id.btn_back);
         sendBtn = (Button)findViewById(R.id.btn_send);
         ed_send_msg_input = (EditText) findViewById(R.id.ed_send_msg_input);
         btn_audio = (Button) findViewById(R.id.btn_audio);
@@ -132,6 +138,6 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        TimerUtils.cancel(ChatTimerTask.class);
     }
 }

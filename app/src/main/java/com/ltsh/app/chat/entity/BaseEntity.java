@@ -21,7 +21,7 @@ public class BaseEntity implements Serializable{
     /**
      * 创建时间
      */
-    private String createTime;
+    private Date createTime;
     /**
      * 修改用户
      */
@@ -29,7 +29,7 @@ public class BaseEntity implements Serializable{
     /**
      * 修改时间
      */
-    private String updateTime;
+    private Date updateTime;
     /**
      * 所属人
      */
@@ -59,11 +59,11 @@ public class BaseEntity implements Serializable{
         this.createBy = createBy;
     }
 
-    public String getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
@@ -75,11 +75,11 @@ public class BaseEntity implements Serializable{
         this.updateBy = updateBy;
     }
 
-    public String getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(String updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 

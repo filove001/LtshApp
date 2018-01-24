@@ -22,7 +22,7 @@
                 android:layout_height="20dp"
                 android:text="张三"
                 android:textColor="#666666"
-                android:textSize="11sp"
+                android:textSize="18sp"
                 />
             <TextView
                 android:id="@+id/chat_item_txt_content"
@@ -36,9 +36,10 @@
         </LinearLayout>
         <ImageView
             android:id="@+id/chat_item_img_icon"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:visibility="gone" />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/friend"
+            android:visibility="visible" />
 
     </LinearLayout>
 

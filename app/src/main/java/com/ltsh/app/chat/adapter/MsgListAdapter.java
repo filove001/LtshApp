@@ -75,7 +75,7 @@ public class MsgListAdapter extends LtshBaseAdapter<MessageItem>{
             if(lastMsg != null && lastMsg.split("_").length > 1) {
                 holder.msg_item_txt_content.setText(lastMsg.split("_")[1]);
             }
-            holder.msg_item_txt_time.setText(Dates.toStrYYYYMMDD(new Date(Long.parseLong(item.getLastTime()))));
+            holder.msg_item_txt_time.setText(item.getLastTime());
 
         }
 

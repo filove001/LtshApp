@@ -45,14 +45,14 @@ public class SendBtnOnClickListener implements View.OnClickListener {
         messageInfo.setSendType(0);
         messageInfo.setCreateBy(CacheObject.userToken.getId());
 //        messageInfo.setCreateByName(CacheObject.userToken.getName());
-        messageInfo.setCreateTime(String.valueOf(new Date().getTime()));
+        messageInfo.setCreateTime(new Date());
         messageInfo.setStatus(StatusEnums.YFS.getValue());
         messageInfo.setSourceType("USER");
         BaseDao.insert(messageInfo);
         messageInfo.setSourceId(CacheObject.userToken.getId() + "");
 
 
-        CacheObject.chatAdapter.add(messageInfo, true);
+        CacheObject.chatAdapter.add(messageInfo, false);
         MessageSendReq req = new MessageSendReq();
         BeanUtils.copyProperties(messageInfo, req);
         AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.SEND_MESSAGE_URL, JsonUtils.fromJson(JsonUtils.toJson(req),Map.class), activity, null);

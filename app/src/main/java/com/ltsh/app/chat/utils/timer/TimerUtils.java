@@ -36,6 +36,10 @@ public class TimerUtils {
             timerTasks.put(timeKey, timerTask);
         }
     }
+    public static void cancel(Class classTemp) {
+        String timeKey = classTemp.getSimpleName();
+        cancel(timeKey);
+    }
     public static void cancel(String timeKey) {
         TimerTask timerTask = timerTasks.get(timeKey);
         if(timerTask != null) {

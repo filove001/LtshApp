@@ -61,7 +61,8 @@ public class ChatAdapter extends LtshBaseAdapter{
         viewHolder = null;
         int itemViewType = 0;
 
-        if(item.getBelongsTo().intValue() == CacheObject.userToken.getId().intValue()) {
+        if(item.getBelongsTo().intValue() == CacheObject.userToken.getId().intValue()
+                && item.getCreateBy().intValue() == CacheObject.userToken.getId().intValue()) {
             itemViewType = 0;
         } else {
             itemViewType = 1;
@@ -85,13 +86,14 @@ public class ChatAdapter extends LtshBaseAdapter{
         }
 //        LogUtils.info("viewHolder:{}", JsonUtils.toJson(viewHolder));
         if(item != null){
-            viewHolder.chat_item_img_icon.setImageBitmap(ImageUtils.readBitMap(convertView.getContext(), R.mipmap.iv_icon_baidu));
+//            viewHolder.chat_item_img_icon.setImageBitmap(ImageUtils.readBitMap(convertView.getContext(), R.mipmap.iv_icon_baidu));
             viewHolder.chat_item_img_icon.setVisibility(View.VISIBLE);
             viewHolder.chat_item_txt_content.setText(item.getMsgContext());
 //            if(viewHolder.type == 0) {
 //                viewHolder.chat_item_txt_name.setText(item.getCreateByName());
 //            } else {
-            if(item.getBelongsTo().intValue() == CacheObject.userToken.getId().intValue()) {
+            if(item.getBelongsTo().intValue() == CacheObject.userToken.getId().intValue()
+                    && item.getCreateBy().intValue() == CacheObject.userToken.getId().intValue()) {
                 viewHolder.chat_item_txt_name.setText(CacheObject.userToken.getName());
             } else {
                 String name = "未知用户";
@@ -142,7 +144,6 @@ public class ChatAdapter extends LtshBaseAdapter{
     private class BeanClass {
         int type;
         int viewId;
-
     }
     private class ViewHolder{
         TextView chat_item_txt_content;

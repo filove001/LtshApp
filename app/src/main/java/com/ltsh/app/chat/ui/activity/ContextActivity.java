@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ltsh.app.chat.ui.fragment.UserInfoFragment;
 import com.ltsh.app.chat.utils.timer.TimerUtils;
 import com.ltsh.app.chat.handler.CallbackHandler;
 import com.ltsh.app.chat.config.AppConstants;
@@ -63,7 +64,7 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
     private ImageView tab_menu_my_num;
     private FragmentManager fManager;
     //    private FragmentTransaction fTransaction;
-    private Fragment chatListFragment, friendFragment, fg3, fg4;
+    private Fragment chatListFragment, friendFragment, fg3, userInfoFragment;
     private Fragment addFriendFragment;
 
     private Intent receiveMessageService;
@@ -291,13 +292,13 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
                 setSelected();
                 tab_menu_my.setSelected(true);
                 tab_menu_my_num.setVisibility(View.INVISIBLE);
+                if (userInfoFragment == null) {
+                    userInfoFragment = new UserInfoFragment();
+                    fTransaction.add(R.id.ly_content, userInfoFragment);
+                } else {
+                    fTransaction.show(userInfoFragment);
+                }
 
-//                if(fg4 == null){
-//                    fg4 = new LtshChatFragment("第四个Fragment");
-//                    fTransaction.add(R.id.ly_content,fg4);
-//                }else{
-//                    fTransaction.show(fg4);
-//                }
                 break;
         }
 
@@ -309,7 +310,7 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
         if (chatListFragment != null) fragmentTransaction.hide(chatListFragment);
         if (friendFragment != null) fragmentTransaction.hide(friendFragment);
         if (fg3 != null) fragmentTransaction.hide(fg3);
-        if (fg4 != null) fragmentTransaction.hide(fg4);
+        if (userInfoFragment != null) fragmentTransaction.hide(userInfoFragment);
     }
 
     //重置所有文本的选中状态

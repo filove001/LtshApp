@@ -57,6 +57,11 @@ public abstract class LtshBaseAdapter<T extends BaseEntity> extends android.widg
         return 2;
     }
 
+    /**
+     * 是否重复
+     * @param item
+     * @return
+     */
     public boolean isRepetition(T item) {
         return false;
     }
@@ -66,35 +71,43 @@ public abstract class LtshBaseAdapter<T extends BaseEntity> extends android.widg
     }
     //往特定位置，添加一个元素
     public boolean add(Integer position,T item, boolean isBatch){
-        boolean isChange = false;
-        if(isRepetition(item)){
-            isChange = true;
+        boolean isUpdate = false;//是否有修改
+        boolean isExist = false;//是否已经存在
+        if(!isBatch && isRepetition(item)){
+            return false;
         } else {
             if(item.getId() != null) {
                 for (T message : dataList) {
                     if (message.getId() != null && item.getId().intValue() == message.getId().intValue()) {
-                        BeanUtils.copyProperties(item, message);
-                        isChange = true;
+                        if(message.getUpdateTime() != null && !message.getUpdateTime().equals(message.getUpdateTime())) {
+                            BeanUtils.copyProperties(item, message);
+                            isUpdate = true;
+                            break;
+                        }
+                        isExist = true;
                         break;
                     }
 
                 }
             }
         }
-        if(!isChange) {
+        if(!isExist) {
             if(position != null) {
                 dataList.add(position,item);
             } else {
                 dataList.add(item);
             }
-        } else {
-            return true;
         }
-        if(!isBatch) {
+
+        if(!isBatch & (!isExist || isUpdate)) {
 //            notifyDataSetInvalidated();
             notifyDataSetChanged();
+            return true;
         }
-        return true;
+        if(!isExist || isUpdate) {
+            return true;
+        }
+        return false;
     }
 
     //往特定位置，添加一个元素
