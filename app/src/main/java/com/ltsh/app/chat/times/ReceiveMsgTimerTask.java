@@ -72,7 +72,7 @@ public class ReceiveMsgTimerTask extends BaseTimerTask {
                     CacheObject.handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            CacheObject.chatAdapter.add(chatMessage, true);
+                            CacheObject.chatAdapter.add(chatMessage);
                         }
                     });
                 }

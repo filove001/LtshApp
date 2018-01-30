@@ -1,10 +1,12 @@
-package com.ltsh.app.chat.req;
+package com.ltsh.app.chat.entity.req;
 
+
+import java.io.Serializable;
 
 /**
  * Created by Random on 2017/07/26.
  */
-public class RegisterUserReq extends BaseReq {
+public class RegisterUserReq implements Serializable {
     /**
      * 登录名
      */

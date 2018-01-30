@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.adapter.ChatAdapter;
+import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.db.BaseDao;
 import com.ltsh.app.chat.db.MessageItemDao;
@@ -75,7 +76,7 @@ public class ChatActivity extends BaseActivity {
                 CacheObject.chatAdapter.addAll(messageInfos);
             }
         });
-        TimerUtils.schedule(ChatTimerTask.class, new ChatTimerTask(CacheObject.handler, userFriend), 0, 3000);
+        TimerUtils.schedule(ChatTimerTask.class, new ChatTimerTask(CacheObject.handler, userFriend), 0, AppConstants.TIMER_INTERVAL);
 
         MessageItemDao.updateMessageRead(CacheObject.userToken.getId(), userFriend.getFriendUserId());
         tab_menu_msg_switch.setOnClickListener(new View.OnClickListener() {

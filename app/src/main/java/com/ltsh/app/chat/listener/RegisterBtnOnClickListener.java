@@ -6,7 +6,7 @@ import android.widget.EditText;
 
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.config.AppConstants;
-import com.ltsh.app.chat.req.RegisterUserReq;
+import com.ltsh.app.chat.entity.req.RegisterUserReq;
 import com.ltsh.app.chat.utils.http.AppHttpClient;
 
 import com.ltsh.common.util.JsonUtils;

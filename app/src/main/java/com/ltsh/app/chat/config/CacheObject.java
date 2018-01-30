@@ -7,15 +7,14 @@ import com.ltsh.app.chat.adapter.ChatAdapter;
 import com.ltsh.app.chat.adapter.FriendAdapter;
 import com.ltsh.app.chat.adapter.MsgListAdapter;
 import com.ltsh.app.chat.db.DBCipherHelper;
+import com.ltsh.app.chat.entity.req.AppReq;
+import com.ltsh.app.chat.entity.req.BaseReq;
 import com.ltsh.app.chat.utils.cache.DiskLruCache;
 import com.ltsh.app.chat.entity.UserToken;
-import com.ltsh.app.chat.utils.http.OkHttpUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -28,9 +27,13 @@ public class CacheObject {
     public static FriendAdapter friendAdapter = null;
     public static Handler handler;
     public static UserToken userToken = null;
-    public static Map<String, String> commonParams = new HashMap<>();
+//    public static Map<String, String> commonParams = new HashMap<>();
+    public static AppReq baseReq = new AppReq();
     public static Context context;
     public static DBCipherHelper dbHelper;
+
+
+
     public static DiskLruCache diskLruCache;
     public InputStream getCache(String key) {
         String newKey = DiskLruCache.Util.hashKeyForDisk(key);

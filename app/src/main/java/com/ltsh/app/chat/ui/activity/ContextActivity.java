@@ -34,7 +34,6 @@ import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.utils.cache.DiskLruCache;
 import com.ltsh.app.chat.utils.http.AppHttpClient;
-import com.ltsh.app.chat.utils.http.OkHttpUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -146,14 +145,12 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
         fManager = getFragmentManager();
 
 
-        TimerUtils.schedule(ReceiveMsgTimerTask.class, new ReceiveMsgTimerTask(this), 0, 3000);
-        TimerUtils.schedule(LoadDataTimerTask.class, new LoadDataTimerTask(CacheObject.handler), 0, 3000);
+        TimerUtils.schedule(ReceiveMsgTimerTask.class, new ReceiveMsgTimerTask(this), 0, AppConstants.TIMER_INTERVAL);
+        TimerUtils.schedule(LoadDataTimerTask.class, new LoadDataTimerTask(CacheObject.handler), 0, AppConstants.TIMER_INTERVAL);
 
         initFragment();
         loadData();
         ly_tab_menu_home.performClick();
-
-
 
     }
 

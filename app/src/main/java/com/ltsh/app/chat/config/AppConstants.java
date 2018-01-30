@@ -6,6 +6,8 @@ package com.ltsh.app.chat.config;
 
 public class AppConstants {
 //    public final static String SERVLCE_URL = "http://192.168.31.208:8013";
+    public static String APP_ID = "";
+    public static String APP_SECRET = "";
     /**
      * 服务器地址
      */
@@ -21,7 +23,7 @@ public class AppConstants {
     /**
      * 登录url
      */
-    public final static String LOGIN_URL = "/chat/login/loginVerify";
+    public final static String LOGIN_URL = "/chat/user/loginVerify";
     /**
      * 注册url
      */
@@ -29,7 +31,7 @@ public class AppConstants {
     /**
      * 获取随机数
      */
-    public final static String GET_RANDOM_URL = "/chat/login/getRandomStr";
+    public final static String GET_RANDOM_URL = "/chat/basics/getRandomStr";
     /**
      * 获取好友
      */
@@ -41,6 +43,6 @@ public class AppConstants {
     public final static String USER_TOKEN_KEY = "user.token.key";
 
     public static final int DISK_MAX_SIZE = 10 * 1024 * 1024;//10MB
-
+    public static final int TIMER_INTERVAL = 20 * 1000;//10MB
     public static boolean isInit = true;
 }

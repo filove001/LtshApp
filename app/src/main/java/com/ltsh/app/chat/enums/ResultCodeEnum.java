@@ -11,6 +11,7 @@ public enum ResultCodeEnum {
     LOGIN_FAIL("999997", "登录失败"),
     REGISTER_FAIL("999997", "注册失败"),
     TOKEN_FAIL("990004", "token已失效"),
+    SYSTEM_ERROR("999999", "系统繁忙,请稍后再试!"),
     ;
 
     private String code;

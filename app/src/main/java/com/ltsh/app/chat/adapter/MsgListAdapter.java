@@ -91,6 +91,7 @@ public class MsgListAdapter extends LtshBaseAdapter<MessageItem>{
         TextView msg_item_num;
         ImageView msg_item_img_icon;
     }
+    @Override
     public boolean isRepetition(MessageItem item) {
         for (MessageItem message : getDataList()) {
             if (item.getCreateBy().intValue() == message.getCreateBy().intValue()) {

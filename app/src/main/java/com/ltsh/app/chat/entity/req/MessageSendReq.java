@@ -1,13 +1,12 @@
-package com.ltsh.app.chat.req;
+package com.ltsh.app.chat.entity.req;
 
 
-import java.io.Serializable;
-import java.util.List;
+
 
 /**
  * Created by Random on 2017/07/26.
  */
-public class MessageSendReq extends BaseReq {
+public class MessageSendReq {
     /**
      * 消息内容
      */

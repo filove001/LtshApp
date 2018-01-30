@@ -7,6 +7,8 @@ import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 
 import com.ltsh.app.chat.db.DBCipherHelper;
+import com.ltsh.app.chat.entity.req.BaseReq;
+import com.ltsh.app.chat.utils.SystemUtil;
 import com.ltsh.app.chat.utils.cache.DiskLruCache;
 import com.ltsh.common.util.LogUtils;
 
@@ -28,10 +30,21 @@ public class AppInit {
         } else {
             imei = telephonyManager.getDeviceId();
         }
-        CacheObject.commonParams.put("appVersion", android.os.Build.VERSION.RELEASE);
-        CacheObject.commonParams.put("medium", imei);
-        CacheObject.commonParams.put("appId", "app");
-        CacheObject.commonParams.put("mediumType", "0");
+        AppConstants.APP_ID = "app";
+        AppConstants.APP_SECRET = "123456";
+        CacheObject.baseReq.setAppId(AppConstants.APP_ID);
+        CacheObject.baseReq.setAppVersion(SystemUtil.getVerName(context));
+        CacheObject.baseReq.setMedium(imei);
+        CacheObject.baseReq.setMediumType("1");
+        CacheObject.baseReq.setDeviceBrand(SystemUtil.getDeviceBrand());
+        CacheObject.baseReq.setSystemLanguage(SystemUtil.getSystemLanguage());
+        CacheObject.baseReq.setSystemModel(SystemUtil.getSystemModel());
+        CacheObject.baseReq.setSystemVersion(SystemUtil.getSystemVersion());
+
+//        CacheObject.commonParams.put("appVersion", android.os.Build.VERSION.RELEASE);
+//        CacheObject.commonParams.put("medium", imei);
+//        CacheObject.commonParams.put("appId", AppConstants.APP_ID);
+//        CacheObject.commonParams.put("mediumType", "0");
         String diskCachePath = context.getCacheDir().getPath() + "/CacheDir";
         File diskCachePathFile = new File(diskCachePath);
         try {

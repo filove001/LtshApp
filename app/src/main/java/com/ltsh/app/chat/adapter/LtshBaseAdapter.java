@@ -70,21 +70,25 @@ public abstract class LtshBaseAdapter<T extends BaseEntity> extends android.widg
         return add(null, item, isBatch);
     }
     //往特定位置，添加一个元素
+    public boolean add(T item) {
+        return add(null, item, false);
+    }
+    //往特定位置，添加一个元素
     public boolean add(Integer position,T item, boolean isBatch){
         boolean isUpdate = false;//是否有修改
         boolean isExist = false;//是否已经存在
-        if(!isBatch && isRepetition(item)){
+        if(isRepetition(item)){
             return false;
         } else {
             if(item.getId() != null) {
                 for (T message : dataList) {
                     if (message.getId() != null && item.getId().intValue() == message.getId().intValue()) {
+                        isExist = true;
                         if(message.getUpdateTime() != null && !message.getUpdateTime().equals(message.getUpdateTime())) {
                             BeanUtils.copyProperties(item, message);
                             isUpdate = true;
                             break;
                         }
-                        isExist = true;
                         break;
                     }
 
