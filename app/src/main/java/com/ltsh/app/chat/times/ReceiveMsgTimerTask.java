@@ -8,9 +8,13 @@ import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.db.BaseDao;
 import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.entity.common.Result;
+import com.ltsh.app.chat.entity.req.AppReq;
 import com.ltsh.app.chat.enums.ResultCodeEnum;
 import com.ltsh.app.chat.handler.CallbackHandler;
 
+import com.ltsh.app.chat.handler.impl.DefaultCallbackHandler;
+import com.ltsh.app.chat.service.MessageService;
+import com.ltsh.app.chat.utils.ServiceContextUtils;
 import com.ltsh.app.chat.utils.http.AppHttpClient;
 import com.ltsh.common.util.JsonUtils;
 
@@ -42,20 +46,22 @@ public class ReceiveMsgTimerTask extends BaseTimerTask {
         if(!isLock()) {
             setLock(true);
             if(CacheObject.userToken != null) {
-                Map<String, Object> params = new HashMap<String, Object>();
-                AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_MESSAGE_URL, params, context, new CallbackHandler() {
+                MessageService messageService = ServiceContextUtils.getService(MessageService.class);
+                messageService.getMsg(new DefaultCallbackHandler() {
                     @Override
-                    public void callBack(Result result) {
+                    public void succeed(Result result) {
                         loadData(result);
-                        setLock(false);
                     }
-
                     @Override
-                    public void error(Result result) {
-                        setLock(false);
+                    public void fail(Result result) {
                         if(result.getCode().equals(ResultCodeEnum.TOKEN_FAIL.getCode())) {
                             cancel();
                         }
+                    }
+
+                    @Override
+                    public void complete(Result result) {
+                        setLock(false);
                     }
                 });
             }

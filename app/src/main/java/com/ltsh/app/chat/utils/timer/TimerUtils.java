@@ -32,6 +32,7 @@ public class TimerUtils {
         if(timerTasks.get(timeKey) != null) {
             LogUtils.error("定时器:" + timeKey + "已存在");
         } else {
+//            timerTask.run();
             getTimerInstance().schedule(timerTask, delay, period);
             timerTasks.put(timeKey, timerTask);
         }

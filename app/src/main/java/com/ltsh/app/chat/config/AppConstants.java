@@ -11,7 +11,8 @@ public class AppConstants {
     /**
      * 服务器地址
      */
-    public final static String SERVLCE_URL = "http://120.79.158.226:8013";
+//    public final static String SERVLCE_URL = "http://120.79.158.226:8013";
+    public final static String SERVLCE_URL = "http://192.168.22.214:8013";
     /**
      * 获取信息
      */
@@ -35,10 +36,10 @@ public class AppConstants {
     /**
      * 获取好友
      */
-    public final static String GET_FRIEND_URL = "/chat/userFriend/page";
-    public final static String ADD_FRIEND_URL = "/chat/userFriend/add";
-    public final static String GET_GROUP_URL = "/chat/userGroup/page";
-    public final static String GET_GROUP_REL_URL = "/chat/userGroupRel/page";
+    public final static String GET_USER_FRIEND_URL = "/chat/userFriend/page";
+    public final static String ADD_USER_FRIEND_URL = "/chat/userFriend/add";
+    public final static String GET_USER_GROUP_URL = "/chat/userGroup/page";
+    public final static String GET_USER_GROUP_REL_URL = "/chat/userGroupRel/page";
 
     public final static String USER_TOKEN_KEY = "user.token.key";
 

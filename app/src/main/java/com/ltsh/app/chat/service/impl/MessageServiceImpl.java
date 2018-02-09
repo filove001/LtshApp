@@ -1,12 +1,14 @@
 package com.ltsh.app.chat.service.impl;
 
 import android.app.Activity;
+import android.content.Context;
 
 import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.entity.MessageInfo;
 import com.ltsh.app.chat.entity.common.Result;
 import com.ltsh.app.chat.entity.req.AppReq;
+import com.ltsh.app.chat.entity.req.BaseReq;
 import com.ltsh.app.chat.entity.req.MessageSendReq;
 import com.ltsh.app.chat.entity.req.RandomReq;
 import com.ltsh.app.chat.entity.resp.RandomResp;
@@ -19,6 +21,7 @@ import com.ltsh.app.chat.utils.http.AppHttpClient;
 import com.ltsh.common.util.JsonUtils;
 import com.ltsh.common.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -27,30 +30,23 @@ import java.util.Map;
 
 public class MessageServiceImpl extends BaseServiceImpl implements MessageService{
 
-    public MessageServiceImpl(Activity activity) {
-        this.activity = activity;
+    public MessageServiceImpl(Context context) {
+        super(context);
     }
 
-    private Activity activity;
-    private BasicsService basicsService = new BasicsServiceImpl();
     /**
      * 发送消息
      */
-    public Result sendMsg(MessageInfo messageInfo) {
-        AppReq<MessageInfo> appReq = new AppReq<>(messageInfo);
-
-        RandomReq randomReq = new RandomReq();
-        randomReq.setUuid(StringUtils.getUUID());
-        Result<RandomResp> random = basicsService.getRandom();
-        super.threadRequest(AppConstants.SERVLCE_URL, AppConstants.SEND_MESSAGE_URL, appReq, random.getContent(), activity, null);
+    public Result sendMsg(MessageInfo messageInfo, CallbackHandler callbackHandler) {
+        super.enctyRequest(AppConstants.SEND_MESSAGE_URL, messageInfo, callbackHandler);
         return new Result<>(ResultCodeEnum.SUCCESS);
     }
 
 
 
     @Override
-    public void getMsg() {
-
+    public void getMsg(CallbackHandler callbackHandler) {
+        super.enctyRequest(AppConstants.GET_MESSAGE_URL, callbackHandler);
     }
 
 

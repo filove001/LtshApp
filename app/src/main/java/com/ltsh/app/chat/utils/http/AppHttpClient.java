@@ -21,6 +21,7 @@ import com.ltsh.app.chat.enums.ResultCodeEnum;
 import com.ltsh.common.util.JsonUtils;
 import com.ltsh.common.util.LogUtils;
 import com.ltsh.common.util.StringUtils;
+
 import com.ltsh.common.util.http.OkHttpUtils;
 import com.ltsh.common.util.security.AES;
 import com.ltsh.common.util.security.SignUtils;
@@ -39,7 +40,7 @@ import java.util.Map;
  */
 
 public class AppHttpClient {
-    public static boolean isDebug = false;
+    public static boolean isDebug = true;
     public static String postJson(String baseUrl, String url, AppReq req, RandomResp randomResp) {
         req.setTimestamp(Calendar.getInstance().getTimeInMillis() + "");
         req.setKeep(StringUtils.getUUID());
@@ -56,7 +57,7 @@ public class AppHttpClient {
         }
         String signInfo = null;
         if(randomResp != null) {
-            signInfo = SignUtils.getSign(signStr, AppConstants.APP_SECRET, randomResp.getRandomKey());
+            signInfo = SignUtils.getSign(signStr, AppConstants.APP_SECRET, randomResp.getRandomValue());
         } else {
             signInfo = SignUtils.getSign(signStr, AppConstants.APP_SECRET, "");
         }
@@ -82,7 +83,7 @@ public class AppHttpClient {
     }
     private static String execute(String url, AppReq req) {
         Map json = JsonUtils.fromJson(JsonUtils.toJson(req), Map.class);
-        return OkHttpUtils.postJson(url, json);
+        return execute(url, json);
     }
     private static String execute(String url, Map<String, Object> json) {
         if(isDebug) {

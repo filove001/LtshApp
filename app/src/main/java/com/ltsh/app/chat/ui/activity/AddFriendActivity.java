@@ -9,7 +9,11 @@ import android.widget.EditText;
 import com.ltsh.app.chat.R;
 import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.entity.common.Result;
+import com.ltsh.app.chat.entity.req.user.AddFriendReq;
 import com.ltsh.app.chat.handler.CallbackHandler;
+import com.ltsh.app.chat.handler.impl.DefaultCallbackHandler;
+import com.ltsh.app.chat.service.UserFriendService;
+import com.ltsh.app.chat.utils.ServiceContextUtils;
 import com.ltsh.app.chat.utils.http.AppHttpClient;
 
 import java.util.HashMap;
@@ -31,27 +35,29 @@ public class AddFriendActivity extends BaseActivity {
         setContentView(R.layout.friend_add);
         friend_account = findViewById(R.id.friend_account);
         friend_name = findViewById(R.id.friend_name);
+        Button backBtn = (Button)findViewById(R.id.btn_back);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         Button submitBtn = (Button) findViewById(R.id.submit_btn);
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String friendName = friend_name.getText().toString();
                 String friendAccount = friend_account.getText().toString();
-                Map<String, Object> params = new HashMap<>();
-                params.put("name", friendName);
-                params.put("loginName", friendAccount);
-                AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.ADD_FRIEND_URL, params, null, new CallbackHandler() {
+                AddFriendReq req = new AddFriendReq();
+                req.setName(friendName);
+                req.setLoginName(friendAccount);
+                UserFriendService userFriendService = ServiceContextUtils.getService(UserFriendService.class);
+                userFriendService.addFriend(req, new DefaultCallbackHandler(){
                     @Override
-                    public void callBack(Result result) {
-                        AddFriendActivity.this.close();
-                    }
-
-                    @Override
-                    public void error(Result result) {
-                        AddFriendActivity.this.close();
+                    public void succeed(Result result) {
+                        AddFriendActivity.this.finish();
                     }
                 });
-
             }
         });
     }

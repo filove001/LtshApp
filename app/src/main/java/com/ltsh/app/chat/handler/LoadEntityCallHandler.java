@@ -18,17 +18,19 @@ public class LoadEntityCallHandler {
 
     public void callBack(Result result, Class<? extends BaseEntity> tClass) {
         Result<Map> mapResult = result;
-        if(ResultCodeEnum.SUCCESS.getCode().equals(mapResult.getCode())) {
-            Map content = mapResult.getContent();
-            List resultList = (List)content.get("resultList");
-            for (Object obj : resultList) {
-                final BaseEntity entity = JsonUtils.fromJson(JsonUtils.toJson(obj), tClass);
-                BaseEntity single = single(entity);
-                if(single == null) {
-                    BaseDao.insert(entity);
-                } else {
-                    entity.setId(single.getId());
-                    BaseDao.update(entity);
+        if(mapResult.isSuccess()) {
+            if(mapResult.getContent() != null) {
+                Map content = mapResult.getContent();
+                List resultList = (List)content.get("resultList");
+                for (Object obj : resultList) {
+                    final BaseEntity entity = JsonUtils.fromJson(JsonUtils.toJson(obj), tClass);
+                    BaseEntity single = single(entity);
+                    if(single == null) {
+                        BaseDao.insert(entity);
+                    } else {
+                        entity.setId(single.getId());
+                        BaseDao.update(entity);
+                    }
                 }
             }
         } else {

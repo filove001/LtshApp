@@ -34,21 +34,7 @@ public class FriendFragment extends Fragment {
 
 
     public void initData() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("pageNumber", "1");
-        map.put("pageSize", "10000");
-        AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_FRIEND_URL, map, getActivity(), new CallbackHandler(){
-            @Override
-            public void callBack(Result result) {
-                LoadEntityCallHandler loadEntityCallHandler = new LoadEntityCallHandler();
-                loadEntityCallHandler.callBack(result, UserFriend.class);
-            }
 
-            @Override
-            public void error(Result result) {
-
-            }
-        });
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,10 +42,9 @@ public class FriendFragment extends Fragment {
         View view = inflater.inflate(R.layout.friend_content,container,false);
         friend_list = (ListView) view.findViewById(R.id.friend_list);
         friend_list.setOnItemClickListener(new FriendItemClickListener(this.getActivity()));
-        if(CacheObject.friendAdapter == null) {
-            CacheObject.friendAdapter = new FriendAdapter(this.getActivity());
-            friend_list.setAdapter(CacheObject.friendAdapter);
-        }
+
+        friend_list.setAdapter(CacheObject.friendAdapter);
+
         //initData();
         return view;
     }

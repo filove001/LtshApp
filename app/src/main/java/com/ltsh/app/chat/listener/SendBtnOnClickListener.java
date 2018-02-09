@@ -10,9 +10,13 @@ import com.ltsh.app.chat.config.AppConstants;
 import com.ltsh.app.chat.config.CacheObject;
 import com.ltsh.app.chat.db.BaseDao;
 import com.ltsh.app.chat.entity.MessageInfo;
+import com.ltsh.app.chat.entity.req.AppReq;
 import com.ltsh.app.chat.entity.req.MessageSendReq;
 import com.ltsh.app.chat.enums.StatusEnums;
 import com.ltsh.app.chat.entity.UserFriend;
+import com.ltsh.app.chat.handler.impl.DefaultCallbackHandler;
+import com.ltsh.app.chat.service.MessageService;
+import com.ltsh.app.chat.utils.ServiceContextUtils;
 import com.ltsh.app.chat.utils.http.AppHttpClient;
 import com.ltsh.app.chat.utils.BeanUtils;
 
@@ -48,14 +52,28 @@ public class SendBtnOnClickListener implements View.OnClickListener {
         messageInfo.setCreateTime(new Date());
         messageInfo.setStatus(StatusEnums.YFS.getValue());
         messageInfo.setSourceType("USER");
-        BaseDao.insert(messageInfo);
+
         messageInfo.setSourceId(CacheObject.userToken.getId() + "");
 
+        MessageService messageService = ServiceContextUtils.getService(MessageService.class);
+        messageService.sendMsg(messageInfo, new DefaultCallbackHandler(){
+            /**
+             * 请求之前
+             * @param appReq
+             */
+            public void before(final AppReq appReq) {
+                CacheObject.handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        MessageInfo messageInfo = (MessageInfo)appReq.getContent();
+                        BaseDao.insert(messageInfo);
+                        CacheObject.chatAdapter.add(messageInfo, false);
+                    }
+                });
 
-        CacheObject.chatAdapter.add(messageInfo, false);
-        MessageSendReq req = new MessageSendReq();
-        BeanUtils.copyProperties(messageInfo, req);
-        AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.SEND_MESSAGE_URL, JsonUtils.fromJson(JsonUtils.toJson(req),Map.class), activity, null);
+            }
+        });
+
         edSendMsg.setText("");
     }
 

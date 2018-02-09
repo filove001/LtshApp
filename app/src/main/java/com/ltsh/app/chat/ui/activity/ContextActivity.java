@@ -3,6 +3,7 @@ package com.ltsh.app.chat.ui.activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -14,7 +15,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ltsh.app.chat.adapter.FriendAdapter;
+import com.ltsh.app.chat.adapter.MsgListAdapter;
+import com.ltsh.app.chat.entity.req.PageReq;
+import com.ltsh.app.chat.handler.impl.DefaultCallbackHandler;
+import com.ltsh.app.chat.service.UserFriendService;
+import com.ltsh.app.chat.service.UserGroupRelService;
+import com.ltsh.app.chat.service.UserGroupService;
 import com.ltsh.app.chat.ui.fragment.UserInfoFragment;
+import com.ltsh.app.chat.utils.ServiceContextUtils;
 import com.ltsh.app.chat.utils.timer.TimerUtils;
 import com.ltsh.app.chat.handler.CallbackHandler;
 import com.ltsh.app.chat.config.AppConstants;
@@ -66,9 +75,13 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
     private Fragment chatListFragment, friendFragment, fg3, userInfoFragment;
     private Fragment addFriendFragment;
 
+    private ProgressDialog progressDialog;
+
     private Intent receiveMessageService;
     private Intent msgListService;
-
+    private UserGroupService userGroupService = ServiceContextUtils.getService(UserGroupService.class);
+    private UserFriendService userFriendService = ServiceContextUtils.getService(UserFriendService.class);
+    private UserGroupRelService userGroupRelService = ServiceContextUtils.getService(UserGroupRelService.class);
     @Override
      public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -107,27 +120,27 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
                 super.loginOut();
                 break;
             case R.id.group_dowm:
-                final File cacheDir = getCacheDir();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String url = "http://pic4.nipic.com/20091217/3885730_124701000519_2.jpg";
-                        String key = DiskLruCache.Util.hashKeyForDisk(url);
-                        try {
-                            DiskLruCache.Snapshot snapshot = CacheObject.diskLruCache.get(key);
-                            if(snapshot == null) {
-
-                            }
-                            DiskLruCache.Editor edit = CacheObject.diskLruCache.edit(key);
-                            if(edit != null) {
-                                OutputStream outputStream = edit.newOutputStream(0);
-                                OkHttpUtils.download(url, outputStream);
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
+//                final File cacheDir = getCacheDir();
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        String url = "http://pic4.nipic.com/20091217/3885730_124701000519_2.jpg";
+//                        String key = DiskLruCache.Util.hashKeyForDisk(url);
+//                        try {
+//                            DiskLruCache.Snapshot snapshot = CacheObject.diskLruCache.get(key);
+//                            if(snapshot == null) {
+//
+//                            }
+//                            DiskLruCache.Editor edit = CacheObject.diskLruCache.edit(key);
+//                            if(edit != null) {
+//                                OutputStream outputStream = edit.newOutputStream(0);
+//                                OkHttpUtils.download(url, outputStream);
+//                            }
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }).start();
                 break;
         }
 
@@ -143,10 +156,11 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
         setContentView(R.layout.activity_context);
         bindViews();
         fManager = getFragmentManager();
-
-
-        TimerUtils.schedule(ReceiveMsgTimerTask.class, new ReceiveMsgTimerTask(this), 0, AppConstants.TIMER_INTERVAL);
-        TimerUtils.schedule(LoadDataTimerTask.class, new LoadDataTimerTask(CacheObject.handler), 0, AppConstants.TIMER_INTERVAL);
+        progressDialog = ProgressDialog.show(ContextActivity.this, "资源加载中", "资源加载中,请稍后...",false,false);
+        ReceiveMsgTimerTask receiveMsgTimerTask = new ReceiveMsgTimerTask(this);
+        LoadDataTimerTask loadDataTimerTask = new LoadDataTimerTask(CacheObject.handler, progressDialog);
+        TimerUtils.schedule(ReceiveMsgTimerTask.class, receiveMsgTimerTask, 1, AppConstants.TIMER_INTERVAL);
+        TimerUtils.schedule(LoadDataTimerTask.class, loadDataTimerTask, 1, AppConstants.TIMER_INTERVAL);
 
         initFragment();
         loadData();
@@ -179,49 +193,35 @@ public class ContextActivity extends BaseActivity implements View.OnClickListene
 
     private void loadData() {
         if(AppConstants.isInit) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("pageNumber", "1");
-            map.put("pageSize", "10000");
+            if(CacheObject.msgListAdapter == null) {
+                CacheObject.msgListAdapter = new MsgListAdapter(this);
+            }
+            if(CacheObject.friendAdapter == null) {
+                CacheObject.friendAdapter = new FriendAdapter(this);
+            }
             final LoadEntityCallHandler callHandler = new LoadEntityCallHandler();
-            AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_FRIEND_URL, map, this, new CallbackHandler() {
+            PageReq pageReq = new PageReq();
+            pageReq.setPageNumber(1);
+            pageReq.setPageSize(10000);
+            userFriendService.page(pageReq, new DefaultCallbackHandler(){
                 @Override
-                public void callBack(Result result) {
+                public void succeed(Result result) {
                     callHandler.callBack(result, UserFriend.class);
                 }
-
-                @Override
-                public void error(Result result) {
-
-                }
             });
-            map = new HashMap<>();
-            map.put("pageNumber", "1");
-            map.put("pageSize", "10000");
-            AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_GROUP_URL, map, this, new CallbackHandler() {
-                @Override
-                public void callBack(Result result) {
-                    callHandler.callBack(result, UserGroup.class);
-                }
-
-                @Override
-                public void error(Result result) {
-
-                }
+            userGroupService.page(pageReq, new DefaultCallbackHandler(){
+               @Override
+               public void succeed(Result result) {
+                   callHandler.callBack(result, UserGroup.class);
+               }
             });
-            map = new HashMap<>();
-            map.put("pageNumber", "1");
-            map.put("pageSize", "10000");
-            AppHttpClient.threadPost(AppConstants.SERVLCE_URL, AppConstants.GET_GROUP_REL_URL, map, this, new CallbackHandler() {
+            userGroupRelService.page(pageReq, new DefaultCallbackHandler(){
                 @Override
-                public void callBack(Result result) {
+                public void succeed(Result result) {
                     callHandler.callBack(result, UserGroupRel.class);
                 }
-
-                @Override
-                public void error(Result result) {
-
-                }
             });
+
         }
 
 

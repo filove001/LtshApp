@@ -6,7 +6,7 @@ package com.ltsh.app.chat.entity.req;
 /**
  * Created by Random on 2017/07/26.
  */
-public class MessageSendReq {
+public class MessageSendReq extends BaseReq {
     /**
      * 消息内容
      */

@@ -11,16 +11,16 @@
         android:layout_alignParentBottom="true"
         android:background="@color/bg_white"
         android:orientation="horizontal">
+
         <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/btn_back"
-            android:layout_width="80px"
+            android:layout_width="120px"
             android:layout_height="match_parent"
-            android:src="@mipmap/btn_back"
-            android:background="#ffffff"
+            android:layout_marginBottom="10px"
             android:layout_marginLeft="10px"
             android:layout_marginTop="10px"
-            android:layout_marginBottom="10px"
-            />
+            android:background="#ffffff"
+            android:src="@mipmap/btn_back" />
 
         <TextView
             android:id="@+id/txt_title"

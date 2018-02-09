@@ -30,9 +30,7 @@ public class ChatListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fg_content,container,false);
 
         list_content = (ListView) view.findViewById(R.id.list_content);
-        if(CacheObject.msgListAdapter == null) {
-            CacheObject.msgListAdapter = new MsgListAdapter(this.getActivity());
-        }
+
         list_content.setAdapter(CacheObject.msgListAdapter);
         list_content.setOnItemClickListener(new ChatItemClickListener(getActivity()));
         return view;

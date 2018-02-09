@@ -33,11 +33,11 @@ public class LoginActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent("android.intent.action.REGISTER");
                 intent.setClassName(LoginActivity.this, RegisterActivity.class.getName());
-                try {
-                    LoginActivity.this.finish();
-                } catch (Throwable throwable) {
-                    LogUtils.error(throwable.getMessage(), throwable);
-                }
+//                try {
+//                    LoginActivity.this.finish();
+//                } catch (Throwable throwable) {
+//                    LogUtils.error(throwable.getMessage(), throwable);
+//                }
                 getMainActivity().startActivity(intent);
             }
         });
@@ -62,7 +62,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
                                           int after) {
-                LogUtils.info("");
+//                LogUtils.info("");
             }
 
             @Override
@@ -74,7 +74,7 @@ public class LoginActivity extends BaseActivity {
                     s.clear();
                     s.append(s1);
                 }
-                LogUtils.info("");
+//                LogUtils.info("");
             }
         });
         editLoginName.setOnEditorActionListener(new TextView.OnEditorActionListener() {

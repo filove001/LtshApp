@@ -33,7 +33,7 @@ public class BasicsServiceImpl implements BasicsService {
 //
 //        String uuid = StringUtils.getUUID();
 //        params.put("uuid", uuid);
-        String post = AppHttpClient.postJson(baseUrl, url, appReq, "");
+        String post = AppHttpClient.postJson(baseUrl, url, appReq, null);
         LogUtils.info("返回参数:" + post);
         Map map = JsonUtils.fromJson(post, Map.class);
         if(!map.get("code").equals("000000")) {

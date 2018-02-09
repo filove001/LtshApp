@@ -9,16 +9,16 @@ import com.ltsh.app.chat.handler.CallbackHandler;
  * Created by Random on 2018/1/18.
  */
 
-public interface MessageService {
+public interface MessageService extends BaseService {
     /**
      * 发送消息
      */
-    public Result sendMsg(MessageInfo messageInfo);
+    public Result sendMsg(MessageInfo messageInfo, CallbackHandler callbackHandler);
 
     /**
      * 获取消息
      */
-    public void getMsg();
+    public void getMsg(CallbackHandler callbackHandler);
 
     /**
      * 发送文件消息

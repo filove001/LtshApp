@@ -56,7 +56,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
                 NetworkInfo networkInfo = (NetworkInfo) parcelableExtra;
                 NetworkInfo.State state = networkInfo.getState();
                 boolean isConnected = state == NetworkInfo.State.CONNECTED;// 当然，这边可以更精确的确定状态
-                LogUtils.error( "isConnected:" + isConnected);
+//                LogUtils.error( "isConnected:" + isConnected);
 
             }
         }

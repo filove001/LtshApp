@@ -1,5 +1,6 @@
 package com.ltsh.app.chat.times;
 
+import android.app.ProgressDialog;
 import android.os.Handler;
 
 import com.ltsh.app.chat.config.CacheObject;
@@ -17,11 +18,13 @@ import java.util.List;
 
 public class LoadDataTimerTask extends BaseTimerTask {
     private Handler handler;
-    public LoadDataTimerTask(Handler handler) {
+    private ProgressDialog progressDialog;
+    public LoadDataTimerTask(Handler handler, ProgressDialog progressDialog) {
         this.handler = handler;
+        this.progressDialog = progressDialog;
     }
 
-
+    private boolean isFast = true;
     @Override
     public void run() {
         super.run();
@@ -32,6 +35,11 @@ public class LoadDataTimerTask extends BaseTimerTask {
                     @Override
                     public void run() {
                         CacheObject.msgListAdapter.addAll(0,messageItemList);
+                        if(isFast && progressDialog != null) {
+                            isFast = false;
+                            progressDialog.cancel();
+                        }
+
                     }
                 });
             }
